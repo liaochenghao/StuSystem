@@ -33,7 +33,7 @@ class UserTicket(object):
         ticket = Ticket.objects.filter(ticket=ticket).last()
         if not ticket:
             return None
-        if ticket.expired_time < datetime.datetime.now():
+        if ticket.expired_time.replace(tzinfo=None) < datetime.datetime.now():
             cls.delete_ticket(ticket)
             return None
         user = ticket.user

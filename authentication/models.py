@@ -1,13 +1,15 @@
 # coding: utf-8
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
 
-class User(models.Model):
+class User(AbstractBaseUser):
     password = models.CharField(max_length=128, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
     username = models.CharField('用户名', max_length=50, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     is_active = models.BooleanField('是否启用', default=True)
+    is_superuser = models.BooleanField('是否为超级用户', default=False)
     ROLE = (
         ('STUDENT', '学生'),
         ('ADMIN', '管理员'),
@@ -38,10 +40,10 @@ class UserInfo(models.Model):
 
 
 class Ticket(models.Model):
+    user = models.ForeignKey(User)
     ticket = models.CharField('用户ticket', max_length=100, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now=True)
     expired_time = models.DateTimeField('过期时间')
-    user = models.ForeignKey(User)
 
     class Meta:
         db_table = 'ticket'

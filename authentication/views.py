@@ -1,10 +1,10 @@
 # coding: utf-8
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
-from .models import User
+from .models import User, UserInfo
 from .functions import UserTicket
-from .serializers import UserSerializer, LoginSerializer, CreateAccountSerializer
+from .serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -37,7 +37,9 @@ class UserViewSet(viewsets.GenericViewSet):
         ret_data = {'msg': '退出登录成功'}
         return Response(ret_data)
 
-    @list_route()
-    def info(self, request):
-        user = request.user
-        return Response(self.get_serializer(instance=user).data)
+
+class UserInfoViewSet(mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      viewsets.GenericViewSet):
+    queryset = UserInfo.objects.all()
+    serializer_class = UserInfoSerializer

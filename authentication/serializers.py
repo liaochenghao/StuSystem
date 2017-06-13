@@ -36,12 +36,18 @@ class CreateAccountSerializer(serializers.Serializer):
                 need_complete_stu_info = True
             else:
                 need_complete_stu_info = False
-        return {'need_complete_stu_info': need_complete_stu_info}
+        return {'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id}
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserInfo
+        fields = ['id', 'name', 'email', 'wechat', 'school', 'wcampus']
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(min_length=6)
-    password = serializers.CharField(min_length=6)
+    username = serializers.CharField(min_length=6, max_length=30)
+    password = serializers.CharField(min_length=6, max_length=30)
 
     def validate(self, attrs):
         if not User.objects.filter(username=attrs['username']).exists():
@@ -55,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
     def create_ticket(self):
-        ticket = UserTicket.create_ticket(self.user.id)
+        ticket = UserTicket.create_ticket(self.user)
         self.user.last_login = datetime.datetime.now()
         self.user.save()
         return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket}
