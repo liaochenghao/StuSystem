@@ -1,2 +1,0 @@
-ERROR 2017-06-12 00:24:17,681 Invalid HTTP_HOST header: 'localhost:8002'. You may need to add 'localhost' to ALLOWED_HOSTS.
-ERROR 2017-06-12 00:24:17,986 Invalid HTTP_HOST header: 'localhost:8002'. You may need to add 'localhost' to ALLOWED_HOSTS.
