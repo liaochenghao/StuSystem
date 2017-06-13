@@ -38,6 +38,6 @@
 
 
 **用户模块**：
-- [登录接口](docs/authentication/user_login.md)      # 用户管理员网页登录
+- [登录接口](docs/authentication/user_login.md)             管理员网页登录
 - [检查用户账户信息](docs/authentication/check_account.md)
 - [获取用户信息](docs/authentication/user_info.md)
