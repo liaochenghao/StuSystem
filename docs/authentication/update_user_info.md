@@ -32,10 +32,10 @@
         "name": "yirantai",
         "email": "896275756@qq.com",
         "wechat": "flyerweixin",
-            "wschool": [
+        "wschool": [
             "加拿大",
             "美国"
-            ],
+        ],
         "wcampus": [
             "北京校区",
             "上海校区"
