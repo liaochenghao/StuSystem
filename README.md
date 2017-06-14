@@ -40,7 +40,7 @@
 ### API接口文档
 
 **通用接口**:
-- [获取校区列表](docs/campus/campus_list.md)
+- [获取校区列表](docs/common/campus_list.md)
 
 
 
