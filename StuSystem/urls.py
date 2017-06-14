@@ -18,4 +18,6 @@ from django.conf.urls import url, include
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('authentication.urls')),  # 登陆模块
+    url(r'^common/', include('common.urls'))          # 通用模块
+
 ]

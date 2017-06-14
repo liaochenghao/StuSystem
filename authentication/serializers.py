@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from weixin_server.client import client
 from .models import User, UserInfo
+from common.models import Campus
 from .functions import UserTicket
 import datetime
 import json
@@ -41,8 +42,8 @@ class CreateAccountSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    wcampus = serializers.ListField()
-    wschool = serializers.ListField()
+    wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    wschool = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserInfo
@@ -57,7 +58,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['wcampus'] = json.loads(instance.wcampus)
+        campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
+        data['wcampus'] = campus_list
         data['wschool'] = json.loads(instance.wschool)
         return data
 
