@@ -4,6 +4,7 @@ from weixin_server.client import client
 from .models import User, UserInfo
 from .functions import UserTicket
 import datetime
+import json
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -40,9 +41,25 @@ class CreateAccountSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    wcampus = serializers.ListField()
+    wschool = serializers.ListField()
+
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'school', 'wcampus']
+        fields = ['id', 'name', 'email', 'wechat', 'wschool', 'wcampus', 'cschool']
+
+    def validate(self, attrs):
+        if attrs.get('wschool'):
+            attrs['wschool'] = json.dumps(attrs['wschool'])
+        if attrs.get('wcampus'):
+            attrs['wcampus'] = json.dumps(attrs['wcampus'])
+        return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['wcampus'] = json.loads(instance.wcampus)
+        data['wschool'] = json.loads(instance.wschool)
+        return data
 
 
 class LoginSerializer(serializers.Serializer):
