@@ -1,24 +1,6 @@
 # coding: utf-8
 from django.db import models
-
-
-class CampusType(models.Model):
-    title = models.CharField('暑校名称', max_length=30, null=True)
-    campus_count = models.IntegerField('校区数量', null=True)
-    create_time = models.DateTimeField('创建时间', auto_now_add=True)
-
-    class Meta:
-        db_table = 'campus_type'
-
-
-class Campus(models.Model):
-    campus_type = models.ForeignKey(CampusType)
-    name = models.CharField('校区名称', max_length=30, null=True)
-    info = models.CharField('校区描述', max_length=255, null=True)
-    create_time = models.DateTimeField('创建时间', auto_now_add=True)
-
-    class Meta:
-        db_table = 'campus'
+from common.models import Campus
 
 
 class Project(models.Model):
@@ -34,6 +16,7 @@ class Project(models.Model):
     class Meta:
         db_table = 'project'
 
+
 class ProjectTuition(models.Model):
     project = models.ForeignKey(Project)
     apply_fee = models.FloatField('申请费', null=True)
@@ -42,6 +25,7 @@ class ProjectTuition(models.Model):
 
     class Meta:
         db_table = 'project_tuition'
+
 
 class Course(models.Model):
     project = models.ForeignKey(Project)
