@@ -47,7 +47,6 @@
 - [获取全局的enums](docs/common/global_enums.md)
 - [获取校区列表](docs/common/campus_list.md)
 
-```
 
 
 **用户模块**：
