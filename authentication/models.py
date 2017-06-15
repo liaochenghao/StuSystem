@@ -16,7 +16,7 @@ class User(AbstractBaseUser):
         ('MARKET', '市场部')
     )
     role = models.CharField(choices=ROLE, max_length=30)
-    USERNAME_FIELD = None
+    USERNAME_FIELD = 'username'
 
     class Meta:
         db_table = 'user'
