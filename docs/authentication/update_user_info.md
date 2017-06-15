@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PATCH   /auth/user/info/[user_id]/
+    PUT/PATCH   /auth/user/info/[user_id]/
 ```
 
 **请求参数**:

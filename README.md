@@ -40,8 +40,14 @@
 ### API接口文档
 
 **通用接口**:
+- [获取全局的enums](docs/common/global_enums.md)
 - [获取校区列表](docs/common/campus_list.md)
 
+```
+备注：获取全局的enums接口，用于获取需要用户填写时的可选项
+     示例： 若要填写用户的性别，只需要调用该接口，找到user_info_gender的key对应的value，即可所有的备选项，
+     根据用户的选择将相应的key值传给后端即可。详见接口文档
+```
 
 
 **用户模块**：
@@ -49,3 +55,5 @@
 - [检查用户账户信息](docs/authentication/check_account.md)
 - [获取用户信息](docs/authentication/user_info.md)
 - [更新用户信息](docs/authentication/update_user_info.md)
+- [获取用户档案信息](docs/authentication/user_personal_file.md)
+- [更新用户档案信息](docs/authentication/update_personal_file.md)

@@ -37,6 +37,19 @@ class UserInfo(models.Model):
     headimgurl = models.CharField('微信头像url', max_length=60, null=True)
     wx_name = models.CharField('微信昵称', max_length=30, null=True)
 
+    first_name = models.CharField('First Name', max_length=30, null=True)
+    last_name = models.CharField('Last name', max_length=30, null=True)
+    phone = models.CharField('联系手机', max_length=11)
+    GENDER = (
+        ('MALE', '男'),
+        ('FEMALE', '女')
+    )
+    gender = models.CharField('性别', choices=GENDER, max_length=30)
+    id_number = models.CharField('身份证号/护照号', max_length=30, unique=True, null=True)
+    major = models.CharField('专业', max_length=30, null=True)
+    graduate_year = models.CharField('毕业年份', max_length=30, null=True)
+    gpa = models.IntegerField('GPA')
+
     class Meta:
         db_table = 'student_info'
 

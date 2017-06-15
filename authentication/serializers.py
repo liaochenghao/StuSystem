@@ -1,6 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from weixin_server.client import client
+from utils.serializer_fields import VerboseChoiceField
 from .models import User, UserInfo
 from common.models import Campus
 from .functions import UserTicket
@@ -62,6 +63,16 @@ class UserInfoSerializer(serializers.ModelSerializer):
         data['wcampus'] = campus_list
         data['wschool'] = json.loads(instance.wschool)
         return data
+
+
+class PersonalFIleUserInfo(serializers.ModelSerializer):
+    gender = VerboseChoiceField(choices=UserInfo.GENDER)
+
+    class Meta:
+        model = UserInfo
+        fields = ['id', 'name', 'email', 'wechat', 'cschool', 'first_name', 'last_name', 'gender', 'id_number',
+                  'major', 'graduate_year', 'gpa']
+        read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
 
 
 class LoginSerializer(serializers.Serializer):
