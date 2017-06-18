@@ -2,9 +2,10 @@
 from rest_framework import serializers
 from weixin_server.client import client
 from utils.serializer_fields import VerboseChoiceField
-from .models import User, UserInfo, UserScoreDetail
+from authentication.models import User, UserInfo, UserScoreDetail
 from course.models import Campus
-from .functions import UserTicket
+from authentication.functions import UserTicket
+from coupons.models import Coupon
 import datetime
 import json
 

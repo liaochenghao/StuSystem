@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'authentication',
     'common',
-    'course'
+    'course',
+    'coupons'
 ]
 
 MIDDLEWARE = [

@@ -55,7 +55,6 @@ class Course(models.Model):
     code = models.CharField('课程代码', max_length=30, null=True)
     name = models.CharField('课程名称', max_length=30, null=True)
     max_num = models.IntegerField('最大容纳人数', null=True)
-    current_num = models.IntegerField('当前选课人数', null=True)
     credit = models.IntegerField('学分', null=True)
     professor = models.CharField('授课教授', max_length=30, null=True)
     course_time = models.DateTimeField('上课时间')

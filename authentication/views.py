@@ -1,11 +1,14 @@
 # coding: utf-8
+import random
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import exceptions
-from .models import User, UserInfo, UserScoreDetail
-from .functions import UserTicket
-from .serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \
+from authentication.models import User, UserInfo, UserScoreDetail
+from coupons.models import Coupon
+from common.models import SalesMan
+from authentication.functions import UserTicket
+from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \
     PersonalFIleUserInfoSerializer, UserScoreDetailSerializer
 
 
@@ -30,7 +33,7 @@ class UserViewSet(viewsets.GenericViewSet):
         res = serializer.check_account(serializer.validated_data)
         return Response(res)
 
-    @list_route()
+    @list_route(['put'])
     def logout(self, request):
         """ 退出登录
         """
@@ -38,6 +41,30 @@ class UserViewSet(viewsets.GenericViewSet):
         UserTicket.delete_ticket(ticket)
         ret_data = {'msg': '退出登录成功'}
         return Response(ret_data)
+
+    @detail_route()
+    def coupon_list(self, request, pk):
+        """
+        获取用户优惠券
+        :param request:
+        :return:
+        """
+        user = request.user
+        res = Coupon.objects.filter(usercoupon__user=user).values('id', 'code', 'amount', 'info', 'start_time', 'end_time')
+        return Response(res)
+
+    @detail_route()
+    def sales_man(self, request, pk):
+        """
+        获取销售人员信息
+        """
+        sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
+        res = None
+        if sales_man.count():
+            rand_int = random.randint(1, len(sales_man))
+            res = sales_man[rand_int - 1]
+            return Response(res)
+        return Response(res)
 
 
 class UserInfoViewSet(mixins.RetrieveModelMixin,

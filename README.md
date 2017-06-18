@@ -57,7 +57,8 @@
 - [更新用户档案信息](docs/authentication/update_personal_file.md)
 - [创建用户成绩单信息](docs/authentication/create_score_detail.md)
 - [获取用户成绩单详情](docs/authentication/get_score_detail.md)
-
+- [用户优惠券信息](docs/authentication/coupon_list.md)
+- [获取销售顾问二维码](docs/authentication/sales_man.md)
 
 **课程模块**:
 - [获取校区列表](docs/common/campus_list.md)
