@@ -2,11 +2,11 @@
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework import  exceptions
-from .models import User, UserInfo
+from rest_framework import exceptions
+from .models import User, UserInfo, UserScoreDetail
 from .functions import UserTicket
 from .serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \
-    PersonalFIleUserInfo
+    PersonalFIleUserInfoSerializer, UserScoreDetailSerializer
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -48,13 +48,13 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
 
     def get_object(self):
         user = self.request.user
-        if not self.queryset.filter(user=user):
-            raise exceptions.ValidationError('暂未找到该用户的用户信息')
+        if not self.queryset.filter(user=user).exists():
+            raise exceptions.ValidationError('暂未找到该用户的用户信息。')
         instance = self.queryset.get(user=user)
         return instance
 
     @detail_route(methods=['GET', 'PUT', 'PATCH'],
-                  serializer_class=PersonalFIleUserInfo)
+                  serializer_class=PersonalFIleUserInfoSerializer)
     def personal_file(self, request, pk):
         instance = self.get_object()
         if request.method != 'GET':
@@ -64,3 +64,17 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             self.perform_update(serializer)
             instance = self.get_object()
         return Response(self.get_serializer(instance).data)
+
+
+class UserScoreDetailViewSet(mixins.CreateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    queryset = UserScoreDetail.objects.all()
+    serializer_class = UserScoreDetailSerializer
+
+    def get_object(self):
+        user = self.request.user
+        if not self.queryset.filter(user=user).exists():
+            raise exceptions.ValidationError('暂未找到该用户的成绩单详情，请先创建。')
+        instance = self.queryset.get(user=user)
+        return instance

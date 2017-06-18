@@ -62,3 +62,15 @@ class Ticket(models.Model):
 
     class Meta:
         db_table = 'ticket'
+
+
+class UserScoreDetail(models.Model):
+    user = models.ForeignKey(User)
+    department = models.CharField('收件部门', max_length=30)
+    phone = models.CharField('联系电话', max_length=30)
+    country = models.CharField('收件国家', max_length=30)
+    post_code = models.CharField('邮编', max_length=30)
+    address = models.CharField('详细地址', max_length=60)
+
+    class Meta:
+        db_table = 'student_score_detail'

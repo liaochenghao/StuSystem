@@ -2,8 +2,8 @@
 from rest_framework import serializers
 from weixin_server.client import client
 from utils.serializer_fields import VerboseChoiceField
-from .models import User, UserInfo
-from common.models import Campus
+from .models import User, UserInfo, UserScoreDetail
+from course.models import Campus
 from .functions import UserTicket
 import datetime
 import json
@@ -65,7 +65,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         return data
 
 
-class PersonalFIleUserInfo(serializers.ModelSerializer):
+class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
 
     class Meta:
@@ -73,6 +73,16 @@ class PersonalFIleUserInfo(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'wechat', 'cschool', 'first_name', 'last_name', 'gender', 'id_number',
                   'major', 'graduate_year', 'gpa']
         read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
+
+
+class UserScoreDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserScoreDetail
+        fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
