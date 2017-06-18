@@ -56,6 +56,5 @@
 - [更新用户信息](docs/authentication/update_user_info.md)
 - [获取用户档案信息](docs/authentication/user_personal_file.md)
 - [更新用户档案信息](docs/authentication/update_personal_file.md)
-
 - [创建用户成绩单信息](docs/authentication/create_score_detail.md)
 - [获取用户成绩单详情](docs/authentication/get_score_detail.md)
