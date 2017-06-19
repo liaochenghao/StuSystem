@@ -65,7 +65,6 @@
 - [获取暑校类型列表](docs/course/campus_type_list.md)
 - [获取暑校详情](docs/course/campus_type_detail.md)
 - [更新暑校类型](docs/course/campus_type_update.md)
-
 - [创建校区](docs/course/campus_create.md)
 - [获取校区列表](docs/course/campus_list.md)
 - [获取校区详情](docs/course/campus_detail.md)
