@@ -6,11 +6,14 @@ class CampusType(models.Model):
     """
     校区类型表
     """
-    title = models.CharField('校区类型', max_length=30)
+    title = models.CharField('暑校类型', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now=True)
 
     class Meta:
         db_table = "campus_type"
+
+    def __str__(self):
+        return self.title
 
 
 class Campus(models.Model):
@@ -25,12 +28,16 @@ class Campus(models.Model):
     class Meta:
         db_table = "campus"
 
+    def __str__(self):
+        return self.name
+
 
 class Project(models.Model):
+    """项目表"""
     campus = models.ForeignKey(Campus)
     name = models.CharField('项目名称', max_length=30, null=True)
-    start_date = models.DateTimeField('开始时间')
-    end_date = models.DateTimeField('结束时间')
+    start_date = models.DateField('开始时间')
+    end_date = models.DateField('结束时间')
     address = models.CharField('上课地点', max_length=30, null=True)
     max_num = models.IntegerField('最大选课数量', null=True)
     info = models.CharField('项目描述', max_length=255, null=True)
@@ -58,7 +65,7 @@ class Course(models.Model):
     credit = models.IntegerField('学分', null=True)
     professor = models.CharField('授课教授', max_length=30, null=True)
     course_time = models.DateTimeField('上课时间')
-    course_addr = models.CharField('上课地点', max_length=30, null=True)
+    address = models.CharField('上课地点', max_length=30, null=True)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
     class Meta:

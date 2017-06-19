@@ -61,4 +61,8 @@
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 
 **课程模块**:
+- [创建暑校类型](docs/course/campus_type_create.md)
+- [获取暑校类型列表](docs/course/campus_type_list.md)
+- [获取暑校详情](docs/course/campus_type_detail.md)
+- [更新暑校类型](docs/course/campus_type_update.md)
 - [获取校区列表](docs/common/campus_list.md)
