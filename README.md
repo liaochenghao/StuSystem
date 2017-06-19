@@ -60,7 +60,7 @@
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 
-**课程模块**:
+**校区模块**:
 - [创建暑校类型](docs/course/campus_type_create.md)
 - [获取暑校类型列表](docs/course/campus_type_list.md)
 - [获取暑校详情](docs/course/campus_type_detail.md)
@@ -69,3 +69,9 @@
 - [获取校区列表](docs/course/campus_list.md)
 - [获取校区详情](docs/course/campus_detail.md)
 - [更新校区](docs/course/campus_update.md)
+
+**项目模块**：
+- [创建项目](docs/project/project_create.md)
+- [项目列表](docs/project/project_list.md)
+- [项目详情](docs/project/project_detail.md)
+- [项目更新](docs/project/project_update.md)
