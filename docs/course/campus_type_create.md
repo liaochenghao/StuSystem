@@ -18,16 +18,9 @@
     "code": 0,
     "msg": "请求成功",
     "data": {
-        "count": 3,
-        "next": null,
-        "previous": null,
-        "results": [
-            {
-                "id": 1,
-                "title": "北美暑校",        str     暑校类型名称
-                "create_time": "2017-06-14T23:38:14Z"
-            }
-        ]
+        "id": 4,
+        "title": "欧洲暑校",
+        "create_time": "2017-06-19T14:34:32.826399Z"
     },
     "field_name": ""
 }
