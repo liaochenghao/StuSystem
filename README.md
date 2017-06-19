@@ -77,7 +77,7 @@
 - [项目更新](docs/project/project_update.md)
 
 **课程模块**:
-- [创建课程]
-- [课程列表]
-- [课程详情]
-- [课程更新]
+- [创建课程](docs/course/course_create.md)
+- [课程列表](docs/course/course_list.md)
+- [课程详情](docs/course/course_detail.md)
+- [课程更新](docs/course/course_update.md)
