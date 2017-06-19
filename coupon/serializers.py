@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from .models import Coupon, UserCoupon
 
+
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
@@ -14,6 +15,7 @@ class CouponSerializer(serializers.ModelSerializer):
     		is_active=self.is_active)
     	coupon.save()
     	return {'code': 0, 'msg': "请求成功"}
+
 
 class UserCouponSerializer(serializers.ModelSerializer):
     class Meta:
