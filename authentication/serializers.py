@@ -5,6 +5,7 @@ from utils.serializer_fields import VerboseChoiceField
 from authentication.models import User, UserInfo, UserScoreDetail
 from course.models import Campus
 from authentication.functions import UserTicket
+from common.models import SalesManUser, SalesMan
 from coupon.models import Coupon
 import datetime
 import json
@@ -84,6 +85,24 @@ class UserScoreDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class SalesManUserSerializer(serializers.Serializer):
+    user = serializers.IntegerField()
+    sales_man = serializers.IntegerField()
+
+    def validate(self, attrs):
+        user = attrs['user']
+        if SalesManUser.objects.filter(user=user).exists():
+            raise serializers.ValidationError('已有关联的销售顾问')
+        if not SalesMan.objects.filter(id=attrs['sales_man']).exists():
+            raise serializers.ValidationError('销售人员不存在')
+        return attrs
+
+    def create(self, validated_data):
+        instance = SalesManUser.objects.create(**{'user_id': validated_data['user'],
+                                                  'sales_man_id': validated_data['sales_man']})
+        return instance
 
 
 class LoginSerializer(serializers.Serializer):

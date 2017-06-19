@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.db import models
+from authentication.models import User
 
 
 class SalesMan(models.Model):
@@ -13,3 +14,18 @@ class SalesMan(models.Model):
 
     class Meta:
         db_table = 'sales_man'
+
+    def __str__(self):
+        return self.name
+
+
+class SalesManUser(models.Model):
+    """
+    销售人员与User关系表
+    """
+    user = models.ForeignKey(User)
+    sales_man = models.ForeignKey(SalesMan)
+    create_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'sales_man_user'

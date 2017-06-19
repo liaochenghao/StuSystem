@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from rest_framework import exceptions
 from authentication.models import User, UserInfo, UserScoreDetail
 from coupon.models import Coupon
-from common.models import SalesMan
+from common.models import SalesMan, SalesManUser
 from authentication.functions import UserTicket
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \
-    PersonalFIleUserInfoSerializer, UserScoreDetailSerializer
+    PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -53,18 +53,29 @@ class UserViewSet(viewsets.GenericViewSet):
         res = Coupon.objects.filter(usercoupon__user=user).values('id', 'code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 
-    @detail_route()
+    @detail_route(['GET', 'POST'], serializer_class=SalesManUserSerializer)
     def sales_man(self, request, pk):
         """
         获取销售人员信息
         """
-        sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
-        res = None
-        if sales_man.count():
-            rand_int = random.randint(1, len(sales_man))
-            res = sales_man[rand_int - 1]
+        user = request.user
+        if request.method == 'GET':
+            if not SalesMan.objects.filter(salesmanuser__user=user).exists():
+                sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
+                res = None
+                if sales_man.count():
+                    rand_int = random.randint(1, len(sales_man))
+                    res = sales_man[rand_int - 1]
+            else:
+                res = SalesMan.objects.filter(salesmanuser__user=user).first().values('id', 'name', 'email', 'qr_code')
             return Response(res)
-        return Response(res)
+        else:
+            data = request.data
+            data['user'] = user.id
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'msg': '操作成功'})
 
 
 class UserInfoViewSet(mixins.RetrieveModelMixin,
