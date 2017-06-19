@@ -1,0 +1,100 @@
+diff --git a/coupons/__init__.py b/coupons/__init__.py
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/coupons/functions.py b/coupons/functions.py
+deleted file mode 100644
+index 576f56f..0000000
+--- a/coupons/functions.py
++++ /dev/null
+@@ -1 +0,0 @@
+-# coding: utf-8
+\ No newline at end of file
+diff --git a/coupons/models.py b/coupons/models.py
+deleted file mode 100644
+index fff1933..0000000
+--- a/coupons/models.py
++++ /dev/null
+@@ -1,31 +0,0 @@
+-# coding: utf-8
+-from django.db import models
+-from authentication.models import User
+-
+-
+-class Coupon(models.Model):
+-    """
+-    优惠券model
+-    """
+-    code = models.CharField("优惠码", max_length=30)
+-    amount = models.IntegerField("优惠金额")
+-    info = models.CharField("优惠说明", max_length=30)
+-    create_time = models.DateTimeField(auto_now=True)
+-    start_time = models.DateTimeField()
+-    end_time = models.DateTimeField()
+-    max_num = models.IntegerField('优惠券最大数')
+-    is_active = models.BooleanField('是否启用', default=True)
+-
+-    class Meta:
+-        db_table = "coupon"
+-
+-
+-class UserCoupon(models.Model):
+-    """
+-    User和优惠券关系表
+-    """
+-    user = models.ForeignKey(User)
+-    coupon = models.ForeignKey(Coupon)
+-
+-    class Meta:
+-        db_table = "user_coupon"
+\ No newline at end of file
+diff --git a/coupons/serializers.py b/coupons/serializers.py
+deleted file mode 100644
+index 8a6bcdb..0000000
+--- a/coupons/serializers.py
++++ /dev/null
+@@ -1,9 +0,0 @@
+-# coding: utf-8
+-from rest_framework import serializers
+-from coupons.models import Coupon
+-
+-
+-class CouponSerializer(serializers.ModelSerializer):
+-    class Meta:
+-        model = Coupon
+-        fields = ['id', 'code', 'amount', 'info', 'start_time', 'end_time']
+\ No newline at end of file
+diff --git a/coupons/urls.py b/coupons/urls.py
+deleted file mode 100644
+index b4488f2..0000000
+--- a/coupons/urls.py
++++ /dev/null
+@@ -1,8 +0,0 @@
+-# coding: utf-8
+-from rest_framework.routers import SimpleRouter
+-from coupons.views import CouponViewSet
+-
+-router = SimpleRouter()
+-router.register('coupon', CouponViewSet)
+-
+-urlpatterns = router.urls
+\ No newline at end of file
+diff --git a/coupons/views.py b/coupons/views.py
+deleted file mode 100644
+index 2ec052d..0000000
+--- a/coupons/views.py
++++ /dev/null
+@@ -1,13 +0,0 @@
+-# coding: utf-8
+-from rest_framework import mixins, viewsets
+-from coupons.models import Coupon
+-from coupons.serializers import CouponSerializer
+-
+-
+-class CouponViewSet(mixins.CreateModelMixin,
+-                    mixins.RetrieveModelMixin,
+-                    mixins.UpdateModelMixin,
+-                    mixins.ListModelMixin,
+-                    viewsets.GenericViewSet):
+-    queryset = Coupon.objects.all()
+-    serializer_class = CouponSerializer
+\ No newline at end of file
