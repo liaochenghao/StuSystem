@@ -8,7 +8,7 @@ class Coupon(models.Model):
     优惠券model
     """
     code = models.CharField("优惠码", max_length=30)
-    amount = models.DecimalField("优惠金额")
+    amount = models.DecimalField("优惠金额", decimal_places=2, max_digits=5)
     info = models.CharField("优惠说明", max_length=30)
     create_time = models.DateTimeField(auto_now=True)
     start_time = models.DateTimeField()

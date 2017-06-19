@@ -61,17 +61,23 @@
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 
 **校区模块**:
-- [创建暑校类型](docs/course/campus_type_create.md)
-- [获取暑校类型列表](docs/course/campus_type_list.md)
-- [获取暑校详情](docs/course/campus_type_detail.md)
-- [更新暑校类型](docs/course/campus_type_update.md)
-- [创建校区](docs/course/campus_create.md)
-- [获取校区列表](docs/course/campus_list.md)
-- [获取校区详情](docs/course/campus_detail.md)
-- [更新校区](docs/course/campus_update.md)
+- [创建暑校类型](docs/campus/campus_type_create.md)
+- [获取暑校类型列表](docs/campus/campus_type_list.md)
+- [获取暑校详情](docs/campus/campus_type_detail.md)
+- [更新暑校类型](docs/campus/campus_type_update.md)
+- [创建校区](docs/campus/campus_create.md)
+- [获取校区列表](docs/campus/campus_list.md)
+- [获取校区详情](docs/campus/campus_detail.md)
+- [更新校区](docs/campus/campus_update.md)
 
 **项目模块**：
 - [创建项目](docs/project/project_create.md)
 - [项目列表](docs/project/project_list.md)
 - [项目详情](docs/project/project_detail.md)
 - [项目更新](docs/project/project_update.md)
+
+**课程模块**:
+- [创建课程]
+- [课程列表]
+- [课程详情]
+- [课程更新]

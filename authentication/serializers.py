@@ -5,7 +5,7 @@ from utils.serializer_fields import VerboseChoiceField
 from authentication.models import User, UserInfo, UserScoreDetail
 from course.models import Campus
 from authentication.functions import UserTicket
-from coupons.models import Coupon
+from coupon.models import Coupon
 import datetime
 import json
 

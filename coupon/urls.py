@@ -1,8 +1,8 @@
 # coding: utf-8
 from rest_framework.routers import DefaultRouter
-from coupon import views
+from coupon.views import CouponViewSet
 
 router = DefaultRouter()
-router.register('coupon', UserViewSet)
+router.register('coupon', CouponViewSet)
 
 urlpatterns = router.urls

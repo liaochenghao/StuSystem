@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'common',
     'course',
-    'coupons'
+    'coupon'
 ]
 
 MIDDLEWARE = [

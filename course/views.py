@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import mixins, viewsets
-from course.models import Project, Campus, CampusType
-from course.serializers import ProjectSerializer, CampusSerializer, CampusTypeSerializer
+from course.models import Project, Campus, CampusType, Course
+from course.serializers import ProjectSerializer, CampusSerializer, CampusTypeSerializer, CourseSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -36,3 +36,8 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+
+class CourseViewSet(BaseViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer

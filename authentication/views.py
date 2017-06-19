@@ -5,7 +5,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import exceptions
 from authentication.models import User, UserInfo, UserScoreDetail
-from coupons.models import Coupon
+from coupon.models import Coupon
 from common.models import SalesMan
 from authentication.functions import UserTicket
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \

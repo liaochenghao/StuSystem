@@ -46,6 +46,9 @@ class Project(models.Model):
     class Meta:
         db_table = 'project'
 
+    def __str__(self):
+        return self.name
+
 
 class ProjectTuition(models.Model):
     project = models.ForeignKey(Project)
@@ -59,14 +62,18 @@ class ProjectTuition(models.Model):
 
 class Course(models.Model):
     project = models.ForeignKey(Project)
-    code = models.CharField('课程代码', max_length=30, null=True)
-    name = models.CharField('课程名称', max_length=30, null=True)
-    max_num = models.IntegerField('最大容纳人数', null=True)
-    credit = models.IntegerField('学分', null=True)
-    professor = models.CharField('授课教授', max_length=30, null=True)
-    course_time = models.DateTimeField('上课时间')
-    address = models.CharField('上课地点', max_length=30, null=True)
+    course_code = models.CharField('课程代码', max_length=30, unique=True)
+    name = models.CharField('课程名称', max_length=30)
+    max_num = models.IntegerField('最大容纳人数')
+    credit = models.IntegerField('学分')
+    professor = models.CharField('授课教授', max_length=30)
+    start_time = models.DateTimeField('上课开始时间')
+    end_time = models.DateTimeField('上课结束时间')
+    address = models.CharField('上课地点', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
     class Meta:
         db_table = 'course'
+
+    def __str__(self):
+        return self.name
