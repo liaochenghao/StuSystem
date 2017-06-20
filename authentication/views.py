@@ -71,7 +71,7 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(res)
         else:
             data = request.data
-            data['user'] = user.id
+            data['user'] = user
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
