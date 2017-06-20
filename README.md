@@ -83,3 +83,7 @@
 - [课程列表](docs/course/course_list.md)
 - [课程详情](docs/course/course_detail.md)
 - [课程更新](docs/course/course_update.md)
+
+**订单模块**:
+- [创建订单](docs/order/order_create.md)
+- [订单详情](docs/order/order_detail.md)

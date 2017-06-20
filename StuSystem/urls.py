@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^common/', include('common.urls')),        # 通用模块
     url(r'^coupon/', include('coupon.urls')),       # 优惠券模块
     url(r'^course/', include('course.urls')),        # 课程模块
+    url(r'^order/', include('order.urls'))          # 订单模块
 ]
