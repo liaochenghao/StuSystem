@@ -15,6 +15,10 @@
     "address":  str        上课地点     最大长度 30
     "max_num":  int        最大选课人数
     "info":     str        项目描述     最大长度255
+    "apply_fee":  float    申请费
+    "course_num": int      课程数量
+    "apply_fee": 2000.0,        float  申请奋勇
+    "course_num": 3             int    课程数量
 }
 ```
 

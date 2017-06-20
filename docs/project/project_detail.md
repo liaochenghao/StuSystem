@@ -36,6 +36,8 @@
         "max_num": 150,                 int    最大选课人数
         "info": "这是项目须知，详情联系18608146540",       str   项目描述
         "create_time": "2017-06-19T14:09:43Z"
+        "apply_fee": 2000.0,        float  申请奋勇
+        "course_num": 3             int    课程数量
     }
     "field_name": ""
 }

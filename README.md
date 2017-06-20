@@ -70,6 +70,7 @@
 - [获取校区列表](docs/campus/campus_list.md)
 - [获取校区详情](docs/campus/campus_detail.md)
 - [更新校区](docs/campus/campus_update.md)
+- [获取该校区所有项目](docs/campus/all_projects.md)
 
 **项目模块**：
 - [创建项目](docs/project/project_create.md)

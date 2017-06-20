@@ -1,5 +1,7 @@
 # coding: utf-8
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course
 from course.serializers import ProjectSerializer, CampusSerializer, CampusTypeSerializer, CourseSerializer
 
@@ -30,6 +32,12 @@ class CampusViewSet(BaseViewSet):
     """
     queryset = Campus.objects.all()
     serializer_class = CampusSerializer
+
+    @detail_route()
+    def all_projects(self, request, pk):
+        instance = self.get_object()
+        all_projects = instance.project_set.all()
+        return Response(ProjectSerializer(all_projects, many=True).data)
 
 
 class ProjectViewSet(BaseViewSet):

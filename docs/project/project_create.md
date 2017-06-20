@@ -8,13 +8,15 @@
 **请求参数**:
 ```
 {
-    "campus":   int    校区id
-    "name":     str    项目名称     最大长度30
-    "start_date":  str     项目开始时间
-    "end_date": str        项目结束时间
-    "address":  str        上课地点     最大长度 30
-    "max_num":  int        最大选课人数
-    "info":     str        项目描述     最大长度255
+    "campus":   int    必填  校区id
+    "name":     str    必填  项目名称     最大长度30
+    "start_date":  str    必填  项目开始时间
+    "end_date": str       必填  项目结束时间
+    "address":  str       必填  上课地点     最大长度 30
+    "info":     str       必填  项目描述     最大长度255
+    "apply_fee":  float   选填  申请费
+    "course_num": int     必填  课程数量
+    ""
 }
 ```
 
@@ -43,6 +45,8 @@
         "max_num": 150,                 int    最大选课人数
         "info": "这是项目须知，详情联系18608146540",       str   项目描述
         "create_time": "2017-06-19T14:09:43Z"
+        "apply_fee": 2000.0,        float  申请奋勇
+        "course_num": 3             int    课程数量
     }
     "field_name": ""
 }
