@@ -1,7 +1,8 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, Campus, CampusType, Course
+from course.models import Project, Campus, CampusType, Course, UserCourse
+from order.models import Order
 
 
 class CampusTypeSerializer(serializers.ModelSerializer):
@@ -48,3 +49,41 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['course_code'] = ''.join(random.sample(string.digits + string.ascii_uppercase, 10))
         return super().create(validated_data)
+
+
+class CurrentCourseProjectSerializer(serializers.Serializer):
+    project = serializers.IntegerField()
+
+    def validate(self, attrs):
+        if not Project.objects.filter(id=attrs['project']).exists():
+            raise serializers.ValidationError('项目不存在')
+
+        if not Order.objects.filter(user=self.context['request'].user, project_id=attrs['project'],
+                                    ).exists():
+            raise serializers.ValidationError('订单不存在')
+
+        if not Order.objects.filter(user=self.context['request'].user, project_id=attrs['project'],
+                                    status='PAYED').exists():
+            raise serializers.ValidationError('订单未支付')
+        return attrs
+
+
+class CreateUserCourseSerializer(serializers.Serializer):
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course', 'project', 'user']
+
+    def validate(self, attrs):
+        if not Order.objects.filter(user=attrs['user'], project=attrs['project'],
+                                    ).exists():
+            raise serializers.ValidationError('订单不存在')
+
+        if not Order.objects.filter(user=attrs['user'], project=attrs['project'],
+                                    status='PAYED').exists():
+            raise serializers.ValidationError('订单未支付')
+
+        if UserCourse.objects.filter(user=attrs['user'], project=attrs['project'],
+                                     course=attrs['course']).exists():
+            raise serializers.ValidationError('已选该课程，不能重复选择')
+        return attrs

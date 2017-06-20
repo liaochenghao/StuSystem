@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.db import models
+from authentication.models import User
 
 
 class CampusType(models.Model):
@@ -68,3 +69,14 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserCourse(models.Model):
+    """用户选课表"""
+    user = models.ForeignKey(User)
+    course = models.ForeignKey(Course, unique=True)
+    project = models.ForeignKey(Project)
+    create_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'user_course'
