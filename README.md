@@ -77,6 +77,7 @@
 - [项目列表](docs/project/project_list.md)
 - [项目详情](docs/project/project_detail.md)
 - [项目更新](docs/project/project_update.md)
+- [我的项目](docs/project/my_project.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)
@@ -86,6 +87,7 @@
 - [获取当前已选课数量和, 课程总数及课程信息](docs/course/current_courses_info.md)
 - [学生选课](docs/course/create_user_courses.md)
 - [我的课程表](docs/course/my_courses.md)
+- [我的成绩](docs/course/my_scores.md)
 
 **订单模块**:
 - [创建订单](docs/order/order_create.md)

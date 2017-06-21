@@ -77,6 +77,9 @@ class UserCourse(models.Model):
     course = models.ForeignKey(Course)
     project = models.ForeignKey(Project)
     create_time = models.DateTimeField(auto_now=True)
+    score = models.IntegerField('课程成绩分数', default=0)
+    score_grade = models.CharField('课程等级', max_length=30, null=True)
+    reporting_time = models.DateTimeField('成绩录入时间', null=True)
 
     class Meta:
         db_table = 'user_course'

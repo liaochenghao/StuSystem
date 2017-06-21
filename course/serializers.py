@@ -37,7 +37,15 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class MyProjectsSerializer(ProjectSerializer):
-    pass
+    def to_representation(self, instance):
+        user = self.context['user']
+        data = super().to_representation(instance)
+        order_info = instance.order_set.filter(user=user, project=instance).first()
+        data['order_status'] = {'key': order_info.status, 'verbose': dict(Order.STATUS).get(order_info.status)}
+        data['order_remark'] = order_info.remark
+        my_courses = Course.objects.filter(usercourse__project=instance, usercourse__user=user)
+        data['my_courses'] = CourseSerializer(my_courses, many=True).data
+        return data
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -109,3 +117,11 @@ class MyCourseSerializer(serializers.ModelSerializer):
         data['current_course_count'] = current_course_count
         data['my_courses'] = my_courses
         return data
+
+
+class MyScoreSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course', 'score', 'score_grade']
