@@ -26,6 +26,7 @@ class Order(models.Model):
     standard_fee = models.FloatField('标准费用')
     pay_fee = models.FloatField('支付费用')
     create_time = models.DateTimeField(auto_now=True)
+    remark = models.CharField('订单备注', max_length=255, null=True)
 
     class Meta:
         db_table = 'order'

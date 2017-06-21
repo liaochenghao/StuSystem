@@ -36,6 +36,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         return data
 
 
+class MyProjectsSerializer(ProjectSerializer):
+    pass
+
+
 class CourseSerializer(serializers.ModelSerializer):
     start_time = serializers.DateTimeField()
     end_time = serializers.DateTimeField()

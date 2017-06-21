@@ -3,7 +3,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course, UserCourse
-from course.serializers import ProjectSerializer, CampusSerializer, CampusTypeSerializer, \
+from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, MyCourseSerializer
 
 
@@ -45,6 +45,12 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    @list_route(serializer_class=MyProjectsSerializer)
+    def my_projects(self, request):
+        projects = self.queryset.filter(order__user=request.user)
+        data = self.serializer_class(projects, many=True).data
+        return Response(data)
 
 
 class CourseViewSet(BaseViewSet):
