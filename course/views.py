@@ -4,7 +4,7 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course, UserCourse
 from course.serializers import ProjectSerializer, CampusSerializer, CampusTypeSerializer, \
-    CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer
+    CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, MyCourseSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -82,3 +82,11 @@ class CourseViewSet(BaseViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'msg': '操作成功'})
+
+    @list_route(serializer_class=MyCourseSerializer)
+    def my_courses(self, request):
+        """我的课程表"""
+        user = request.user
+        data = self.serializer_class(Project.objects.filter(order__user=user, order__status='PAYED'), many=True,
+                                     context={'user': user}).data
+        return Response(data)

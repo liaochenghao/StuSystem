@@ -88,3 +88,20 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
+
+
+class MyCourseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        courses = Course.objects.filter(usercourse__project=instance)
+        current_course_count = UserCourse.objects.filter(user=self.context['user'], project_id=instance).count()
+        my_courses = CourseSerializer(courses, many=True).data
+        data['course_count'] = instance.course_num
+        data['current_course_count'] = current_course_count
+        data['my_courses'] = my_courses
+        return data

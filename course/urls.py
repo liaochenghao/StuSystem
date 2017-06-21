@@ -7,5 +7,5 @@ router = SimpleRouter()
 router.register('project', ProjectViewSet)
 router.register('campus', CampusViewSet)
 router.register('campus_type', CampusTypeViewSet)
-router.register('course', CourseViewSet)
+router.register('', CourseViewSet)
 urlpatterns = router.urls
