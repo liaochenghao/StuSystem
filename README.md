@@ -83,6 +83,8 @@
 - [课程列表](docs/course/course_list.md)
 - [课程详情](docs/course/course_detail.md)
 - [课程更新](docs/course/course_update.md)
+- [获取当前已选课数量和, 课程总数及课程信息](docs/course/current_courses_info.md)
+- [学生选课](docs/course/create_user_courses.md)
 
 **订单模块**:
 - [创建订单](docs/order/order_create.md)

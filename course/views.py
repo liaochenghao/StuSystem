@@ -51,36 +51,34 @@ class CourseViewSet(BaseViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    @list_route()
-    def get_current_course_count(self, request):
-        """获取当前已选课数量"""
+    @list_route(serializer_class=CurrentCourseProjectSerializer)
+    def current_courses_info(self, request):
+        """获取当前已选课数量和, 课程总数及课程信息"""
         user = request.user
-        serializer = CurrentCourseProjectSerializer(data=self.request.query_params)
+        data = self.request.query_params.dict()
+        data['user'] = user.id
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         project = serializer.validated_data['project']
         current_course_count = UserCourse.objects.filter(user=user, project_id=project).count()
         course_count = Project.objects.get(id=project).course_num
-        return Response({'course_count': course_count, 'current_course_count': current_course_count})
-
-    @list_route()
-    def current_courses(self, request):
-        """
-        当前项目可选课程
-        """
-        serializer = CurrentCourseProjectSerializer(data=self.request.query_params)
-        serializer.is_valid(raise_exception=True)
-        project = serializer.validated_data['project']
         courses = self.queryset.filter(project_id=project)
-        return Response(self.serializer_class(courses, many=True).data)
+        data = CourseSerializer(courses, many=True).data
+        res = {
+            'course_count': course_count,
+            'current_course_count': current_course_count,
+            'course_info': data
+        }
+        return Response(res)
 
     @list_route(['POST'], serializer_class=CreateUserCourseSerializer)
-    def create_user_course(self, request):
+    def create_user_courses(self, request):
         """
         学生选课
         """
         data = request.data
-        data['user'] = request.user
-        serializer = CurrentCourseProjectSerializer(data=data)
+        data['user'] = request.user.id
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'msg': '操作成功'})

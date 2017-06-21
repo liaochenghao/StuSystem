@@ -74,7 +74,7 @@ class Course(models.Model):
 class UserCourse(models.Model):
     """用户选课表"""
     user = models.ForeignKey(User)
-    course = models.ForeignKey(Course, unique=True)
+    course = models.ForeignKey(Course)
     project = models.ForeignKey(Project)
     create_time = models.DateTimeField(auto_now=True)
 

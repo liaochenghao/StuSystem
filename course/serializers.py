@@ -53,22 +53,23 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CurrentCourseProjectSerializer(serializers.Serializer):
     project = serializers.IntegerField()
+    user = serializers.IntegerField()
 
     def validate(self, attrs):
         if not Project.objects.filter(id=attrs['project']).exists():
             raise serializers.ValidationError('项目不存在')
 
-        if not Order.objects.filter(user=self.context['request'].user, project_id=attrs['project'],
+        if not Order.objects.filter(user_id=attrs['user'], project_id=attrs['project'],
                                     ).exists():
             raise serializers.ValidationError('订单不存在')
 
-        if not Order.objects.filter(user=self.context['request'].user, project_id=attrs['project'],
+        if not Order.objects.filter(user_id=attrs['user'], project_id=attrs['project'],
                                     status='PAYED').exists():
             raise serializers.ValidationError('订单未支付')
         return attrs
 
 
-class CreateUserCourseSerializer(serializers.Serializer):
+class CreateUserCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
