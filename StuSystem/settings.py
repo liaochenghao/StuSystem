@@ -40,11 +40,25 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'authentication',
+	'corsheaders',
     'common',
     'course',
     'coupon',
     'order'
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = '^.*$'
+CORS_ALLOW_METHODS = (
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ('Klicen-Agent', 'Content-Type', 'X-Requested-With',)
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
