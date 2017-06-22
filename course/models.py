@@ -63,6 +63,7 @@ class Course(models.Model):
     end_time = models.DateTimeField('上课结束时间')
     address = models.CharField('上课地点', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    syllabus = models.FileField('课程大纲', upload_to='course/syllabus', null=True)
 
     class Meta:
         db_table = 'course'

@@ -56,7 +56,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'project', 'course_code', 'name', 'max_num', 'credit', 'professor', 'start_time', 'end_time',
-                  'create_time', 'address']
+                  'create_time', 'address', 'syllabus']
 
     def create(self, validated_data):
         validated_data['course_code'] = ''.join(random.sample(string.digits + string.ascii_uppercase, 10))
