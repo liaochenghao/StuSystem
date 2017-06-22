@@ -88,6 +88,8 @@
 - [学生选课](docs/course/create_user_courses.md)
 - [我的课程表](docs/course/my_courses.md)
 - [我的成绩](docs/course/my_scores.md)
+- [审课图片上传](docs/course/upload_confirm.md)
+
 
 **订单模块**:
 - [创建订单](docs/order/order_create.md)

@@ -81,6 +81,7 @@ class UserCourse(models.Model):
     score = models.IntegerField('课程成绩分数', default=0)
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
+    confirm_photo = models.ImageField('审课照片', upload_to='course/confirm_photo', null=True)
 
     class Meta:
         db_table = 'user_course'

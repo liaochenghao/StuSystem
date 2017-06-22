@@ -2,6 +2,7 @@
 import random, string
 from rest_framework import serializers
 from course.models import Project, Campus, CampusType, Course, UserCourse
+from drf_extra_fields.fields import Base64ImageField
 from order.models import Order
 
 
@@ -125,3 +126,7 @@ class MyScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
         fields = ['id', 'course', 'score', 'score_grade']
+
+
+class ConfirmPhotoSerializer(serializers.Serializer):
+    confirm_photo = Base64ImageField()

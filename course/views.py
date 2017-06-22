@@ -4,7 +4,8 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course, UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
-    CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, MyCourseSerializer, MyScoreSerializer
+    CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
+    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -104,3 +105,17 @@ class CourseViewSet(BaseViewSet):
         user_courses = UserCourse.objects.filter(user=user)
         data = self.serializer_class(user_courses, many=True).data
         return Response(data)
+
+    @detail_route(['PUT'], serializer_class=ConfirmPhotoSerializer)
+    def upload_confirm_photo(self, request, pk):
+        """
+        上传审课照片
+        :param request:
+        :param pk:
+        :return:
+        """
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        UserCourse.objects.filter(user=request.user,
+                                  course=self.get_object()).update(confirm_photo=serializer.validated_data['confirm_photo'])
+        return Response({'msg': '操作成功'})
