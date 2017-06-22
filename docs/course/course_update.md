@@ -18,6 +18,7 @@
     "address":  str        上课地点     最大长度 30
     "max_num":  int        最大选课人数,
     "address":  str        上课地点
+    "syllabus": File       课程大纲文件
 }
 ```
 
@@ -38,6 +39,7 @@
         "end_time": "2017-06-30T04:00:00Z",
         "create_time": "2017-06-19T16:07:11Z",
         "address": "华府大道一段33号"          str     上课地点
+        "syllabus": ""                       str    课程地址
     },
     "field_name": ""
 }
