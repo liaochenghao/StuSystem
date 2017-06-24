@@ -23,39 +23,32 @@ class CreateAccountSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
 
     def check_account(self, validated_data):
-        # res = client.get_web_access_token(validated_data['code'])
-        # user_info = client.get_web_user_info(res['access_token'], res['openid'])
+        res = client.get_web_access_token(validated_data['code'])
+        user_info = client.get_web_user_info(res['access_token'], res['openid'])
         # todo debug
-        res = {
-            "openid": "kldjflkajdlkjdlkf",
-        }
+        # res = {
+        #     "openid": "qwertyuiop",
+        # }
+        #
+        # user_info = {
+        #     "nickname": "121212121212",
+        #     "headimgurl": "http://www.baidu.com/12313/3224/213123/",
+        #     "unionid": "2323232323232"
+        # }
+        user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
 
-        user_info = {
-            "nickname": "woshichenguanxi",
-            "headimgurl": "http://www.qq.com",
-            "unionid": "124dajldjflkadjfdkjfa"
-        }
-        user = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
-        if not UserInfo.objects.filter(openid=res['openid']).exists():
-            UserInfo.objects.create(**{
-                "user": user,
-                "unionid": user_info.get('unionid'),
-                "headimgurl": user_info['headimgurl'],
-                "openid": res['openid'],
-                "wx_name": user_info['nickname']
-            })
+        user_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
+                                                               **{
+                                                                "user": user,
+                                                                "unionid": user_info.get('unionid'),
+                                                                "headimgurl": user_info['headimgurl'],
+                                                                "openid": res['openid'],
+                                                                "wx_name": user_info['nickname']
+                                                                })
+        if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
-            UserInfo.objects.filter(openid=res['openid']).update(**{
-                "unionid": user_info.get('unionid'),
-                "headimgurl": user_info['headimgurl'],
-                "wx_name": user_info['nickname']
-            })
-            user_info = UserInfo.objects.get(openid=res['openid'])
-            if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
-                need_complete_stu_info = True
-            else:
-                need_complete_stu_info = False
+            need_complete_stu_info = False
         return {'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id}
 
 
