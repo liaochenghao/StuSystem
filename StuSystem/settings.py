@@ -110,10 +110,6 @@ TEMPLATES = [
     },
 ]
 
-MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, '/media')
-
 WSGI_APPLICATION = 'StuSystem.wsgi.application'
 
 
@@ -226,9 +222,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/')
 ]
 
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, '/media')
+
 # 不需要校验权限, 免登陆
 LOGIN_EXEMPT_URLS = [
-    r'auth/user/login'
+    r'auth/user/login',
+    r'auth/user/check_account',
 ]
 
 # 微信服务号配置
