@@ -31,13 +31,12 @@ class CreateAccountSerializer(serializers.Serializer):
         }
 
         user_info = {
-            "nickname": "jhhikhdss",
+            "nickname": "woshichenguanxi",
             "headimgurl": "http://www.qq.com",
-            "unionid": "jljdlkjljlkj"
+            "unionid": "124dajldjflkadjfdkjfa"
         }
-
+        user = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
         if not UserInfo.objects.filter(openid=res['openid']).exists():
-            user = User.objects.create(**{'username': res['openid'], 'role': 'STUDENT'})
             UserInfo.objects.create(**{
                 "user": user,
                 "unionid": user_info.get('unionid'),
@@ -47,8 +46,13 @@ class CreateAccountSerializer(serializers.Serializer):
             })
             need_complete_stu_info = True
         else:
-            user = UserInfo.objects.get(openid=res['openid'])
-            if any([user.name, user.email, user.wechat, user.school, user.wcampus]) is False:
+            UserInfo.objects.filter(openid=res['openid']).update(**{
+                "unionid": user_info.get('unionid'),
+                "headimgurl": user_info['headimgurl'],
+                "wx_name": user_info['nickname']
+            })
+            user_info = UserInfo.objects.get(openid=res['openid'])
+            if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
                 need_complete_stu_info = True
             else:
                 need_complete_stu_info = False

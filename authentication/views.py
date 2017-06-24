@@ -25,10 +25,10 @@ class UserViewSet(viewsets.GenericViewSet):
         response.set_cookie('ticket', res.get('ticket'))
         return response
 
-    @list_route(['POST'], serializer_class=CreateAccountSerializer)
+    @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
         # 检查账户信息
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=self.request.query_params)
         serializer.is_valid(raise_exception=True)
         res = serializer.check_account(serializer.validated_data)
         return Response(res)
