@@ -13,7 +13,7 @@
         "gender":       str     MALE--男, FEMALE--女
         "id_number":    str     最大长度30
         "major":        str     专业
-        "gpa"：         int
+        "gpa"：         float   小数点后两位
     }
 ```
 

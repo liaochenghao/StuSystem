@@ -23,8 +23,19 @@ class CreateAccountSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
 
     def check_account(self, validated_data):
-        res = client.get_web_access_token(validated_data['code'])
-        user_info = client.get_web_user_info(res['access_token'], res['openid'])
+        # res = client.get_web_access_token(validated_data['code'])
+        # user_info = client.get_web_user_info(res['access_token'], res['openid'])
+        # todo debug
+        res = {
+            "openid": "kldjflkajdlkjdlkf",
+        }
+
+        user_info = {
+            "nickname": "jhhikhdss",
+            "headimgurl": "http://www.qq.com",
+            "unionid": "jljdlkjljlkj"
+        }
+
         if not UserInfo.objects.filter(openid=res['openid']).exists():
             user = User.objects.create(**{'username': res['openid'], 'role': 'STUDENT'})
             UserInfo.objects.create(**{
