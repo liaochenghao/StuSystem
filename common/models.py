@@ -23,9 +23,15 @@ class SalesManUser(models.Model):
     """
     销售人员与User关系表
     """
+    STATUS = (
+        ('NEW', '新关注'),
+        ('CONTACTED', '已联系'),
+    )
     user = models.ForeignKey(User)
     sales_man = models.ForeignKey(SalesMan)
+    status = models.CharField('用户状态', max_length=30, choices=STATUS, default='NEW')
     create_time = models.DateTimeField(auto_now=True)
+    remark = models.CharField('备注', max_length=255, null=True)
 
     class Meta:
         db_table = 'sales_man_user'

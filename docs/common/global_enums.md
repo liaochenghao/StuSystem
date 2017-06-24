@@ -58,7 +58,16 @@
                 "key": "PAYED",
                 "verbose": "已支付"
             }
-    ]
+        ],
+         "user_status": [                   # 用户的状态
+            {
+                "key": "NEW",
+                "verbose": "新关注"
+            },
+            {
+                "key": "CONTACTED",
+                "verbose": "已联系"
+            }
     },
 "field_name": ""
 }

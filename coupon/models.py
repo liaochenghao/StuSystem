@@ -26,6 +26,7 @@ class UserCoupon(models.Model):
     """
     user = models.ForeignKey(User)
     coupon = models.ForeignKey(Coupon)
+    used = models.BooleanField('是否使用', default=False)
 
     class Meta:
         db_table = "user_coupon"
