@@ -8,7 +8,12 @@
 **请求参数**:
 ```
 {
-    "project":   int     项目id
+    "project":   int     项目id,
+    "currency":  varchar   DOLLAR--美金, RMB--人民币
+    "payment":   varchar  支付方式
+    "standard_fee": float   标准费用，精确到小数点后两位
+    "pay_fee": float  支付费用，精确到小数点后两位
+    "coupon_list": list  优惠券id list
 }
 ```
 

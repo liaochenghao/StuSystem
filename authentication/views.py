@@ -50,7 +50,8 @@ class UserViewSet(viewsets.GenericViewSet):
         :return:
         """
         user = request.user
-        res = Coupon.objects.filter(usercoupon__user=user).values('id', 'code', 'amount', 'info', 'start_time', 'end_time')
+        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__used=False).values(
+            'id', 'code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 
     @detail_route(['GET', 'POST'], serializer_class=SalesManUserSerializer)
