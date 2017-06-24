@@ -68,7 +68,7 @@ class UserViewSet(viewsets.GenericViewSet):
                     rand_int = random.randint(1, len(sales_man))
                     res = sales_man[rand_int - 1]
             else:
-                res = SalesMan.objects.filter(salesmanuser__user=user).first().values('id', 'name', 'email', 'qr_code')
+                res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code').first()
             return Response(res)
         else:
             data = request.data
