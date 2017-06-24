@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'common',
     'course',
     'coupon',
-    'order'
+    'order',
+    'gunicorn'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

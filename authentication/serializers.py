@@ -36,6 +36,9 @@ class CreateAccountSerializer(serializers.Serializer):
         #     "unionid": "2323232323232"
         # }
         user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
+        ticket = UserTicket.create_ticket(self.user)
+        user.last_login = datetime.datetime.now()
+        user.save()
 
         user_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
                                                                **{
@@ -49,7 +52,7 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
-        return {'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id}
+        return {'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket}
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
