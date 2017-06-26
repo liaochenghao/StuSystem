@@ -29,6 +29,7 @@
                 "post_date": "2017-06-26",    成绩单寄送时间
                 "post_channel": "DHL",        快递方式
                 "post_number": "25424521236"  快递单号
+                "img": str                    图片地址
             }
         },
         {
