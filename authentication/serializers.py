@@ -61,7 +61,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wschool', 'wcampus', 'cschool']
+        fields = ['id', 'name', 'email', 'wechat', 'wschool', 'wcampus', 'cschool', 'headimgurl']
+        read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
         if attrs.get('wschool'):

@@ -1,8 +1,9 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, Campus, CampusType, Course, UserCourse
+from course.models import Project, Campus, CampusType, Course, UserCourse, ProjectResult
 from drf_extra_fields.fields import Base64ImageField
+from utils.serializer_fields import VerboseChoiceField
 from order.models import Order
 
 
@@ -46,6 +47,31 @@ class MyProjectsSerializer(ProjectSerializer):
         data['order_remark'] = order_info.remark
         my_courses = Course.objects.filter(usercourse__project=instance, usercourse__user=user)
         data['my_courses'] = CourseSerializer(my_courses, many=True).data
+        return data
+
+
+class ProjectResultSerializer(serializers.ModelSerializer):
+    status = VerboseChoiceField(choices=ProjectResult.STATUS)
+
+    class Meta:
+        model = ProjectResult
+        fields = ['id', 'status', 'post_date', 'post_channel', 'post_number']
+
+
+class GetProjectResultSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'create_time']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user = self.context['user']
+        if ProjectResult.objects.filter(user=user, project=instance, status__isnull=False).exists():
+            project_result = ProjectResultSerializer(ProjectResult.objects.get(user=user, project=instance)).data
+        else:
+            project_result = None
+        data['project_result'] = project_result
         return data
 
 
@@ -101,6 +127,10 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
+
+    def create(self, validated_data):
+        ProjectResult.objects.get_or_create(user=validated_data['user'], project=validated_data['project'])
+        return super().create(validated_data)
 
 
 class MyCourseSerializer(serializers.ModelSerializer):

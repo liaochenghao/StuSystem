@@ -77,7 +77,8 @@
 - [项目列表](docs/project/project_list.md)
 - [项目详情](docs/project/project_detail.md)
 - [项目更新](docs/project/project_update.md)
-- [我的项目](docs/project/my_projects.md)
+- [我的项目](docs/project/my_project.md)
+- [项目学分转换](docs/project/project_result.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)

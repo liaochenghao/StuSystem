@@ -82,6 +82,27 @@ class UserCourse(models.Model):
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_photo = models.ImageField('审课照片', upload_to='course/confirm_photo', null=True)
+    confirm_course = models.BooleanField('课程审核结果', default=True)
 
     class Meta:
         db_table = 'user_course'
+
+
+class ProjectResult(models.Model):
+    """用户学分转换"""
+    STATUS = (
+        ('POSTED', '成绩单已寄出'),
+        ('RECEIVED', '学校已收到'),
+        ('SUCCESS', '学分转换成功')
+    )
+    project = models.ForeignKey(Project)
+    user = models.ForeignKey(User)
+    create_time = models.DateTimeField(auto_now=True)
+    post_date = models.DateField('快递日期', null=True)
+    post_channel = models.CharField('快递方式', max_length=30, null=True)
+    post_number = models.CharField('快递单号', max_length=30, null=True)
+    status = models.CharField(max_length=30, choices=STATUS, null=True)
+
+    class Meta:
+        db_table = 'project_result'
+        unique_together = ['user', 'project']

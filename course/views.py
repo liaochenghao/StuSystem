@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course, UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
-    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer
+    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -49,6 +49,12 @@ class ProjectViewSet(BaseViewSet):
 
     @list_route(serializer_class=MyProjectsSerializer)
     def my_project(self, request):
+        projects = self.queryset.filter(order__user=request.user)
+        data = self.serializer_class(projects, many=True, context={'user': request.user}).data
+        return Response(data)
+
+    @list_route(serializer_class=GetProjectResultSerializer)
+    def project_result(self, request):
         projects = self.queryset.filter(order__user=request.user)
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)

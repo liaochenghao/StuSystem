@@ -67,7 +67,21 @@
             {
                 "key": "CONTACTED",
                 "verbose": "已联系"
+            },
+         "project_result": [            # 成绩单寄送状态
+            {
+                "key": "POSTED",
+                "verbose": "成绩单已寄出"
+            },
+            {
+                "key": "RECEIVED",
+                "verbose": "学校已收到"
+            },
+            {
+                "key": "SUCCESS",
+                "verbose": "学分转换成功"
             }
+        ]
     },
 "field_name": ""
 }

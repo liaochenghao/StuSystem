@@ -2,7 +2,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from course.models import Campus
+from course.models import Campus, ProjectResult
 from order.models import Order
 from authentication.models import UserInfo
 from common.models import SalesManUser
@@ -23,6 +23,7 @@ class GlobalEnumsViewSet(APIView):
             'order_payment': get_key_verbose_data(dict(Order.PAYMENT)),
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),
             'order_status': get_key_verbose_data(dict(Order.STATUS)),
-            'user_status': get_key_verbose_data(dict(SalesManUser.STATUS))
+            'user_status': get_key_verbose_data(dict(SalesManUser.STATUS)),
+            'project_result': get_key_verbose_data(dict(ProjectResult.STATUS))
         }
         return Response(res)
