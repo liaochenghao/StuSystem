@@ -48,7 +48,7 @@ class ProjectViewSet(BaseViewSet):
     serializer_class = ProjectSerializer
 
     @list_route(serializer_class=MyProjectsSerializer)
-    def my_projects(self, request):
+    def my_project(self, request):
         projects = self.queryset.filter(order__user=request.user)
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
