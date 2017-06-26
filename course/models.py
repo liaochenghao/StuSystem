@@ -102,6 +102,7 @@ class ProjectResult(models.Model):
     post_channel = models.CharField('快递方式', max_length=30, null=True)
     post_number = models.CharField('快递单号', max_length=30, null=True)
     status = models.CharField(max_length=30, choices=STATUS, null=True)
+    img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
 
     class Meta:
         db_table = 'project_result'

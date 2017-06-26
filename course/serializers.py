@@ -160,3 +160,12 @@ class MyScoreSerializer(serializers.ModelSerializer):
 
 class ConfirmPhotoSerializer(serializers.Serializer):
     confirm_photo = Base64ImageField()
+
+
+class UpdateImgSerializer(serializers.Serializer):
+    img = Base64ImageField()
+
+    def validate_project_result(self, project, user):
+        if not ProjectResult.objects.filter(project=project, user=user, status='SUCCESS').exists():
+            raise serializers.ValidationError('学分转换未完成，不能上传图片')
+        return

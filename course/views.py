@@ -1,11 +1,11 @@
 # coding: utf-8
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-from course.models import Project, Campus, CampusType, Course, UserCourse
+from course.models import Project, Campus, CampusType, Course, UserCourse, ProjectResult
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
-    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer
+    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -58,6 +58,17 @@ class ProjectViewSet(BaseViewSet):
         projects = self.queryset.filter(order__user=request.user)
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
+
+    @detail_route(methods=['PUT'], serializer_class=UpdateImgSerializer)
+    def upload_img(self, request, pk):
+        instance = self.get_object()
+        if instance.img:
+            raise exceptions.ValidationError('学分转换结果证明已经上传了')
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate_project_result(instance, request.user)
+        ProjectResult.objects.filter(project=instance, user=request.user).update(img=serializer.validated_data['img'])
+        return Response({'msg': '图片上传成功'})
 
 
 class CourseViewSet(BaseViewSet):
