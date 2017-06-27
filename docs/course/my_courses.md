@@ -19,8 +19,8 @@
         {
             "id": 2,
             "name": "北京校区一期项目",
-            "course_count": 3,
-            "current_course_count": 1,
+            "course_num": 3,
+            "current_course_num": 1,
             "my_courses": [
                 {
                     "id": 2,

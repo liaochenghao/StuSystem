@@ -80,6 +80,7 @@
 - [我的项目](docs/project/my_project.md)
 - [项目学分转换结果](docs/project/project_result.md)
 - [上传学分转换结果图片](docs/project/upload_img.md)
+- [根据项目获取课程信息](docs/project/my_course.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)

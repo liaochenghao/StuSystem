@@ -53,6 +53,12 @@ class ProjectViewSet(BaseViewSet):
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
 
+    @detail_route()
+    def my_course(self, request, pk):
+        my_course = Course.objects.filter(project=self.get_object())
+        res = CourseSerializer(my_course, many=True).data
+        return Response(res)
+
     @list_route(serializer_class=GetProjectResultSerializer)
     def project_result(self, request):
         projects = self.queryset.filter(order__user=request.user)
@@ -84,13 +90,13 @@ class CourseViewSet(BaseViewSet):
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         project = serializer.validated_data['project']
-        current_course_count = UserCourse.objects.filter(user=user, project_id=project).count()
-        course_count = Project.objects.get(id=project).course_num
+        current_course_num = UserCourse.objects.filter(user=user, project_id=project).count()
+        course_num = Project.objects.get(id=project).course_num
         courses = self.queryset.filter(project_id=project)
         data = CourseSerializer(courses, many=True).data
         res = {
-            'course_count': course_count,
-            'current_course_count': current_course_count,
+            'course_num': course_num,
+            'current_course_num': current_course_num,
             'course_info': data
         }
         return Response(res)

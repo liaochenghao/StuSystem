@@ -19,8 +19,8 @@
     "msg": "请求成功",
     "field_name": ""
     "data": {
-        "course_count": 3,                 课程总数
-        "current_course_count": 1          已选课数量
+        "course_num": 3,                 课程总数
+        "current_course_num": 1          已选课数量
         "course_info": [                   可选课程信息
             {
                 "id": 2,
