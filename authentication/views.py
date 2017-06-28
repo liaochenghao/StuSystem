@@ -31,7 +31,9 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = self.serializer_class(data=self.request.query_params)
         serializer.is_valid(raise_exception=True)
         res = serializer.check_account(serializer.validated_data)
-        return Response(res)
+        response = Response(res)
+        response.set_cookie('ticket', res.get('ticket'))
+        return Response(response)
 
     @list_route(['put'])
     def logout(self, request):
