@@ -227,6 +227,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '/media')
 
 # 不需要校验权限, 免登陆
 LOGIN_EXEMPT_URLS = [
+    r'^',
     r'auth/user/login',
     r'auth/user/check_account',
 ]
