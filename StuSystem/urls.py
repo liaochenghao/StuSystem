@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
-    url(r'^', 'index.view'),
+    url(r'^', include('index.view')),
     url(r'^auth/', include('authentication.urls')),  # 登陆模块
     url(r'^common/', include('common.urls')),        # 通用模块
     url(r'^coupon/', include('coupon.urls')),       # 优惠券模块
