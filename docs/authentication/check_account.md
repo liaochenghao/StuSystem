@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    POST  ／auth/user/check_account/
+    GET  ／auth/user/check_account/
 ```
 
 **请求参数**:
