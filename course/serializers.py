@@ -52,6 +52,7 @@ class MyProjectsSerializer(ProjectSerializer):
         return data
 
 
+
 class ProjectResultSerializer(serializers.ModelSerializer):
     status = VerboseChoiceField(choices=ProjectResult.STATUS)
 
@@ -171,3 +172,33 @@ class UpdateImgSerializer(serializers.Serializer):
         if not ProjectResult.objects.filter(project=project, user=user, status='SUCCESS').exists():
             raise serializers.ValidationError('学分转换未完成，不能上传图片')
         return
+
+
+class UserCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCourse
+        fields = ['score', 'score_grade', 'reporting_time']
+
+
+class ProjectCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'course_code', 'name', 'create_time']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        my_course = UserCourse.objects.filter(user=self.context['user'], course=instance).first()
+        data['course_score'] = UserCourseSerializer(my_course).data if my_course else None
+        return data
+
+
+class ProjectMyScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'create_time']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['course'] = ProjectCourseSerializer(Course.objects.filter(usercourse__project=instance), many=True,
+                                                 context={'user': self.context['user']}).data
+        return data

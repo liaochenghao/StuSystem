@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from course.models import Project, Campus, CampusType, Course, UserCourse, ProjectResult
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
-    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer
+    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
+    ProjectMyScoreSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -64,6 +65,13 @@ class ProjectViewSet(BaseViewSet):
         projects = self.queryset.filter(order__user=request.user)
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
+
+    @list_route(serializer_class=ProjectMyScoreSerializer)
+    def my_scores(self, request):
+        user = request.user
+        projects = self.queryset.filter(usercourse__user=user).distinct()
+        serializer = self.serializer_class(projects, many=True, context={'user': user})
+        return Response(serializer.data)
 
     @detail_route(methods=['PUT'], serializer_class=UpdateImgSerializer)
     def upload_img(self, request, pk):
