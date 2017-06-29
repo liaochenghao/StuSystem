@@ -1,6 +1,7 @@
 # coding: utf-8
 from werobot.client import Client
 from django.conf import settings
+import requests
 
 
 class WxClient(Client):
@@ -8,6 +9,7 @@ class WxClient(Client):
         self.config = settings.WX_CONFIG
         self._token = None
         self.token_expires_at = None
+    #     super().__init__(self.config)
 
     def get_web_access_token(self, code):
         """
@@ -22,12 +24,12 @@ class WxClient(Client):
         """
         url = "https://api.weixin.qq.com/sns/oauth2/access_token"
         params = {
-            "appid": settings.WX_CONFIG["API_KEY"],
-            "secret": settings.WX_CONFIG["SECRET_KEY"],
+            "appid": settings.WX_CONFIG["APP_ID"],
+            "secret": settings.WX_CONFIG["APP_SECRET"],
             "code": code,
             "grant_type": "authorization_code"
         }
-        res = self.get(url, **params)
+        res = requests.get(url, params=params).json()
         return res
 
     def refresh_web_access_token(self, refresh_token):
@@ -43,11 +45,11 @@ class WxClient(Client):
         """
         url = "https://api.weixin.qq.com/sns/oauth2/refresh_token"
         params = {
-            "appid": settings.WX_CONFIG['API_KEY'],
+            "appid": settings.WX_CONFIG['APP_ID'],
             "grant_type": "refresh_token",
             "refresh_token": refresh_token
         }
-        res = self.get(url, **params)
+        res = requests.get(url, params=params).json()
         return res
 
     def get_web_user_info(self, access_token, openid):
@@ -72,7 +74,7 @@ class WxClient(Client):
             "openid": openid,
             "lang": "zh_CN"
         }
-        res = self.get(url, **params)
+        res = requests.get(url, params=params).json()
         return res
 
     def check_web_access_token(self, access_token, openid):
@@ -89,7 +91,7 @@ class WxClient(Client):
             "access_token": access_token,
             "openid": openid
         }
-        res = self.get(url, **params)
+        res = requests.get(url, params=params).json()
         return res
 
 client = WxClient()

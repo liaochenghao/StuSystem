@@ -24,6 +24,8 @@ class CreateAccountSerializer(serializers.Serializer):
 
     def check_account(self, validated_data):
         res = client.get_web_access_token(validated_data['code'])
+        if not (res.get('access_token') and res.get('openid')):
+            raise serializers.ValidationError('无效的code值, 微信网页认证失败')
         user_info = client.get_web_user_info(res['access_token'], res['openid'])
         # todo debug
         # res = {

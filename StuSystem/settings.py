@@ -234,6 +234,6 @@ LOGIN_EXEMPT_URLS = [
 
 # 微信服务号配置
 WX_CONFIG = {
-    'API_KEY': '',
-    'SECRET_KEY': ''
+    'APP_ID': 'wx6cdbbafe0da85703',
+    'APP_SECRET': '73c8e307c09027162840705e7496ed32'
 }
