@@ -15,14 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from utils.index import view
+from utils import index
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
-    url(r'^', view),
     url(r'^auth/', include('authentication.urls')),  # 登陆模块
     url(r'^common/', include('common.urls')),        # 通用模块
     url(r'^coupon/', include('coupon.urls')),       # 优惠券模块
     url(r'^course/', include('course.urls')),        # 课程模块
-    url(r'^order/', include('order.urls'))          # 订单模块
+    url(r'^order/', include('order.urls')),          # 订单模块
+	url(r'^', index.view),							# index页面				
 ]
