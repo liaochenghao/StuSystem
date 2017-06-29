@@ -20,6 +20,7 @@
     "data": {
         "need_complete_student_info"： True   Boolean        # 是否需要完善用户信息,
         "user_id":  int    # 当前用户的id
+        "ticket":   str
     }
 }
 ```
