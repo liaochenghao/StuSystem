@@ -59,7 +59,9 @@
 - [获取用户成绩单详情](docs/authentication/get_score_detail.md)
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
-- [已发送好友申请](docs/authentication/post_sales_man.md)·
+- [已发送好友申请](docs/authentication/post_sales_man.md)
+
+- [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)

@@ -35,6 +35,18 @@ class UserViewSet(viewsets.GenericViewSet):
         response.set_cookie('ticket', res.get('ticket'))
         return Response(response)
 
+    @list_route()
+    def check_user_info(self, request):
+        user = request.user
+        user_info = UserInfo.objects.filter(user=user).first()
+        if not user_info:
+            raise exceptions.ValidationError('不存在基础的用户信息')
+        if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
+            need_complete_stu_info = True
+        else:
+            need_complete_stu_info = False
+        return Response({'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id})
+
     @list_route(['put'])
     def logout(self, request):
         """ 退出登录
