@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^coupon/', include('coupon.urls')),       # 优惠券模块
     url(r'^course/', include('course.urls')),        # 课程模块
     url(r'^order/', include('order.urls')),          # 订单模块
-	url(r'^', index.view),							# index页面				
+	# url(r'^', index.view),							# index页面
 ]
