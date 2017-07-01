@@ -34,7 +34,7 @@ class UserInfo(models.Model):
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
     unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True)
     openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
-    headimgurl = models.CharField('微信头像url', max_length=60, null=True)
+    headimgurl = models.CharField('微信头像url', max_length=255, null=True)
     wx_name = models.CharField('微信昵称', max_length=30, null=True)
 
     first_name = models.CharField('First Name', max_length=30, null=True)
