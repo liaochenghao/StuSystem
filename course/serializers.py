@@ -1,7 +1,7 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, Campus, CampusType, Course, UserCourse, ProjectResult
+from course.models import Project, ProjectCourseFee, Campus, CampusType, Course, UserCourse, ProjectResult
 from drf_extra_fields.fields import Base64ImageField
 from utils.serializer_fields import VerboseChoiceField
 from order.models import Order
@@ -24,12 +24,21 @@ class CampusSerializer(serializers.ModelSerializer):
         return data
 
 
+class ProjectCourseFeeSerializer(serializers.ModelSerializer):
+    course_info = serializers.CharField(source='get_course_info')
+
+    class Meta:
+        model = ProjectCourseFee
+        fields = ['id', 'course_number', 'course_fee', 'course_info']
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+    project_course_fee = ProjectCourseFeeSerializer(many=True)
 
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num']
+                  'apply_fee', 'course_num', 'project_course_fee']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -52,13 +61,12 @@ class MyProjectsSerializer(ProjectSerializer):
         return data
 
 
-
 class ProjectResultSerializer(serializers.ModelSerializer):
     status = VerboseChoiceField(choices=ProjectResult.STATUS)
 
     class Meta:
         model = ProjectResult
-        fields = ['id', 'status', 'post_date', 'post_channel', 'post_number' 'img']
+        fields = ['id', 'status', 'post_date', 'post_channel', 'post_number', 'img']
 
 
 class GetProjectResultSerializer(serializers.ModelSerializer):

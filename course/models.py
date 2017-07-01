@@ -52,6 +52,20 @@ class Project(models.Model):
         return self.name
 
 
+class ProjectCourseFee(models.Model):
+    """项目课程费用对应表"""
+    project = models.ForeignKey(Project, related_name='project_course_fee')
+    course_number = models.IntegerField('课程门数')
+    course_fee = models.FloatField('课程费用')
+
+    class Meta:
+        db_table = 'project_course_fee'
+
+    @property
+    def get_course_info(self):
+        return '%d门' % self.course_number
+
+
 class Course(models.Model):
     project = models.ForeignKey(Project)
     course_code = models.CharField('课程代码', max_length=30, unique=True)

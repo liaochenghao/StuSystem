@@ -38,6 +38,14 @@
         "create_time": "2017-06-19T14:09:43Z"
         "apply_fee": 2000.0,        float  申请奋勇
         "course_num": 3             int    课程数量
+        "project_course_fee": [
+                    {
+                        "id": 1,
+                        "course_number": 1,         int 课程数量
+                        "course_fee": 1000.0,       float 课程费用
+                        "course_info": "1门"         varchar 课程门数
+                    },
+                ]
     }
     "field_name": ""
 }
