@@ -1,8 +1,6 @@
 # coding: utf-8
-import json
 from rest_framework import serializers
-from order.models import Order
-from coupon.models import UserCoupon
+from order.models import Order, OrderCoupon
 from course.serializers import ProjectSerializer
 from utils.serializer_fields import VerboseChoiceField
 
@@ -20,10 +18,18 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
     def create(self, validated_data):
+        order_coupon = []
+        coupon_list = []
         user = self.context['request'].user
         validated_data['user'] = user
-        UserCoupon.objects.filter(user=user, coupon__id__in=validated_data['coupon_list']).update(used=True)
-        return super().create(validated_data)
+        if validated_data.get('coupon_list'):
+            coupon_list = validated_data.pop('coupon_list')
+        order = super().create(validated_data)
+        if coupon_list:
+            for item in coupon_list:
+                order_coupon.append(OrderCoupon(**{'order': order, 'coupon_id': item}))
+            OrderCoupon.objects.bulk_create(order_coupon)
+        return order
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

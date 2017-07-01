@@ -2,6 +2,7 @@
 from django.db import models
 from authentication.models import User
 from course.models import Project
+from coupon.models import Coupon
 
 
 class Order(models.Model):
@@ -30,3 +31,12 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'order'
+
+
+class OrderCoupon(models.Model):
+    order = models.ForeignKey(Order)
+    coupon = models.ForeignKey(Coupon)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'order_coupon'
