@@ -33,7 +33,7 @@ class UserViewSet(viewsets.GenericViewSet):
         res = serializer.check_account(serializer.validated_data)
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
-        return Response(response)
+        return response
 
     @list_route()
     def check_user_info(self, request):
