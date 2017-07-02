@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CreateAccountSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
-    ticket = serializers.CharField(required=False)
+    ticket = serializers.CharField(required=False, allow_null=True)
 
     def check_account(self, validated_data):
         res = client.get_web_access_token(validated_data['code'])
