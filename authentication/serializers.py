@@ -54,7 +54,7 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
-        return {'need_complete_stu_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket}
+        return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket}
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
