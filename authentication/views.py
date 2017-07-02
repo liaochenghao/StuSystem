@@ -28,7 +28,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
         # 检查账户信息
-        data = self.request.query_params
+        data = self.request.query_params.dict()
         ticket = request.COOKIES.get('ticket')
         if not ticket:
             ticket = request.GET.get('ticket')

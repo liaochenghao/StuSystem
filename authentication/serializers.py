@@ -28,7 +28,6 @@ class CreateAccountSerializer(serializers.Serializer):
         if validated_data.get('ticket') and UserTicket.check_ticket(validated_data['ticket']):
             user = UserTicket.check_ticket(validated_data['ticket'])
             user_info = UserInfo.objects.filter(user=user).first()
-            print(00000)
             ticket = validated_data['ticket']
         else:
             if not (res.get('access_token') and res.get('openid')):
@@ -57,7 +56,6 @@ class CreateAccountSerializer(serializers.Serializer):
                                                                     "openid": res['openid'],
                                                                     "wx_name": user_info['nickname']
                                                                     })
-        print(user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus)
         if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
