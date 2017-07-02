@@ -38,7 +38,7 @@ class CreateAccountSerializer(serializers.Serializer):
         #     "unionid": "2323232323232"
         # }
         user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
-        ticket = UserTicket.create_ticket(self.user)
+        ticket = UserTicket.create_ticket(user)
         user.last_login = datetime.datetime.now()
         user.save()
 
