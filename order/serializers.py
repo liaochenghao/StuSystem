@@ -6,7 +6,7 @@ from utils.serializer_fields import VerboseChoiceField
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    coupon_list = serializers.ListField(write_only=True)
+    coupon_list = serializers.ListField(write_only=True, required=False)
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, read_only=True)
@@ -19,11 +19,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         order_coupon = []
-        coupon_list = []
+        coupon_list = validated_data.pop('coupon_list')
         user = self.context['request'].user
         validated_data['user'] = user
-        if validated_data.get('coupon_list'):
-            coupon_list = validated_data.pop('coupon_list')
         order = super().create(validated_data)
         if coupon_list:
             for item in coupon_list:
