@@ -59,7 +59,7 @@ CORS_ALLOW_METHODS = (
     'OPTIONS'
 )
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ('Klicen-Agent', 'Content-Type', 'X-Requested-With',)
+# CORS_ALLOW_HEADERS = ('Klicen-Agent', 'Content-Type', 'X-Requested-With',)
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
