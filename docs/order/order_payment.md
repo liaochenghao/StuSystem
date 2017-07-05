@@ -19,7 +19,20 @@
 
 **成功返回**：
 ```
-
+{
+    "code": 0,
+    "msg": "请求成功",
+    "data": {
+        "id": 1,
+        "order": 31,
+        "account_number": "896275756@qq.com",
+        "account_name": "邱雷",
+        "opening_bank": null,
+        "pay_date": "2017-07-05",
+        "img": "http://42.51.8.152:8002/media/order/order_payment/1%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95-2-%E5%A1%AB%E5%86%99%E5%9F%BA%E6%9C%AC%E8%B5%84%E6%96%99%E9%A1%B5%E9%9D%A2.jpg"
+    },
+    "field_name": ""
+}
 ```
 
 **失败返回**：
