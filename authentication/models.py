@@ -48,7 +48,7 @@ class UserInfo(models.Model):
     id_number = models.CharField('身份证号/护照号', max_length=30, unique=True, null=True)
     major = models.CharField('专业', max_length=30, null=True)
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
-    gpa = models.DecimalField('GPA', max_digits=3, decimal_places=2)
+    gpa = models.FloatField('GPA')
 
     class Meta:
         db_table = 'student_info'

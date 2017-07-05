@@ -11,13 +11,16 @@ class Order(models.Model):
         ('RMB', '人民币')
     )
     PAYMENT = (
-        ('ON_LINE', '线上支付'),
-        ('TRANSFER_ACCOUNT', '转账'),
+        # ('ON_LINE', '线上支付'),
+        ('BANK', '银行转账'),
+        ('ALI_PAY', '支付宝转账'),
         ('OFF_LINE', '面付')
     )
     STATUS = (
+        ('CANCEL', '已取消'),
         ('TO_PAY', '待支付'),
-        ('PAYED', '已支付')
+        ('PAYED', '已支付'),
+        ('CONFIRMED', '已确认')
     )
     user = models.ForeignKey(User)
     project = models.ForeignKey(Project)
@@ -31,6 +34,19 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'order'
+
+
+class OrderPayment(models.Model):
+    order = models.ForeignKey(Order)
+    account_number = models.CharField('支付账号', max_length=30)
+    account_name = models.CharField('支付姓名', max_length=30)
+    opening_bank = models.CharField('开户银行', max_length=30, null=True)
+    pay_date = models.DateField('支付日期')
+    img = models.ImageField(upload_to='order/order_payment')
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'order_payment'
 
 
 class OrderCoupon(models.Model):

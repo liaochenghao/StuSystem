@@ -56,6 +56,16 @@
         },
         "standard_fee": 1000.0, 标准费用
         "pay_fee": 800.0        支付费用
+        "payment_info": {
+            "id": 1,
+            "account_number": "896275756@qq.com",        转账账号
+            "account_name": "qiulei",                    账户姓名
+            "opening_bank": null,                        开户银行，可能为空
+            "payment": {
+                "key": "ALI_PAY",
+                "verbose": "支付宝转账"
+            }
+        }
     },
     "field_name": ""
 }

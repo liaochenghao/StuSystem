@@ -1,7 +1,9 @@
 # coding: utf-8
 from rest_framework import serializers
-from order.models import Order, OrderCoupon
+from order.models import Order, OrderCoupon, OrderPayment
 from course.serializers import ProjectSerializer
+from admin.models import PaymentAccountInfo
+from admin.serializers import PaymentAccountInfoSerializer
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -32,4 +34,12 @@ class OrderSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project'] = ProjectSerializer(instance=instance.project).data
+        payment_info = PaymentAccountInfo.objects.filter(payment=instance.payment).first()
+        data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         return data
+
+
+class OrderPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderPayment
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'img']
