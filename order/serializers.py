@@ -5,6 +5,7 @@ from course.models import ProjectCourseFee
 from course.serializers import ProjectSerializer
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer
+from coupon.models import Coupon
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -46,13 +47,20 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'img', 'coupon_list']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list']
 
     def create(self, validated_data):
         order_coupon = []
         coupon_list = validated_data.pop('coupon_list')
+        pay_fee = validated_data['order'].standard_fee
         if coupon_list:
+            amount = Coupon.objects.filter(id__in=coupon_list).values_list('amount', flat=True)
             for item in coupon_list:
                 order_coupon.append(OrderCoupon(**{'order': validated_data['order'], 'coupon_id': item}))
             OrderCoupon.objects.bulk_create(order_coupon)
+
+            for item in amount:
+                pay_fee -= item
+        validated_data['order'].pay_fee = pay_fee if pay_fee >= 0 else 0
+        validated_data['order'].save()
         return super().create(validated_data)
