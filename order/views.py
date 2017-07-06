@@ -19,7 +19,7 @@ class OrderViewSet(mixins.CreateModelMixin,
         order = self.queryset.filter(user=self.request.user).exclude(status='CONFIRMED').last()
         if order:
             return Response(self.get_serializer(order).data)
-        return Response({'code': ''})
+        return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
 
 class OrderPaymentViewSet(mixins.CreateModelMixin,
