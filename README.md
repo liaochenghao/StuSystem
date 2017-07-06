@@ -101,3 +101,4 @@
 - [创建订单](docs/order/order_create.md)
 - [订单详情](docs/order/order_detail.md)
 - [上传订单支付信息](docs/order/order_payment.md)
+- [检查是否可以创建订单](docs/order/check_order.md)
