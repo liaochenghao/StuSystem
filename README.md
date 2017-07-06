@@ -102,4 +102,4 @@
 - [订单详情](docs/order/order_detail.md)
 - [上传订单支付信息](docs/order/order_payment.md)
 - [检查是否可以创建订单](docs/order/check_order.md)
-- [更新订单](docs/order/update_order.md)
+- [取消订单，确认订单](docs/order/update_order.md)
