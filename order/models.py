@@ -17,7 +17,7 @@ class Order(models.Model):
         ('OFF_LINE', '面付')
     )
     STATUS = (
-        ('CANCEL', '已取消'),
+        ('CANCELED', '已取消'),
         ('TO_PAY', '待支付'),
         ('PAYED', '已支付'),
         ('CONFIRMED', '已确认')

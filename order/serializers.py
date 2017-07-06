@@ -12,7 +12,7 @@ from utils.serializer_fields import VerboseChoiceField
 class OrderSerializer(serializers.ModelSerializer):
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
-    status = VerboseChoiceField(choices=Order.STATUS, read_only=True)
+    status = VerboseChoiceField(choices=Order.STATUS, required=False)
 
     class Meta:
         model = Order
@@ -21,8 +21,20 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'pay_fee', 'standard_fee']
 
     def validate(self, attrs):
-        if attrs['course_num'] > attrs['project'].course_num:
-            raise serializers.ValidationError('所选课程数大于项目最大课程数, 项目最大选课数{}'.format(attrs['project'].course_num))
+        if not self.instance:
+            if attrs['course_num'] > attrs['project'].course_num:
+                raise serializers.ValidationError('所选课程数大于项目最大课程数, 项目最大选课数{}'.format(attrs['project'].course_num))
+        else:
+            if self.instance.status == 'CANCELED':
+                raise serializers.ValidationError('该订单已被取消，不能进行更新任何操作')
+            if self.instance.status == 'TO_PAY':
+                if attrs.get('status') == 'CONFIRMED':
+                    raise serializers.ValidationError('用户尚未上传凭证，不能进行确认操作')
+            if self.instance.status == 'PAYED':
+                if attrs.get('status') == 'CANCELED':
+                    raise serializers.ValidationError('该订单已被支付，在管理员确定前不能取消')
+            if self.instance.status == 'CONFIRMED':
+                raise serializers.ValidationError('管理员已确认该订单，不能进行任何更新操作')
         return attrs
 
     def create(self, validated_data):
@@ -47,7 +59,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
 
     def create(self, validated_data):
         order_coupon = []
@@ -62,5 +74,6 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
             for item in amount:
                 pay_fee -= item
         validated_data['order'].pay_fee = pay_fee if pay_fee >= 0 else 0
+        validated_data['order'].status = 'PAYED'
         validated_data['order'].save()
         return super().create(validated_data)
