@@ -10,6 +10,7 @@ from common.models import SalesMan, SalesManUser
 from authentication.functions import UserTicket
 from authentication.serializers import UserSerializer, ListUserInfoSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
+from authentication.filters import UserInfoFilterSet
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -105,12 +106,15 @@ class UserInfoViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
+    # filter_class = UserInfoFilterSet
 
     def list(self, request, *args, **kwargs):
         if request.user.role != 'ADMIN':
             raise exceptions.PermissionDenied('非管理员无权限访问该接口')
-        queryset = UserInfo.objects.exclude(user__role='ADMIN')
-        return Response(ListUserInfoSerializer(queryset, many=True).data)
+        self.queryset = self.queryset.exclude(user__role='ADMIN')
+        self.serializer_class = ListUserInfoSerializer
+        return Response(ListUserInfoSerializer(self.queryset, many=True).data)
+        # return super().list(request, *args, **kwargs)
 
     def get_object(self):
         user = self.request.user
