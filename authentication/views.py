@@ -8,11 +8,12 @@ from authentication.models import User, UserInfo, UserScoreDetail
 from coupon.models import Coupon
 from common.models import SalesMan, SalesManUser
 from authentication.functions import UserTicket
-from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, UserInfoSerializer, \
-    PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
+from authentication.serializers import UserSerializer, ListUserInfoSerializer, LoginSerializer, CreateAccountSerializer, \
+    UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
 
 
-class UserViewSet(viewsets.GenericViewSet):
+class UserViewSet(mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     queryset = User.objects.filter()
     serializer_class = UserSerializer
 
@@ -98,11 +99,18 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response({'msg': '操作成功'})
 
 
-class UserInfoViewSet(mixins.RetrieveModelMixin,
+class UserInfoViewSet(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
+
+    def list(self, request, *args, **kwargs):
+        if request.user.role != 'ADMIN':
+            raise exceptions.PermissionDenied('非管理员无权限访问该接口')
+        queryset = UserInfo.objects.exclude(user__role='ADMIN')
+        return Response(ListUserInfoSerializer(queryset, many=True).data)
 
     def get_object(self):
         user = self.request.user

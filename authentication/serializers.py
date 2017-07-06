@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ['password', 'delete', 'is_active']
+        exclude = ['password', 'is_active']
 
 
 class CreateAccountSerializer(serializers.Serializer):
@@ -33,16 +33,6 @@ class CreateAccountSerializer(serializers.Serializer):
             if not (res.get('access_token') and res.get('openid')):
                 raise serializers.ValidationError('无效的code值, 微信网页认证失败')
             user_info = client.get_web_user_info(res['access_token'], res['openid'])
-            # todo debug
-            # res = {
-            #     "openid": "qwertyuiop",
-            # }
-            #
-            # user_info = {
-            #     "nickname": "121212121212",
-            #     "headimgurl": "http://www.baidu.com/12313/3224/213123/",
-            #     "unionid": "2323232323232"
-            # }
             user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
@@ -84,6 +74,21 @@ class UserInfoSerializer(serializers.ModelSerializer):
         campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
         data['wcampus'] = campus_list
         data['wschool'] = json.loads(instance.wschool)
+        return data
+
+
+class ListUserInfoSerializer(serializers.ModelSerializer):
+    last_login = serializers.DateTimeField(source='user.last_login')
+
+    class Meta:
+        model = UserInfo
+        fields = ['user_id', 'name', 'email', 'cschool', 'last_login']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
+                             instance.major, instance.graduate_year, instance.gpa])     # 判断用户是否已建档
+        data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
 
 
