@@ -113,8 +113,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
             raise exceptions.PermissionDenied('非管理员无权限访问该接口')
         self.queryset = self.queryset.exclude(user__role='ADMIN')
         self.serializer_class = ListUserInfoSerializer
-        return Response(ListUserInfoSerializer(self.queryset, many=True).data)
-        # return super().list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     def get_object(self):
         user = self.request.user
