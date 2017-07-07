@@ -54,6 +54,15 @@ class UserInfo(models.Model):
         db_table = 'student_info'
 
 
+class UserInfoRemark(models.Model):
+    user_info = models.ForeignKey(UserInfo, related_name='user_info_remark')
+    remark = models.CharField('备注', max_length=255)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_info_remark'
+
+
 class Ticket(models.Model):
     user = models.ForeignKey(User)
     ticket = models.CharField('用户ticket', max_length=100, unique=True)

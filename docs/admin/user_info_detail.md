@@ -31,6 +31,13 @@
         "major": "计算机科学",
         "graduate_year": "2017-07",
         "gpa": 1
+        "user_info_remark": [
+            {
+                "id": 4,
+                "remark": "I Love you not because who you are!",
+                "create_time": "2017-07-07T15:31:23Z"
+            },
+        ]
     },
     "field_name": ""
 }

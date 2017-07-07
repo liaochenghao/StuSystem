@@ -1,7 +1,10 @@
 # coding: utf-8
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
-from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer
+from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
+    UserInfoRemarkSerializer
 from authentication.models import UserInfo
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
@@ -43,3 +46,12 @@ class UserInfoViewSet(mixins.ListModelMixin,
         except UserInfo.DoesNotExist:
             raise exceptions.NotFound('未找到user_info实例')
         return user_info
+
+    @detail_route(['POST'])
+    def add_remark(self, request, pk):
+        data = request.data
+        data['user_info'] = self.get_object().id
+        serializer = UserInfoRemarkSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return Response(UserInfoRemarkSerializer(instance).data)

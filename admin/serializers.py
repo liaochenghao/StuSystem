@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo
+from authentication.models import UserInfo, UserInfoRemark
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -28,10 +28,19 @@ class UserInfoSerializer(serializers.ModelSerializer):
         return data
 
 
+class UserInfoRemarkSerializer(serializers.ModelSerializer):
+    user_info = serializers.PrimaryKeyRelatedField(queryset=UserInfo.objects.all(), write_only=True)
+
+    class Meta:
+        model = UserInfoRemark
+        fields = ['id', 'remark', 'user_info', 'create_time']
+
+
 class RetrieveUserInfoSerializer(serializers.ModelSerializer):
+    user_info_remark = UserInfoRemarkSerializer(many=True)
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
 
     class Meta:
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
-                  'cschool', 'major', 'graduate_year', 'gpa']
+                  'cschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
