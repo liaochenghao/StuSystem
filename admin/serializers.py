@@ -1,6 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
+from course.models import UserCourse
 from authentication.models import UserInfo, UserInfoRemark
 from utils.serializer_fields import VerboseChoiceField
 
@@ -44,3 +45,14 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
                   'cschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+
+
+class ConfirmCourseSerializer(serializers.ModelSerializer):
+    project_name = serializers.CharField(source='course.project.name')
+    course_code = serializers.CharField(source='course.course_code')
+    syllabus = serializers.CharField(source='course.syllabus')
+    status = VerboseChoiceField(choices=UserCourse.STATUS)
+
+    class Meta:
+        model = UserCourse
+        fields = ['project_name', 'course_code', 'syllabus', 'confirm_photo', 'status']

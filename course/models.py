@@ -88,6 +88,11 @@ class Course(models.Model):
 
 class UserCourse(models.Model):
     """用户选课表"""
+    STATUS = (
+        ('TO_UPLOAD', '待上传'),
+        ('TO_CONFIRM', '待审核'),
+        ('PASS', '通过')
+    )
     user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
     project = models.ForeignKey(Project)
@@ -97,6 +102,7 @@ class UserCourse(models.Model):
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_photo = models.ImageField('审课照片', upload_to='course/confirm_photo', null=True)
     confirm_course = models.BooleanField('课程审核结果', default=True)
+    status = models.CharField(choices=STATUS, default='TO_UPLOAD', max_length=30)
 
     class Meta:
         db_table = 'user_course'

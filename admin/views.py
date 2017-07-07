@@ -4,7 +4,8 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
-    UserInfoRemarkSerializer
+    UserInfoRemarkSerializer, ConfirmCourseSerializer
+from course.models import UserCourse
 from authentication.models import UserInfo
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
@@ -55,3 +56,9 @@ class UserInfoViewSet(mixins.ListModelMixin,
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         return Response(UserInfoRemarkSerializer(instance).data)
+
+    @detail_route()
+    def confirm_course(self, request, pk):
+        user = self.get_object().user
+        user_course = UserCourse.objects.filter(user=user)
+        return Response(ConfirmCourseSerializer(user_course, many=True).data)

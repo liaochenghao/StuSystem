@@ -81,6 +81,20 @@
                 "key": "SUCCESS",
                 "verbose": "学分转换成功"
             }
+        ],
+        "user_course_status": [         # 学生审课状态
+            {
+                "key": "TO_UPLOAD",
+                "verbose": "待上传"
+            },
+            {
+                "key": "TO_CONFIRM",
+                "verbose": "待审核"
+            },
+            {
+                "key": "PASS",
+                "verbose": "通过"
+            }
         ]
     },
 "field_name": ""

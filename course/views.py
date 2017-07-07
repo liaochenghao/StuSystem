@@ -147,6 +147,6 @@ class CourseViewSet(BaseViewSet):
         """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        UserCourse.objects.filter(user=request.user,
-                                  course=self.get_object()).update(confirm_photo=serializer.validated_data['confirm_photo'])
+        UserCourse.objects.filter(user=request.user, course=self.get_object()).update(
+            confirm_photo=serializer.validated_data['confirm_photo'], status='TO_CONFIRM')
         return Response({'msg': '操作成功'})
