@@ -106,7 +106,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
-    # filter_class = UserInfoFilterSet
+    filter_class = UserInfoFilterSet
 
     def list(self, request, *args, **kwargs):
         if request.user.role != 'ADMIN':
