@@ -26,3 +26,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
+
+
+class RetrieveUserInfoSerializer(serializers.ModelSerializer):
+    gender = VerboseChoiceField(choices=UserInfo.GENDER)
+
+    class Meta:
+        model = UserInfo
+        fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
+                  'cschool', 'major', 'graduate_year', 'gpa']

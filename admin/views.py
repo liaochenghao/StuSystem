@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import mixins, viewsets
 from admin.models import PaymentAccountInfo
-from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer
+from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer
 from authentication.models import UserInfo
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
@@ -24,8 +24,22 @@ class UserInfoViewSet(mixins.ListModelMixin,
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
 
-    def list(self, request, *args, **kwargs):
-        if request.user.role != 'ADMIN':
+    def get_queryset(self):
+        if self.request.user.role != 'ADMIN':
             raise exceptions.PermissionDenied('非管理员无权限访问该接口')
-        self.queryset = self.queryset.exclude(user__role='ADMIN')
-        return super().list(request, *args, **kwargs)
+        queryset = self.queryset.exclude(user__role='ADMIN')
+        return queryset
+
+    def get_serializer(self, *args, **kwargs):
+        if kwargs.get('many'):
+            return UserInfoSerializer(*args, **kwargs)
+        return RetrieveUserInfoSerializer(*args, **kwargs)
+
+    def get_object(self):
+        # pk 传过来的是user_id，需要转换为user_info
+        user_id = self.kwargs.get('pk')
+        try:
+            user_info = self.queryset.get(pk=user_id)
+        except UserInfo.DoesNotExist:
+            raise exceptions.NotFound('未找到user_info实例')
+        return user_info
