@@ -63,7 +63,7 @@
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 
 **管理后台接口**：
-- [学生信息列表](docs/authentication/user_info_list.md)
+- [学生信息列表](docs/admin/user_info_list.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)

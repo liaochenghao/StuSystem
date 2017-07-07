@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    GET     /auth/user/info/
+    GET     /admin/user_info/
 ```
 
 **请求参数**:

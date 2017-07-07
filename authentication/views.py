@@ -1,16 +1,16 @@
 # coding: utf-8
 import random
+
+from rest_framework import exceptions
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework import exceptions
-from authentication.models import User, UserInfo, UserScoreDetail
-from coupon.models import Coupon
-from common.models import SalesMan, SalesManUser
 from authentication.functions import UserTicket
+from authentication.models import User, UserInfo, UserScoreDetail
 from authentication.serializers import UserSerializer, ListUserInfoSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
-from authentication.filters import UserInfoFilterSet
+from common.models import SalesMan
+from coupon.models import Coupon
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -100,20 +100,11 @@ class UserViewSet(mixins.ListModelMixin,
             return Response({'msg': '操作成功'})
 
 
-class UserInfoViewSet(mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
+class UserInfoViewSet(mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
-    filter_class = UserInfoFilterSet
-
-    def list(self, request, *args, **kwargs):
-        if request.user.role != 'ADMIN':
-            raise exceptions.PermissionDenied('非管理员无权限访问该接口')
-        self.queryset = self.queryset.exclude(user__role='ADMIN')
-        self.serializer_class = ListUserInfoSerializer
-        return super().list(request, *args, **kwargs)
 
     def get_object(self):
         user = self.request.user
