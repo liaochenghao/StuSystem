@@ -14,7 +14,7 @@ class OrderSerializer(serializers.ModelSerializer):
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
-    # project = ProjectSerializer()
+    project = ProjectSerializer()
 
     class Meta:
         model = Order

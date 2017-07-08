@@ -1,12 +1,12 @@
 # coding: utf-8
-from rest_framework import mixins, viewsets
-from rest_framework.decorators import detail_route
+from rest_framework import mixins, viewsets, views
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, AdminProjectSerializer
 from course.models import Project
-from order.models import UserCourse
+from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
@@ -93,3 +93,22 @@ class AdminProjectViewSet(mixins.ListModelMixin,
                           viewsets.GenericViewSet):
     queryset = Project.objects.all()
     serializer_class = AdminProjectSerializer
+
+
+class StatisticsViewSet(mixins.ListModelMixin,
+                        viewsets.GenericViewSet):
+    queryset = UserInfo.objects.all()
+    serializer_class = UserInfoSerializer
+
+    @list_route()
+    def students_overview(self, request):
+        students_num = self.queryset.count()
+        students_personal_file_num = self.queryset.filter(first_name__isnull=False,
+                                                          last_name__isnull=False,
+                                                          phone__isnull=False,
+                                                          gender__isnull=False,
+                                                          id_number__isnull=False,
+                                                          major__isnull=False,
+                                                          gpa__isnull=False).count()
+        students_applyed = Order.objects.filter()
+        return Response()
