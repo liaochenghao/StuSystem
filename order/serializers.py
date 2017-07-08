@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from order.models import Order, OrderCoupon, OrderPayment
-from course.models import ProjectCourseFee
+from course.models import ProjectCourseFee, Course
 from course.serializers import ProjectSerializer
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer
@@ -54,6 +54,7 @@ class OrderSerializer(serializers.ModelSerializer):
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         order_payment = OrderPayment.objects.filter(order=instance).first()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
+        data['user_course'] = Course.objects.filter(usercourse__project=instance.project).values('id', 'name', 'course_code')
         return data
 
 
