@@ -1,7 +1,8 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, ProjectCourseFee, Campus, CampusType, Course, UserCourse, ProjectResult
+from course.models import Project, ProjectCourseFee, Campus, CampusType, Course, ProjectResult
+from order.models import UserCourse
 from drf_extra_fields.fields import Base64ImageField
 from utils.serializer_fields import VerboseChoiceField
 from order.models import Order
@@ -123,24 +124,24 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course', 'project', 'user']
+        fields = ['id', 'course', 'order', 'user']
 
     def validate(self, attrs):
-        if not Order.objects.filter(user=attrs['user'], project=attrs['project'],
+        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
                                     ).exists():
             raise serializers.ValidationError('订单不存在')
 
-        if not Order.objects.filter(user=attrs['user'], project=attrs['project'],
+        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
                                     status='PAYED').exists():
             raise serializers.ValidationError('订单未支付')
 
-        if UserCourse.objects.filter(user=attrs['user'], project=attrs['project'],
+        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
 
     def create(self, validated_data):
-        ProjectResult.objects.get_or_create(user=validated_data['user'], project=validated_data['project'])
+        ProjectResult.objects.get_or_create(user=validated_data['user'], project=validated_data['order'].project)
         return super().create(validated_data)
 
 

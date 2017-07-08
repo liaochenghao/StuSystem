@@ -2,8 +2,8 @@
 from rest_framework import mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from course.models import Campus, ProjectResult, UserCourse
-from order.models import Order
+from course.models import Campus, ProjectResult
+from order.models import Order, UserCourse
 from authentication.models import UserInfo
 from common.models import SalesManUser
 from common.serializers import CampusSerializer

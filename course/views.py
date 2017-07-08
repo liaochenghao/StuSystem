@@ -2,7 +2,8 @@
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-from course.models import Project, Campus, CampusType, Course, UserCourse, ProjectResult
+from course.models import Project, Campus, CampusType, Course, ProjectResult
+from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \

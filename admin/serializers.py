@@ -1,7 +1,8 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
-from course.models import UserCourse, Project
+from course.models import Project
+from order.models import UserCourse
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 

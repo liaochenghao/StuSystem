@@ -8,7 +8,7 @@
 **请求参数**:
 ```
 {
-    "project":  int 项目id
+    "order":  int 项目id
     "course":   int 课程id
 }
 ```
