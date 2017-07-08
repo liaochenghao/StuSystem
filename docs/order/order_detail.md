@@ -66,6 +66,15 @@
                 "key": "ALI_PAY",
                 "verbose": "支付宝转账"
             }
+        },
+        "order_payed_info": {
+            "id": 2,
+            "order": 34,
+            "account_number": "yirantai@hotmail.com",
+            "account_name": "邱雷",
+            "opening_bank": null,
+            "pay_date": "2017-07-06",
+            "img": null
         }
     },
     "field_name": ""
