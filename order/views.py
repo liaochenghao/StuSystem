@@ -19,7 +19,7 @@ class OrderViewSet(mixins.CreateModelMixin,
         order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
         if order:
             order_course_count = UserCourse.objects.filter(order=order).count()
-            if order_course_count < order.course_num:
+            if order_course_count < int(order.course_num):
                 return Response(self.get_serializer(order).data)
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
