@@ -61,12 +61,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
     coupon_list = serializers.ListField(write_only=True, allow_empty=True)
-    # img = Base64ImageField()
+    img = Base64ImageField()
 
     class Meta:
         model = OrderPayment
-        # fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
 
     def create(self, validated_data):
         order_coupon = []
