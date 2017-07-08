@@ -1,6 +1,6 @@
 # coding: utf-8
 from rest_framework import serializers
-from order.models import Order, OrderCoupon, OrderPayment
+from order.models import Order, OrderCoupon, OrderPayment, UserCourse
 from course.models import ProjectCourseFee, Course
 from course.serializers import ProjectSerializer
 from admin.models import PaymentAccountInfo
@@ -25,6 +25,12 @@ class OrderSerializer(serializers.ModelSerializer):
         if not self.instance:
             if attrs['course_num'] > attrs['project'].course_num:
                 raise serializers.ValidationError('所选课程数大于项目最大课程数, 项目最大选课数{}'.format(attrs['project'].course_num))
+            order = Order.objects.filter(user=self.context['request'].user,
+                                         status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
+            if order:
+                order_course_count = UserCourse.objects.filter(order=order).count()
+                if order_course_count < int(order.course_num):
+                    raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
         else:
             if self.instance.status == 'CANCELED':
                 raise serializers.ValidationError('该订单已被取消，不能进行更新任何操作')
