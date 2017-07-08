@@ -55,4 +55,15 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['project_name', 'course_code', 'syllabus', 'confirm_photo', 'status']
+        fields = ['project_name', 'course_code', 'syllabus', 'confirm_photo', 'status', 'user']
+
+
+class CourseScoreSerializer(serializers.ModelSerializer):
+    project_name = serializers.CharField(source='course.project.name')
+    course_code = serializers.CharField(source='course.course_code')
+    start_time = serializers.DateTimeField(source='course.start_time')
+    end_time = serializers.DateTimeField(source='course.end_time')
+
+    class Meta:
+        model = UserCourse
+        fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user']

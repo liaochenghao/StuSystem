@@ -25,6 +25,7 @@
                 "key": "TO_UPLOAD",
                 "verbose": "待上传"
             }
+            "user": 6
         }
     ],
     "field_name": ""
