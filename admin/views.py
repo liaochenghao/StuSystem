@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer
-from course.models import UserCourse
+from course.models import UserCourse, Project
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions

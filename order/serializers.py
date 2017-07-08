@@ -7,6 +7,7 @@ from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer
 from coupon.models import Coupon
 from utils.serializer_fields import VerboseChoiceField
+from drf_extra_fields.fields import Base64ImageField
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -56,6 +57,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
     coupon_list = serializers.ListField(write_only=True, allow_empty=True)
+    img = Base64ImageField()
 
     class Meta:
         model = OrderPayment
