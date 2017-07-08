@@ -9,7 +9,6 @@ class WxClient(Client):
         self.config = settings.WX_CONFIG
         self._token = None
         self.token_expires_at = None
-    #     super().__init__(self.config)
 
     def get_web_access_token(self, code):
         """
