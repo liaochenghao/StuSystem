@@ -75,7 +75,14 @@
             "opening_bank": null,
             "pay_date": "2017-07-06",
             "img": null
-        }
+        }，
+        "user_course": [
+                    {
+                        "id": 2,
+                        "name": "大学通识课一",
+                        "course_code": "6ZDGW28OL7"
+                    },
+                ]
     },
     "field_name": ""
 }

@@ -88,7 +88,14 @@
                 "key": "ALI_PAY",
                 "verbose": "支付宝转账"
             }
-        }
+        },
+        "user_course": [
+                    {
+                        "id": 2,
+                        "name": "大学通识课一",
+                        "course_code": "6ZDGW28OL7"
+                    },
+                ]
     },
     "field_name": ""
 }
