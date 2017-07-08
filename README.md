@@ -68,6 +68,8 @@
 - [添加学生备注](docs/admin/add_remark.md)
 - [学生审课记录列表](docs/admin/confirm_course.md)
 - [学生成绩列表](docs/admin/scores_list.md)
+- [成绩单寄送地址](docs/admin/student_score_info.md)
+- [更新成绩单寄送信息](docs/admin/update_student_score_info.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)

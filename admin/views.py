@@ -4,9 +4,9 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
-    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer
+    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer
 from course.models import UserCourse
-from authentication.models import UserInfo
+from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
 
@@ -43,7 +43,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
         # pk 传过来的是user_id，需要转换为user_info
         user_id = self.kwargs.get('pk')
         try:
-            user_info = self.queryset.get(pk=user_id)
+            user_info = self.queryset.get(user=user_id)
         except UserInfo.DoesNotExist:
             raise exceptions.NotFound('未找到user_info实例')
         return user_info
@@ -68,3 +68,19 @@ class UserInfoViewSet(mixins.ListModelMixin,
         user = self.get_object().user
         user_course = UserCourse.objects.filter(user=user)
         return Response(CourseScoreSerializer(user_course, many=True).data)
+
+
+class UserScoreDetailViewSet(mixins.RetrieveModelMixin,
+                             mixins.UpdateModelMixin,
+                             viewsets.GenericViewSet):
+    queryset = UserScoreDetail.objects.all()
+    serializer_class = UserScoreDetailSerializer
+
+    def get_object(self):
+        # pk 传过来的是user_id，需要转换为user_score_detail
+        user_id = self.kwargs.get('pk')
+        try:
+            user_info = self.queryset.get(user=user_id)
+        except UserScoreDetail.DoesNotExist:
+            raise exceptions.NotFound('未找到user_info实例')
+        return user_info

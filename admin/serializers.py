@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
 from course.models import UserCourse
-from authentication.models import UserInfo, UserInfoRemark
+from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -67,3 +67,10 @@ class CourseScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
         fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user']
+
+
+class UserScoreDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserScoreDetail
+        fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
