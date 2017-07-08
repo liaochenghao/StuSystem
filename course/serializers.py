@@ -139,6 +139,9 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
                                     status='CONFIRMED').exists():
             raise serializers.ValidationError('订单未确认')
 
+        if UserCourse.objects.filter(order=attrs['order']).count() >= attrs['order'].course_num:
+            raise serializers.ValidationError('订单已达到最大选课数，不能再继续选课')
+
         if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
