@@ -4,7 +4,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
-    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer
+    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, AdminProjectSerializer
 from course.models import UserCourse, Project
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
@@ -84,3 +84,11 @@ class UserScoreDetailViewSet(mixins.RetrieveModelMixin,
         except UserScoreDetail.DoesNotExist:
             raise exceptions.NotFound('未找到user_info实例')
         return user_info
+
+
+class AdminProjectViewSet(mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
+                          mixins.UpdateModelMixin,
+                          viewsets.GenericViewSet):
+    queryset = Project.objects.all()
+    serializer_class = AdminProjectSerializer

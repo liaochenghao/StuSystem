@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
-from course.models import UserCourse
+from course.models import UserCourse, Project
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 
@@ -74,3 +74,17 @@ class UserScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserScoreDetail
         fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
+
+
+class AdminProjectSerializer(serializers.ModelSerializer):
+    campus_name = serializers.CharField(source='campus.name')
+
+    class Meta:
+        model = Project
+        fields = ['id', 'campus_name', 'name']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['applyed_num'] = instance.order_set.all().count()
+        data['payed_num'] = instance.order_set.filter(status__in=['PAYED', 'CONFIRMED']).count()
+        return data

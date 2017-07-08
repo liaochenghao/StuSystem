@@ -70,6 +70,7 @@
 - [学生成绩列表](docs/admin/scores_list.md)
 - [成绩单寄送地址](docs/admin/student_score_info.md)
 - [更新成绩单寄送信息](docs/admin/update_student_score_info.md)
+- [项目管理列表](docs/admin/project_list.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
