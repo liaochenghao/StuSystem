@@ -18,7 +18,7 @@ class Order(models.Model):
     STATUS = (
         ('CANCELED', '已取消'),
         ('TO_PAY', '待支付'),
-        ('PAYED', '已支付'),
+        ('PAYED', '待确认'),
         ('CONFIRMED', '已确认')
     )
     user = models.ForeignKey(User)
