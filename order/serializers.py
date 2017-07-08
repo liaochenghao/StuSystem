@@ -14,7 +14,6 @@ class OrderSerializer(serializers.ModelSerializer):
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
-    project = ProjectSerializer()
 
     class Meta:
         model = Order
@@ -50,6 +49,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        data['project'] = ProjectSerializer(instance.project).data
         payment_info = PaymentAccountInfo.objects.filter(payment=instance.payment).first()
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         order_payment = OrderPayment.objects.filter(order=instance).first()
