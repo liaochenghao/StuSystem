@@ -61,11 +61,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
     coupon_list = serializers.ListField(write_only=True, allow_empty=True)
-    img = Base64ImageField()
+    # img = Base64ImageField()
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
+        # fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list']
 
     def create(self, validated_data):
         order_coupon = []
@@ -82,4 +83,5 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         validated_data['order'].pay_fee = pay_fee if pay_fee >= 0 else 0
         validated_data['order'].status = 'PAYED'
         validated_data['order'].save()
-        return super().create(validated_data)
+        instance = super().create(validated_data)
+        return instance

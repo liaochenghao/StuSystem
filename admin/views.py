@@ -103,12 +103,19 @@ class StatisticsViewSet(mixins.ListModelMixin,
     @list_route()
     def students_overview(self, request):
         students_num = self.queryset.count()
-        students_personal_file_num = self.queryset.filter(first_name__isnull=False,
-                                                          last_name__isnull=False,
-                                                          phone__isnull=False,
-                                                          gender__isnull=False,
-                                                          id_number__isnull=False,
-                                                          major__isnull=False,
-                                                          gpa__isnull=False).count()
-        students_applyed = Order.objects.filter()
-        return Response()
+        personal_file_num = self.queryset.filter(first_name__isnull=False,
+                                                 last_name__isnull=False,
+                                                 phone__isnull=False,
+                                                 gender__isnull=False,
+                                                 id_number__isnull=False,
+                                                 major__isnull=False,
+                                                 gpa__isnull=False).count()
+        students_applyed = Order.objects.extra(select={'a': 'GROUP BY user_id'}).count()
+        students_payed = Order.objects.filter(status='PAYED').count()
+        res = {
+            'students_num': students_num,
+            'personal_file_num': personal_file_num,
+            'students_applyed': students_applyed,
+            'students_payed': students_payed
+        }
+        return Response(res)
