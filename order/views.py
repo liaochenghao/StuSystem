@@ -16,7 +16,7 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def check_order(self, request):
-        order = self.queryset.filter(user=self.request.user, status='TO_PAY').last()
+        order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).last()
         if order:
             return Response(self.get_serializer(order).data)
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
