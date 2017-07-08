@@ -31,7 +31,7 @@ class OrderSerializer(serializers.ModelSerializer):
             if self.instance.status == 'TO_PAY':
                 if attrs.get('status') == 'CONFIRMED':
                     raise serializers.ValidationError('用户尚未上传凭证，不能进行确认操作')
-            if self.instance.status == 'PAYED':
+            if self.instance.status == 'TO_CONFIRM':
                 if attrs.get('status') == 'CANCELED':
                     raise serializers.ValidationError('该订单已被支付，在管理员确定前不能取消')
             if self.instance.status == 'CONFIRMED':
@@ -65,7 +65,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img', 'amount']
 
     def create(self, validated_data):
         order_coupon = []
@@ -80,7 +80,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
             for item in amount:
                 pay_fee -= item
         validated_data['order'].pay_fee = pay_fee if pay_fee >= 0 else 0
-        validated_data['order'].status = 'PAYED'
+        validated_data['order'].status = 'TO_CONFIRM'
         validated_data['order'].save()
         instance = super().create(validated_data)
         return instance

@@ -115,7 +115,7 @@ class CurrentCourseProjectSerializer(serializers.Serializer):
             raise serializers.ValidationError('订单不存在')
 
         if not Order.objects.filter(user_id=attrs['user'], project_id=attrs['project'],
-                                    status='PAYED').exists():
+                                    status='TO_PAY').exists():
             raise serializers.ValidationError('订单未支付')
         return attrs
 
@@ -132,8 +132,12 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('订单不存在')
 
         if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
-                                    status='PAYED').exists():
+                                    status='TO_CONFIRM').exists():
             raise serializers.ValidationError('订单未支付')
+
+        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
+                                    status='CONFIRMED').exists():
+            raise serializers.ValidationError('订单未确认')
 
         if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
                                      course=attrs['course']).exists():

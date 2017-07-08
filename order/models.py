@@ -18,7 +18,7 @@ class Order(models.Model):
     STATUS = (
         ('CANCELED', '已取消'),
         ('TO_PAY', '待支付'),
-        ('PAYED', '待确认'),
+        ('TO_CONFIRM', '待确认'),
         ('CONFIRMED', '已确认')
     )
     user = models.ForeignKey(User)
@@ -60,6 +60,7 @@ class UserCourse(models.Model):
 
 class OrderPayment(models.Model):
     order = models.ForeignKey(Order)
+    amount = models.FloatField()
     account_number = models.CharField('支付账号', max_length=30)
     account_name = models.CharField('支付姓名', max_length=30)
     opening_bank = models.CharField('开户银行', max_length=30, null=True)

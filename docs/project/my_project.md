@@ -39,8 +39,8 @@
             "course_num": 3,                        项目课程数量
             "current_course_num": 2,                当前已选课程数量
             "order_status": {                       订单支付状态
-                "key": "PAYED",
-                "verbose": "已支付"
+                "key": "TO_CONFIRM",
+                "verbose": "待确认"
             },
             "order_remark": null,                   该项目订单备注
             "my_courses": [                         已选择的课程

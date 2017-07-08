@@ -15,6 +15,7 @@
     "pay_date":        date  支付日期    必填
     "img":             Base64   确认图片,
     "coupon_list": []   list  优惠券的id，coupon_list可以传空list，但coupon_list字段必填
+    "amount": float   用户支付的金额
 }
 ```
 
@@ -78,8 +79,8 @@
         },
         "create_time": "2017-07-08T16:24:37Z",
         "status": {
-            "key": "PAYED",
-            "verbose": "已支付"
+            "key": "TO_CONFIRM",
+            "verbose": "待确认"
         },
         "course_num": 1,
         "standard_fee": 2200,
