@@ -55,9 +55,9 @@ class MyProjectsSerializer(ProjectSerializer):
         order_info = instance.order_set.filter(user=user, project=instance).first()
         data['order_status'] = {'key': order_info.status, 'verbose': dict(Order.STATUS).get(order_info.status)}
         data['order_remark'] = order_info.remark
-        current_course_num = UserCourse.objects.filter(user=self.context['user'], project_id=instance).count()
+        current_course_num = UserCourse.objects.filter(user=self.context['user'], order__project=instance).count()
         data['current_course_num'] = current_course_num
-        my_courses = Course.objects.filter(usercourse__project=instance, usercourse__user=user)
+        my_courses = Course.objects.filter(usercourse__order__project=instance, usercourse__user=user)
         data['my_courses'] = CourseSerializer(my_courses, many=True).data
         return data
 
