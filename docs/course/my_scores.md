@@ -33,6 +33,7 @@
             }
             "score": null,          int  课程分数
             "score_grade": null     str  课程等级
+            "reporting_time": null  str  录入时间
         },
     ],
     "field_name": ""

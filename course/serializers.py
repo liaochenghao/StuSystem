@@ -172,7 +172,7 @@ class MyScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course', 'score', 'score_grade']
+        fields = ['id', 'course', 'score', 'score_grade', 'reporting_time']
 
 
 class ConfirmPhotoSerializer(serializers.Serializer):
