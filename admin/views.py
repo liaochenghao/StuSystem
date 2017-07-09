@@ -10,6 +10,7 @@ from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
+from utils.mysql_db import execute_sql
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -110,8 +111,10 @@ class StatisticsViewSet(mixins.ListModelMixin,
                                                  id_number__isnull=False,
                                                  major__isnull=False,
                                                  gpa__isnull=False).count()
-        students_applyed = Order.objects.extra(select={'a': 'GROUP BY user_id'}).count()
-        students_payed = Order.objects.filter(status='CONFIRMED').count()
+        # students_applyed = Order.objects.extra(select={'a': 'GROUP BY user_id'}).count()
+        # students_payed = Order.objects.filter(status='CONFIRMED').count()
+        students_applyed = len(execute_sql('select * from stu_system.order GROUP by user_id'))
+        students_payed = len(execute_sql('select * from stu_system.order where status="CONFIRMED" GROUP by user_id'))
         res = {
             'students_num': students_num,
             'personal_file_num': personal_file_num,
