@@ -7,7 +7,7 @@ from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -89,6 +89,7 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_fields = ['project']
 
     @list_route(serializer_class=CurrentCourseProjectSerializer)
     def current_courses_info(self, request):
@@ -151,3 +152,8 @@ class CourseViewSet(BaseViewSet):
         UserCourse.objects.filter(user=request.user, course=self.get_object()).update(
             confirm_photo=serializer.validated_data['confirm_photo'], status='TO_CONFIRM')
         return Response({'msg': '操作成功'})
+
+    @list_route()
+    def filter_elements(self, request):
+        campus = Campus.objects.all()
+        return Response(CourseFilterElementsSerializer(campus, many=True).data)

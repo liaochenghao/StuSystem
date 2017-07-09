@@ -216,3 +216,16 @@ class ProjectMyScoreSerializer(serializers.ModelSerializer):
         data['course'] = ProjectCourseSerializer(Course.objects.filter(usercourse__project=instance), many=True,
                                                  context={'user': self.context['user']}).data
         return data
+
+
+class CourseFilterElementsSerializer(serializers.ModelSerializer):
+    project_set = ProjectSerializer(many=True)
+
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'info', 'create_time', 'project_set']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['project_set'] = Project.objects.filter(campus=instance).values('id', 'name')
+        return data
