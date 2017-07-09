@@ -23,6 +23,12 @@ class OrderViewSet(mixins.CreateModelMixin,
                 return Response(self.get_serializer(order).data)
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
+    @list_route()
+    def user_order_list(self, request):
+        user = request.user
+        user_orders = self.queryset.filter(user=user)
+        return Response(self.serializer_class(user_orders, many=True, context={'request': request}).data)
+
 
 class OrderPaymentViewSet(mixins.CreateModelMixin,
                           mixins.RetrieveModelMixin,

@@ -61,7 +61,8 @@ class OrderSerializer(serializers.ModelSerializer):
         order_payment = OrderPayment.objects.filter(order=instance).first()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
         data['user_course'] = Course.objects.filter(
-            usercourse__order=instance, usercourse__user=self.context['request'].user).values('id', 'name', 'course_code')
+            usercourse__order=instance, usercourse__user=self.context['request'].user).\
+            values('id', 'name', 'course_code', 'start_time', 'end_time')
         return data
 
 
