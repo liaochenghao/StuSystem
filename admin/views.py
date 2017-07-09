@@ -111,7 +111,7 @@ class StatisticsViewSet(mixins.ListModelMixin,
                                                  major__isnull=False,
                                                  gpa__isnull=False).count()
         students_applyed = Order.objects.extra(select={'a': 'GROUP BY user_id'}).count()
-        students_payed = Order.objects.filter(status='PAYED').count()
+        students_payed = Order.objects.filter(status='CONFIRMED').count()
         res = {
             'students_num': students_num,
             'personal_file_num': personal_file_num,
