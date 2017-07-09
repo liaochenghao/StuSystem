@@ -133,11 +133,11 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
 
         if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
                                     status='TO_CONFIRM').exists():
-            raise serializers.ValidationError('订单未支付')
+            raise serializers.ValidationError('订单已支付，但未确认')
 
         if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
-                                    status='CONFIRMED').exists():
-            raise serializers.ValidationError('订单未确认')
+                                    status='TO_PAY').exists():
+            raise serializers.ValidationError('订单尚未支付')
 
         if UserCourse.objects.filter(order=attrs['order']).count() >= attrs['order'].course_num:
             raise serializers.ValidationError('订单已达到最大选课数，不能再继续选课')
