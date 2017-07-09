@@ -4,8 +4,9 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
-    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, AdminProjectSerializer
-from course.models import Project
+    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
+    AdminProjectSerializer, CampusOverViewSerializer
+from course.models import Project, Campus
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
@@ -122,3 +123,8 @@ class StatisticsViewSet(mixins.ListModelMixin,
             'students_payed': students_payed
         }
         return Response(res)
+
+    @list_route()
+    def campus_overview(self, request):
+        campus = Campus.objects.all()
+        return Response(CampusOverViewSerializer(campus, many=True).data)

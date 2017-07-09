@@ -1,8 +1,8 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
-from course.models import Project
-from order.models import UserCourse
+from course.models import Project, Campus
+from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 
@@ -88,4 +88,25 @@ class AdminProjectSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['applyed_num'] = instance.order_set.all().count()
         data['payed_num'] = instance.order_set.filter(status__in=['PAYED', 'CONFIRMED']).count()
+        return data
+
+
+class ProjectOverViewSerializer(serializers.ModelSerializer):
+    applyed_number = serializers.IntegerField(source='current_applyed_number')
+    payed_number = serializers.IntegerField(source='current_payed_number')
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'applyed_number', 'payed_number']
+
+
+class CampusOverViewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'info', 'create_time']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['project_set'] = ProjectOverViewSerializer(Project.objects.filter(campus=instance), many=True).data
         return data

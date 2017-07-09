@@ -224,11 +224,10 @@ class ProjectMyScoreSerializer(serializers.ModelSerializer):
 
 
 class CourseFilterElementsSerializer(serializers.ModelSerializer):
-    project_set = ProjectSerializer(many=True)
 
     class Meta:
         model = Campus
-        fields = ['id', 'name', 'info', 'create_time', 'project_set']
+        fields = ['id', 'name', 'info', 'create_time']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

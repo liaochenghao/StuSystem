@@ -1,6 +1,7 @@
 # coding: utf-8
 from django.db import models
 from authentication.models import User
+from utils.mysql_db import execute_sql
 
 
 class CampusType(models.Model):
@@ -50,6 +51,18 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def current_applyed_number(self):
+        data = execute_sql('select * from stu_system.order o where o.project_id=%d group by o.user_id' % self.id)
+        return len(data)
+
+    @property
+    def current_payed_number(self):
+        data = execute_sql('select * from stu_system.order o where o.project_id=%d and o.status="CONFIRMED" '
+                           'group by o.user_id' % self.id)
+        return len(data)
+
 
 
 class ProjectCourseFee(models.Model):

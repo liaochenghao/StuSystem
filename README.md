@@ -73,6 +73,9 @@
 - [项目管理列表](docs/admin/project_list.md)
 - [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
 
+- [产品中心/学生情况概览](docs/statistics/students_overview.md)
+- [产品中心/校区情况概览](docs/statistics/campus_overview.md)
+
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
 - [获取暑校类型列表](docs/campus/campus_type_list.md)
