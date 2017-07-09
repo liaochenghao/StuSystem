@@ -131,11 +131,11 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
                                     ).exists():
             raise serializers.ValidationError('订单不存在')
 
-        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
+        if not Order.objects.filter(user=attrs['user'], id=attrs['order'].id,
                                     status='TO_CONFIRM').exists():
-            raise serializers.ValidationError('订单已支付，但未确认')
+            raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
 
-        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
+        if not Order.objects.filter(user=attrs['user'], id=attrs['order'].id,
                                     status='TO_PAY').exists():
             raise serializers.ValidationError('订单尚未支付')
 
