@@ -34,7 +34,7 @@ class ProjectCourseFeeSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    project_course_fee = ProjectCourseFeeSerializer(many=True)
+    project_course_fee = ProjectCourseFeeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
