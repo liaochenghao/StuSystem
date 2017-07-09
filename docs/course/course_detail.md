@@ -29,6 +29,7 @@
         "create_time": "2017-06-19T16:07:11Z",
         "address": "华府大道一段33号"          str     上课地点
         "syllabus": ""                       str    课程地址
+        "current_course_num": 1              int    当前选课人数
     },
     "field_name": ""
 }

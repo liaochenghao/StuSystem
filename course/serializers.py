@@ -101,6 +101,11 @@ class CourseSerializer(serializers.ModelSerializer):
         validated_data['course_code'] = ''.join(random.sample(string.digits + string.ascii_uppercase, 10))
         return super().create(validated_data)
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
+        return data
+
 
 class CurrentCourseProjectSerializer(serializers.Serializer):
     project = serializers.IntegerField()
