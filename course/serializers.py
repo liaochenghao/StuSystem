@@ -163,7 +163,7 @@ class MyCourseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        courses = Course.objects.filter(usercourse__project=instance)
+        courses = Course.objects.filter(usercourse__order_project=instance)
         current_course_num = UserCourse.objects.filter(user=self.context['user'], project_id=instance).count()
         my_courses = CourseSerializer(courses, many=True).data
         data['course_num'] = instance.course_num
