@@ -40,6 +40,7 @@
                 "create_time": "2017-06-20T15:39:48Z",
                 "apply_fee": 1000,
                 "course_num": 3,
+                "remark": ""            订单备注
                 "project_course_fee": [
                     {
                         "id": 4,

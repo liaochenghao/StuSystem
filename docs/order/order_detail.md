@@ -57,6 +57,7 @@
         "standard_fee": 1000.0, 标准费用
         "pay_fee": 800.0        支付费用
         "course_num": 3,        课程数量
+        "remark": ""            订单备注
         "payment_info": {
             "id": 1,
             "account_number": "896275756@qq.com",        转账账号
