@@ -18,7 +18,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'project', 'currency', 'payment', 'create_time', 'status',
-                  'course_num', 'standard_fee', 'pay_fee', 'project']
+                  'course_num', 'standard_fee', 'pay_fee', 'project', 'remark']
         read_only_fields = ['user', 'pay_fee', 'standard_fee']
 
     def validate(self, attrs):
@@ -42,6 +42,8 @@ class OrderSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError('该订单已被支付，在管理员确定前不能取消')
             if self.instance.status == 'CONFIRMED':
                 raise serializers.ValidationError('管理员已确认该订单，不能进行任何更新操作')
+            if self.instance.status == 'CONFIRM_FAILED':
+                raise serializers.ValidationError('管理员已确认订单支付认证失败，不能进行任何更新操作')
         return attrs
 
     def create(self, validated_data):
