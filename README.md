@@ -118,3 +118,4 @@
 - [检查是否可以创建订单](docs/order/check_order.md)
 - [取消订单，确认订单](docs/order/update_order.md)
 - [获取当前用户所有订单](docs/order/user_order_list.md)
+- [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)

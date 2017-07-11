@@ -64,7 +64,6 @@ class Project(models.Model):
         return len(data)
 
 
-
 class ProjectCourseFee(models.Model):
     """项目课程费用对应表"""
     project = models.ForeignKey(Project, related_name='project_course_fee')

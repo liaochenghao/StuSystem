@@ -2,7 +2,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route
 from order.models import Order, OrderPayment, UserCourse
-from order.serializers import OrderSerializer, OrderPaymentSerializer
+from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer
 from rest_framework.response import Response
 
 
@@ -25,6 +25,13 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def user_order_list(self, request):
+        user = request.user
+        user_orders = self.queryset.filter(user=user)
+        return Response(self.serializer_class(user_orders, many=True, context={'request': request}).data)
+
+    @list_route()
+    def user_order_course(self, request):
+        self.serializer_class = UserOrderCourseSerializer
         user = request.user
         user_orders = self.queryset.filter(user=user)
         return Response(self.serializer_class(user_orders, many=True, context={'request': request}).data)

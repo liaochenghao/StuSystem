@@ -64,7 +64,47 @@ class OrderSerializer(serializers.ModelSerializer):
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
         data['user_course'] = Course.objects.filter(
             usercourse__order=instance, usercourse__user=self.context['request'].user).\
-            values('id', 'name', 'course_code', 'start_time', 'end_time')
+            values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
+        return data
+
+
+class OrderCourseSerializer(serializers.ModelSerializer):
+    """用于用户关联订单的审课"""
+    class Meta:
+        model = Course
+        fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'professor', 'start_time', 'end_time',
+                  'create_time', 'address', 'syllabus']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user_course = UserCourse.objects.filter(course=instance).first()
+        user_course_data = {
+            'score': user_course.score,
+            'score_grade': user_course.score_grade,
+            'reporting_time': user_course.reporting_time,
+            'confirm_photo': user_course.confirm_photo.path if user_course.confirm_photo else None,
+            'status': {
+                'key': user_course.status,
+                'verbose': dict(UserCourse.STATUS).get(user_course.status)
+            }
+        } if user_course else None
+        data['confirm_course'] = user_course_data
+        return data
+
+
+class UserOrderCourseSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'project', 'currency', 'payment', 'create_time', 'status',
+                  'course_num', 'standard_fee', 'pay_fee', 'project', 'remark']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user_course = Course.objects.filter(usercourse__order=instance, usercourse__user=self.context['request'].user)
+        user_course_data = OrderCourseSerializer(user_course, many=True).data if user_course else None
+        data['user_course'] = user_course_data
         return data
 
 
