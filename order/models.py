@@ -19,7 +19,8 @@ class Order(models.Model):
         ('CANCELED', '已取消'),
         ('TO_PAY', '待支付'),
         ('TO_CONFIRM', '待确认'),
-        ('CONFIRMED', '已确认')
+        ('CONFIRMED', '已确认'),
+        ('CONFIRM_FAILED', '验证失败')
     )
     user = models.ForeignKey(User)
     project = models.ForeignKey(Project)
