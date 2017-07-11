@@ -1,8 +1,8 @@
-### 创建校区
+### 创建课程
 
 **请求地址**:
 ```
-    POST   /course/project/
+    POST   /course/
 ```
 
 **请求参数**:
