@@ -131,7 +131,6 @@ REST_FRAMEWORK = {
 }
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -230,6 +229,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '/media')
 LOGIN_EXEMPT_URLS = [
     r'auth/user/login',
     r'auth/user/check_account',
+    r'auth/user/assign_sales_man',
     r'^$',
 ]
 

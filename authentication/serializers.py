@@ -9,6 +9,7 @@ from common.models import SalesManUser, SalesMan
 from coupon.models import Coupon
 import datetime
 import json
+import random
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,6 +52,45 @@ class CreateAccountSerializer(serializers.Serializer):
         else:
             need_complete_stu_info = False
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket}
+
+
+class AssignSalesManSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=100)
+
+    def create(self, validated_data):
+        # res = client.get_web_access_token(validated_data['code'])
+        # if not (res.get('access_token') and res.get('openid')):
+        #     raise serializers.ValidationError('无效的code值, 微信网页认证失败')
+        res = {
+            'openid': 'kjader234kldjlji344k'
+        }
+        user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
+        # weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
+        weixin_info = {
+            'unionid': 'lkafjkljoerewojdlfj',
+            'headimgurl': 'http://www.baidu.com',
+            'nickname': 'I love you baby'
+        }
+        ticket = UserTicket.create_ticket(user)
+        user.last_login = datetime.datetime.now()
+        user.save()
+        user_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
+                                                               **{
+                                                                   "user": user,
+                                                                   "unionid": weixin_info.get('unionid'),
+                                                                   "headimgurl": weixin_info['headimgurl'],
+                                                                   "openid": res['openid'],
+                                                                   "wx_name": weixin_info['nickname']
+                                                               })
+        if not SalesMan.objects.filter(salesmanuser__user=user).exists():
+            sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
+            res = None
+            if sales_man.count():
+                rand_int = random.randint(1, len(sales_man))
+                res = sales_man[rand_int - 1]
+        else:
+            res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code')[0]
+        return {'sales_man': res, 'ticket': ticket}
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

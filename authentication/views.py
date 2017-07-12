@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from authentication.functions import UserTicket
 from authentication.models import User, UserInfo, UserScoreDetail
 from authentication.serializers import UserSerializer, ListUserInfoSerializer, LoginSerializer, CreateAccountSerializer, \
-    UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer
+    UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer, AssignSalesManSerializer
 from common.models import SalesMan
 from coupon.models import Coupon
 
@@ -98,6 +98,17 @@ class UserViewSet(mixins.ListModelMixin,
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'msg': '操作成功'})
+
+    @list_route(serializer_class=AssignSalesManSerializer)
+    def assign_sales_man(self, request):
+        data = self.request.query_params
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+        res = serializer.save()
+        ticket = res.get('ticket')
+        response = Response(res.get('sales_man'))
+        response.set_cookie('ticket', ticket)
+        return response
 
 
 class UserInfoViewSet(mixins.RetrieveModelMixin,
