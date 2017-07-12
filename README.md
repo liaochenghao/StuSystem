@@ -72,10 +72,16 @@
 - [成绩单寄送地址](docs/admin/student_score_info.md)
 - [更新成绩单寄送信息](docs/admin/update_student_score_info.md)
 - [项目管理列表](docs/admin/project_list.md)
-- [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
+- 课程管理筛选条件获取](docs/admin/user_filter_elements.md)
+
+- [销售顾问列表](docs/sales_man/sales_man_list.md)
+- [创建销售顾问](docs/sales_man/sales_man_create.md)
+- [获取销售顾问详情](docs/sales_man/sales_man_detail.md)
+- [更新销售顾问](docs/sales_man/sales_man_update.md)
 
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
+
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)

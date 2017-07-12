@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
-    AdminProjectSerializer, CampusOverViewSerializer
+    AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer
 from course.models import Project, Campus
+from common.models import SalesMan
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail
 from admin.filters import UserInfoFilterSet
@@ -128,3 +129,12 @@ class StatisticsViewSet(mixins.ListModelMixin,
     def campus_overview(self, request):
         campus = Campus.objects.all()
         return Response(CampusOverViewSerializer(campus, many=True).data)
+
+
+class SalesManViewSet(mixins.ListModelMixin,
+                      mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      viewsets.GenericViewSet):
+    queryset = SalesMan.objects.all()
+    serializer_class = SalsesManSerializer

@@ -2,9 +2,11 @@
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
 from course.models import Project, Campus
+from common.models import SalesMan
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
 from utils.serializer_fields import VerboseChoiceField
+from drf_extra_fields.fields import Base64ImageField
 
 
 class PaymentAccountInfoSerializer(serializers.ModelSerializer):
@@ -110,3 +112,11 @@ class CampusOverViewSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['project_set'] = ProjectOverViewSerializer(Project.objects.filter(campus=instance), many=True).data
         return data
+
+
+class SalsesManSerializer(serializers.ModelSerializer):
+    qr_code = Base64ImageField()
+
+    class Meta:
+        model = SalesMan
+        fields = ['id', 'name', 'wechat', 'email', 'qr_code']
