@@ -70,7 +70,7 @@ class UserViewSet(mixins.ListModelMixin,
         :return:
         """
         user = request.user
-        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__used=False).values(
+        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").values(
             'id', 'code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 

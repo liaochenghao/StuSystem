@@ -24,9 +24,14 @@ class UserCoupon(models.Model):
     """
     User和优惠券关系表
     """
+    STATUS = (
+        ('TO_USE', '待使用'),
+        ('LOCKED', '被锁定'),
+        ('USED', '已使用')
+    )
     user = models.ForeignKey(User)
     coupon = models.ForeignKey(Coupon)
-    used = models.BooleanField('是否使用', default=False)
+    status = models.CharField(max_length=30, choices=STATUS, default='TO_USE')
 
     class Meta:
         db_table = "user_coupon"

@@ -6,6 +6,7 @@ from course.models import Campus, ProjectResult
 from order.models import Order, UserCourse
 from authentication.models import UserInfo
 from common.models import SalesManUser
+from coupon.models import UserCoupon
 from common.serializers import CampusSerializer
 from utils.functions import get_key_verbose_data
 
@@ -25,6 +26,7 @@ class GlobalEnumsViewSet(APIView):
             'order_status': get_key_verbose_data(dict(Order.STATUS)),
             'user_status': get_key_verbose_data(dict(SalesManUser.STATUS)),
             'project_result': get_key_verbose_data(dict(ProjectResult.STATUS)),
-            'user_course_status': get_key_verbose_data(dict(UserCourse.STATUS))
+            'user_course_status': get_key_verbose_data(dict(UserCourse.STATUS)),
+            'coupon_status': get_key_verbose_data(dict(UserCoupon.STATUS))
         }
         return Response(res)

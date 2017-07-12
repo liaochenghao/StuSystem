@@ -95,6 +95,20 @@
                 "key": "PASS",
                 "verbose": "通过"
             }
+        ],
+        "coupon_status": [          # 优惠券使用情况
+            {
+                "key": "TO_USE",
+                "verbose": "待使用"
+            },
+            {
+                "key": "LOCKED",
+                "verbose": "被锁定"
+            },
+            {
+                "key": "USED",
+                "verbose": "已使用"
+            }
         ]
     },
 "field_name": ""
