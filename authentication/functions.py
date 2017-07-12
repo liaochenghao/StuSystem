@@ -3,9 +3,30 @@
 import random
 import string
 import datetime
-from .models import Ticket
+from authentication.models import Ticket
+from common.models import SalesManUser, SalesMan
 
 TICKET_TIMEOUT = 60 * 60 * 24   # ticket过期时间 1天
+
+
+def auto_assign_sales_man(user):
+    """
+    自动分配销售顾问
+    :param user:
+    :return:
+    """
+    sales_man = SalesMan.objects.all()
+    if not sales_man:
+        return None
+    if not SalesManUser.objects.filter(user=user).exists():
+        rand_int = random.randint(1, len(sales_man))
+        random_sales_man = sales_man[rand_int-1]
+        SalesManUser.objects.get_or_create(user=user, sales_man=random_sales_man)
+        res = {'id': random_sales_man.id, 'name': random_sales_man.name, 'email': random_sales_man.email,
+               'qr_code': random_sales_man.qr_code.path}
+    else:
+        res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code')[0]
+    return res
 
 
 class UserTicket(object):

@@ -4,7 +4,7 @@ from weixin_server.client import client
 from utils.serializer_fields import VerboseChoiceField
 from authentication.models import User, UserInfo, UserScoreDetail
 from course.models import Campus
-from authentication.functions import UserTicket
+from authentication.functions import UserTicket, auto_assign_sales_man
 from common.models import SalesManUser, SalesMan
 from coupon.models import Coupon
 import datetime
@@ -34,11 +34,14 @@ class CreateAccountSerializer(serializers.Serializer):
             if not (res.get('access_token') and res.get('openid')):
                 raise serializers.ValidationError('无效的code值, 微信网页认证失败')
             user_info = client.get_web_user_info(res['access_token'], res['openid'])
+
+            # 创建用户
             user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
 
+            # 创建用户信息
             user_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
                                                                    **{
                                                                     "user": user,
@@ -47,6 +50,10 @@ class CreateAccountSerializer(serializers.Serializer):
                                                                     "openid": res['openid'],
                                                                     "wx_name": user_info['nickname']
                                                                     })
+
+            # 自动分配课程顾问
+            auto_assign_sales_man(user)
+
         if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
@@ -82,15 +89,8 @@ class AssignSalesManSerializer(serializers.Serializer):
                                                                    "openid": res['openid'],
                                                                    "wx_name": weixin_info['nickname']
                                                                })
-        if not SalesMan.objects.filter(salesmanuser__user=user).exists():
-            sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
-            res = None
-            if sales_man.count():
-                rand_int = random.randint(1, len(sales_man))
-                res = sales_man[rand_int - 1]
-        else:
-            res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code')[0]
-        return {'sales_man': res, 'ticket': ticket}
+        sales_man_info = auto_assign_sales_man(user)
+        return {'sales_man': sales_man_info, 'ticket': ticket}
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

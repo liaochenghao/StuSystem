@@ -5,11 +5,10 @@ from rest_framework import exceptions
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from authentication.functions import UserTicket
+from authentication.functions import UserTicket, auto_assign_sales_man
 from authentication.models import User, UserInfo, UserScoreDetail
-from authentication.serializers import UserSerializer, ListUserInfoSerializer, LoginSerializer, CreateAccountSerializer, \
+from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer, AssignSalesManSerializer
-from common.models import SalesMan
 from coupon.models import Coupon
 
 
@@ -82,14 +81,7 @@ class UserViewSet(mixins.ListModelMixin,
         """
         user = request.user
         if request.method == 'GET':
-            if not SalesMan.objects.filter(salesmanuser__user=user).exists():
-                sales_man = SalesMan.objects.all().values('id', 'name', 'email', 'qr_code')
-                res = None
-                if sales_man.count():
-                    rand_int = random.randint(1, len(sales_man))
-                    res = sales_man[rand_int - 1]
-            else:
-                res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code')[0]
+            res = auto_assign_sales_man(user)
             return Response(res)
         else:
             data = request.data
