@@ -7,7 +7,7 @@ class Coupon(models.Model):
     """
     优惠券model
     """
-    code = models.CharField("优惠码", max_length=30)
+    coupon_code = models.CharField("优惠码", max_length=30)
     amount = models.FloatField("优惠金额")
     info = models.CharField("优惠说明", max_length=30)
     create_time = models.DateTimeField(auto_now=True)
@@ -18,6 +18,9 @@ class Coupon(models.Model):
 
     class Meta:
         db_table = "coupon"
+
+    def __str__(self):
+        return self.info
 
 
 class UserCoupon(models.Model):

@@ -1,23 +1,30 @@
 # coding: utf-8
 from rest_framework import serializers
+import random, string
 from .models import Coupon, UserCoupon
 
 
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
-        fields = ['id', 'code', 'amount', 'info', 'start_time', 'end_time',\
-        			'max_num', 'create_time', 'is_active']
+        fields = ['id', 'coupon_code', 'amount', 'info', 'start_time', 'end_time',
+                  'max_num', 'create_time', 'is_active']
+        read_only_fields = ['coupon_code']
 
-    def create_coupon(self):
-    	coupon = Coupon(code=self.code, amount=self.amount, info=self.info, \
-    		start_time=self.start_time, end_time=self.end_time, max_num=self.max_num, create_time=datetime.datetime.now(),\
-    		is_active=self.is_active)
-    	coupon.save()
-    	return {'code': 0, 'msg': "请求成功"}
+    def create(self, validated_data):
+        validated_data['coupon_code'] = ''.join(random.sample(string.digits + string.ascii_uppercase, 10))
+        return super().create(validated_data)
 
 
 class UserCouponSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        if UserCoupon.objects.filter(coupon=attrs['coupon'], user=attrs['user']).exists():
+            raise serializers.ValidationError('已经为该用户分配过该优惠券，不能重复分配')
+        if UserCoupon.objects.filter(coupon=attrs['coupon']).count() >= attrs['coupon'].max_num:
+            raise serializers.ValidationError('优惠券已超过最大数量，不能为该用户新增优惠券')
+        return attrs
+
     class Meta:
         model = UserCoupon
         fields = ['id', 'user', 'coupon']
