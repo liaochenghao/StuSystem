@@ -31,6 +31,7 @@
                 "email": "896275756@qq.com",
                 "cschool": "青蛙大学",
                 "last_login": "2017-07-06T15:04:47Z",
+                "wechat":   "",
                 "personal_file": "已建档"
             }
         ]

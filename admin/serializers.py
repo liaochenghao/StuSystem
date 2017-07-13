@@ -22,7 +22,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['user_id', 'name', 'email', 'cschool', 'last_login']
+        fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
