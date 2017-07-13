@@ -8,10 +8,18 @@ from utils.serializer_fields import VerboseChoiceField
 from order.models import Order
 
 
+class CustomCampusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'campus_type', 'info', 'create_time']
+
+
 class CampusTypeSerializer(serializers.ModelSerializer):
+    campus_set = CustomCampusSerializer(many=True, read_only=True)
+
     class Meta:
         model = CampusType
-        fields = ['id', 'title', 'create_time']
+        fields = ['id', 'title', 'create_time', 'campus_set']
 
 
 class CampusSerializer(serializers.ModelSerializer):

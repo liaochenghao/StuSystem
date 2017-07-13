@@ -71,7 +71,7 @@ class UserViewSet(mixins.ListModelMixin,
         """
         user = request.user
         res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").values(
-            'id', 'code', 'amount', 'info', 'start_time', 'end_time')
+            'id', 'coupon_code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 
     @detail_route(['GET', 'POST'], serializer_class=SalesManUserSerializer)
