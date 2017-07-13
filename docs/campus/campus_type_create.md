@@ -19,8 +19,9 @@
     "msg": "请求成功",
     "data": {
         "id": 4,
-        "title": "欧洲暑校",
-        "create_time": "2017-06-19T14:34:32.826399Z"
+        "title": "非洲暑校",
+        "create_time": "2017-07-13T15:43:52.714693Z",
+        "campus_set": []
     },
     "field_name": ""
 }
