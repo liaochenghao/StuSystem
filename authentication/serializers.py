@@ -46,10 +46,11 @@ class CreateAccountSerializer(serializers.Serializer):
                                                                    **{
                                                                     "user": user,
                                                                     "unionid": user_info.get('unionid'),
-                                                                    "headimgurl": user_info['headimgurl'],
                                                                     "openid": res['openid'],
-                                                                    "wx_name": user_info['nickname']
                                                                     })
+            user_info.headimgurl = user_info['headimgurl']
+            user_info.wx_name = user_info['nickname']
+            user_info.save()
 
             # 自动分配课程顾问
             auto_assign_sales_man(user)
