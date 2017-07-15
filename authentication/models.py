@@ -32,7 +32,7 @@ class UserInfo(models.Model):
     wcampus = models.CharField('意向校区', max_length=60)
     create_time = models.DateTimeField('新建时间', auto_now=True)
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
-    unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True)
+    unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True, unique=True)
     openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
     headimgurl = models.CharField('微信头像url', max_length=255, null=True)
     wx_name = models.CharField('微信昵称', max_length=30, null=True)
