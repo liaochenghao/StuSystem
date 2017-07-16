@@ -18,14 +18,29 @@ class CampusType(models.Model):
         return self.title
 
 
+class CampusCountry(models.Model):
+    """
+    校区对应国家
+    """
+    name = models.CharField('国家名称', max_length=30)
+    campus_type = models.ForeignKey(CampusType)
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+
+    class Meta:
+        db_table = 'campus_country'
+
+    def __str__(self):
+        return self.name
+
+
 class Campus(models.Model):
     """
     校区信息表
     """
     name = models.CharField('校区名称', max_length=30)
-    campus_type = models.ForeignKey(CampusType)
+    campus_country = models.ForeignKey(CampusCountry)
     info = models.CharField("校区描述", max_length=100)
-    create_time = models.DateTimeField('创建时间', auto_now=True)
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
     class Meta:
         db_table = "campus"

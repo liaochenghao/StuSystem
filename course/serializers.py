@@ -1,35 +1,50 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, ProjectCourseFee, Campus, CampusType, Course, ProjectResult
+from course.models import Project, ProjectCourseFee, Campus, CampusCountry, CampusType, Course, ProjectResult
 from order.models import UserCourse
 from drf_extra_fields.fields import Base64ImageField
 from utils.serializer_fields import VerboseChoiceField
 from order.models import Order
 
 
-class CustomCampusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Campus
-        fields = ['id', 'name', 'campus_type', 'info', 'create_time']
-
-
 class CampusTypeSerializer(serializers.ModelSerializer):
-    campus_set = CustomCampusSerializer(many=True, read_only=True)
 
     class Meta:
         model = CampusType
-        fields = ['id', 'title', 'create_time', 'campus_set']
+        fields = ['id', 'title', 'create_time']
+
+
+class CustomCampusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'campus_country', 'info', 'create_time']
+
+
+class CampusCountrySerializer(serializers.ModelSerializer):
+    campus_set = CustomCampusSerializer(many=True)
+
+    class Meta:
+        model = CampusCountry
+        fields = ['id', 'name', 'campus_type', 'create_time', 'campus_set']
+
+
+class CustomCampusTypeSerializer(serializers.ModelSerializer):
+    campuscountry_set = CampusCountrySerializer(many=True)
+
+    class Meta:
+        model = CampusType
+        fields = ['id', 'title', 'create_time', 'campuscountry_set']
 
 
 class CampusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campus
-        fields = ['id', 'name', 'campus_type', 'info', 'create_time']
+        fields = ['id', 'name', 'campus_country', 'info', 'create_time']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['campus_type'] = CampusTypeSerializer(instance.campus_type).data
+        data['campus_country'] = CampusCountrySerializer(instance.campus_country).data
         return data
 
 

@@ -91,11 +91,16 @@
 - [获取暑校类型列表](docs/campus/campus_type_list.md)
 - [获取暑校详情](docs/campus/campus_type_detail.md)
 - [更新暑校类型](docs/campus/campus_type_update.md)
+- [暑校国家/暑校国家列表](docs/campus/campus_country_list.md)
+- [暑校国家/创建暑校国家](docs/campus/campus_country_create.md)
+- [暑校国家/暑校国家详情](docs/campus/campus_country_detail.md)
+- [暑校国家/更新暑校国家](docs/campus/campus_country_update.md)
 - [创建校区](docs/campus/campus_create.md)
 - [获取校区列表](docs/campus/campus_list.md)
 - [获取校区详情](docs/campus/campus_detail.md)
 - [更新校区](docs/campus/campus_update.md)
 - [获取该校区所有项目](docs/campus/all_projects.md)
+- [根据暑校类型获取对应国家，校区信息](docs/campus/type_country_campus.md)
 
 **项目模块**：
 - [创建项目](docs/project/project_create.md)

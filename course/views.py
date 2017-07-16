@@ -2,12 +2,12 @@
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-from course.models import Project, Campus, CampusType, Course, ProjectResult
+from course.models import Project, Campus, CampusCountry, CampusType, Course, ProjectResult
 from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, CampusCountrySerializer, CustomCampusTypeSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -28,6 +28,20 @@ class CampusTypeViewSet(BaseViewSet):
     """
     queryset = CampusType.objects.all()
     serializer_class = CampusTypeSerializer
+
+    @list_route(serializer_class=CustomCampusTypeSerializer)
+    def type_country_campus(self, request):
+        """根据暑校类型，获取所在国家，获取所在校区"""
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+
+
+class CampusCountryViewSet(BaseViewSet):
+    """
+    暑校国家
+    """
+    queryset = CampusCountry.objects.all()
+    serializer_class = CampusCountrySerializer
 
 
 class CampusViewSet(BaseViewSet):
