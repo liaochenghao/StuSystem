@@ -50,7 +50,7 @@ class CreateAccountSerializer(serializers.Serializer):
                                                                     })
             student_info.headimgurl = user_info['headimgurl']
             student_info.wx_name = user_info['nickname']
-            user_info.save()
+            student_info.save()
 
             # 自动分配课程顾问
             auto_assign_sales_man(user)
