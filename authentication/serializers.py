@@ -28,7 +28,7 @@ class CreateAccountSerializer(serializers.Serializer):
         res = client.get_web_access_token(validated_data['code'])
         if validated_data.get('ticket') and UserTicket.check_ticket(validated_data['ticket']):
             user = UserTicket.check_ticket(validated_data['ticket'])
-            user_info = UserInfo.objects.filter(user=user).first()
+            student_info = UserInfo.objects.filter(user=user).first()
             ticket = validated_data['ticket']
         else:
             if not (res.get('access_token') and res.get('openid')):
@@ -55,7 +55,7 @@ class CreateAccountSerializer(serializers.Serializer):
             # 自动分配课程顾问
             auto_assign_sales_man(user)
 
-        if any([user_info.name, user_info.email, user_info.wechat, user_info.wschool, user_info.wcampus]) is False:
+        if any([student_info.name, student_info.email, student_info.wechat, student_info.wschool, student_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
