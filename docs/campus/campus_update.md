@@ -8,7 +8,7 @@
 **请求参数**:
 ```
 {
-    "campus_type": int   暑校国家id
+    "campus_country": int   暑校国家id
     "name": str          校区名称
     "info": str          校区说明  最大长度100
 }
