@@ -8,7 +8,7 @@ class CampusType(models.Model):
     """
     校区类型表
     """
-    title = models.CharField('暑校类型', max_length=30)
+    title = models.CharField('暑校类型', max_length=30, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now=True)
 
     class Meta:
@@ -22,7 +22,7 @@ class CampusCountry(models.Model):
     """
     校区对应国家
     """
-    name = models.CharField('国家名称', max_length=30)
+    name = models.CharField('国家名称', max_length=30, unique=True)
     campus_type = models.ForeignKey(CampusType)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
@@ -37,8 +37,8 @@ class Campus(models.Model):
     """
     校区信息表
     """
-    name = models.CharField('校区名称', max_length=30)
-    campus_country = models.ForeignKey(CampusCountry)
+    name = models.CharField('校区名称', max_length=30, unique=True)
+    # campus_country = models.ForeignKey(CampusCountry)
     info = models.CharField("校区描述", max_length=100)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
@@ -47,6 +47,15 @@ class Campus(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CampusCountryRelation(models.Model):
+    """校区和国家关系表"""
+    campus = models.ForeignKey(Campus)
+    campus_country = models.ForeignKey(CampusCountry)
+
+    class Meta:
+        db_table = 'campus_country_relation'
 
 
 class Project(models.Model):
