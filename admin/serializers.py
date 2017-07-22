@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from admin.models import PaymentAccountInfo
-from course.models import Project, Campus
+from course.models import Project, Campus, Course, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
@@ -120,3 +120,63 @@ class SalsesManSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesMan
         fields = ['id', 'name', 'wechat', 'email', 'qr_code']
+
+
+class AdminCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'course_code', 'name', 'credit']
+
+
+class AdminUserCourseSerializer(serializers.ModelSerializer):
+    course = AdminCourseSerializer(read_only=True)
+    status = VerboseChoiceField(UserCourse.STATUS)
+
+    def validate(self, attrs):
+        if self.instance:
+            if self.instance.status == 'TO_UPLOAD' and (attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
+                raise serializers.ValidationError('用户还未上传审课图片，不能更改审课状态为通过或不通过')
+            if self.instance.status == 'TO_UPLOAD' and attrs.get('status') == 'TO_CONFIRM':
+                raise serializers.ValidationError('用户还未上传审课图片，管理员不能更改状态为待审核')
+        return attrs
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'order', 'course', 'score', 'score_grade', 'reporting_time', 'confirm_photo', 'status']
+        read_only_fields = ['order', 'confirm_photo']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
+        data['user_info'] = user_info
+        return data
+
+
+class CustomAdminProjectSerializer(serializers.ModelSerializer):
+    campus_name = serializers.CharField(source='campus.name')
+
+    class Meta:
+        model = Project
+        fields = ['id', 'campus_name', 'name']
+
+
+class AdminProjectResultSerializer(serializers.ModelSerializer):
+    status = VerboseChoiceField(choices=ProjectResult.STATUS)
+    project = CustomAdminProjectSerializer(read_only=True)
+
+    class Meta:
+        model = ProjectResult
+        fields = ['id', 'project', 'project', 'post_date', 'post_channel', 'post_number', 'status', 'img']
+        read_only_fields = ['img']
+
+    def validate(self, attrs):
+        if self.instance:
+            if not self.instance.img and (attrs.get('status')) in ['SUCCESS', 'FAILURE']:
+                raise serializers.ValidationError('用户还未上传学分转换证明，不能更改学分转换状态为成功或失败')
+        return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
+        data['user_info'] = user_info
+        return data

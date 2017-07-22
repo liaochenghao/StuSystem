@@ -127,7 +127,8 @@ class ProjectResult(models.Model):
     STATUS = (
         ('POSTED', '成绩单已寄出'),
         ('RECEIVED', '学校已收到'),
-        ('SUCCESS', '学分转换成功')
+        ('SUCCESS', '学分转换成功'),
+        ('FAILURE', '学分转换失败')
     )
     project = models.ForeignKey(Project)
     user = models.ForeignKey(User)

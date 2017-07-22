@@ -80,6 +80,10 @@
             {
                 "key": "SUCCESS",
                 "verbose": "学分转换成功"
+            },
+             {
+                "key": "FAILURE",
+                "verbose": "学分转换失败"
             }
         ],
         "user_course_status": [         # 学生审课状态
