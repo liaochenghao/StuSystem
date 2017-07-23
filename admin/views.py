@@ -84,10 +84,7 @@ class UserScoreDetailViewSet(mixins.RetrieveModelMixin,
     def get_object(self):
         # pk 传过来的是user_id，需要转换为user_score_detail
         user_id = self.kwargs.get('pk')
-        try:
-            user_score_detail, created = self.queryset.get_or_create(user_id=int(user_id))
-        except UserScoreDetail.DoesNotExist:
-            raise exceptions.NotFound('未找到user_info实例')
+        user_score_detail, created = self.queryset.get_or_create(user_id=int(user_id))
         return user_score_detail
 
 
