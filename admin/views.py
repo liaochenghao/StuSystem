@@ -85,10 +85,10 @@ class UserScoreDetailViewSet(mixins.RetrieveModelMixin,
         # pk 传过来的是user_id，需要转换为user_score_detail
         user_id = self.kwargs.get('pk')
         try:
-            user_info = self.queryset.get(user=user_id)
+            user_score_detail, created = self.queryset.get_or_create(user_id=int(user_id))
         except UserScoreDetail.DoesNotExist:
             raise exceptions.NotFound('未找到user_info实例')
-        return user_info
+        return user_score_detail
 
 
 class AdminProjectViewSet(mixins.ListModelMixin,
