@@ -10,7 +10,7 @@ from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, 
 from course.models import Project, Campus, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
-from authentication.models import UserInfo, UserScoreDetail
+from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
 from utils.mysql_db import execute_sql
@@ -155,3 +155,12 @@ class AdminUserProjectResultViewSet(mixins.ListModelMixin,
     """学生学分转换视图"""
     queryset = ProjectResult.objects.all()
     serializer_class = AdminProjectResultSerializer
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        try:
+            user = User.objects.get(id=pk)
+        except User.DoesNotExist:
+            raise exceptions.NotFound('未找到用户信息')
+        project_result, created = self.queryset.get_or_create(user=user)
+        return project_result

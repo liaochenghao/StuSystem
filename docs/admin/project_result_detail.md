@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    GET     /admin/project_result/[project_result_id]
+    GET     /admin/project_result/[user_id]/
 ```
 
 **请求参数**:
