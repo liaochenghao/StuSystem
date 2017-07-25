@@ -84,9 +84,9 @@
 - [优惠券/给学生分配优惠券](docs/coupon/add_coupon.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
-- [成绩管理/所有学生课程成绩列表](docs/admin/user_course_list.md)
-- [成绩管理/某一课程成绩详情](docs/admin/user_course_detail.md)
+
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
+- [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
 
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)

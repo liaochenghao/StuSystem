@@ -4,7 +4,7 @@ from admin.models import PaymentAccountInfo
 from course.models import Project, Campus, Course, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
-from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail
+from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
 from utils.serializer_fields import VerboseChoiceField
 from drf_extra_fields.fields import Base64ImageField
 
@@ -150,6 +150,27 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
         user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
         data['user_info'] = user_info
         return data
+
+
+class AddUserCourseSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    score = serializers.IntegerField()
+    score_grade = serializers.CharField()
+
+
+class ConfirmUserCourseSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    status = VerboseChoiceField(choices=UserCourse.STATUS)
+
+    # def validate(self, attrs):
+    #     user_instance = UserCourse.objects.filter(user=attrs['user'], course=attrs['course'], order=attrs['order']).first()
+    #     if user_instance and user_instance.status == 'TO_UPLOAD':
+    #         raise serializers.ValidationError('用户还未上传审课图片，不能审核')
+    #     return attrs
 
 
 class CustomAdminProjectSerializer(serializers.ModelSerializer):

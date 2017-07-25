@@ -1,13 +1,18 @@
-### 某一课程成绩详情
+### 更新课程成绩
 
 **请求地址**:
 ```
-    GET     /admin/user_course/[user_course_id]/
+    PUT     /admin/user_course/confirm_course/
 ```
 
 **请求参数**:
 ```
-
+    {
+        "user": int      用户id,
+        "course": int    课程id
+        "order": int     订单id
+        "status": varchar  PASS--审核通过, NOPASS--审核不通过
+    }
 ```
 
 **成功返回**：
@@ -16,17 +21,17 @@
     "code": 0,
     "msg": "请求成功",
     "data": {
-        "id": 14,
-        "order": 77,
+        "id": 16,
+        "order": 78,
         "course": {
-            "id": 2,
-            "course_code": "6ZDGW28OL7",
-            "name": "大学通识课一",
+            "id": 5,
+            "course_code": "3FGWTSYQXE",
+            "name": "测试课程3",
             "credit": 3
         },
-        "score": 0,
-        "score_grade": null,
-        "reporting_time": null,
+        "score": 88,
+        "score_grade": "A",
+        "reporting_time": "2017-07-25T16:01:03Z",
         "confirm_photo": null,
         "status": {
             "key": "TO_UPLOAD",
@@ -41,6 +46,7 @@
     },
     "field_name": ""
 }
+
 ```
 
 **失败返回**：

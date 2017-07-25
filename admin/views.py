@@ -6,7 +6,7 @@ from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
-    AdminProjectResultSerializer
+    AdminProjectResultSerializer, AddUserCourseSerializer, ConfirmUserCourseSerializer
 from course.models import Project, Campus, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
@@ -14,6 +14,7 @@ from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
 from utils.mysql_db import execute_sql
+import datetime
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -140,16 +141,35 @@ class SalesManViewSet(mixins.ListModelMixin,
 
 
 class AdminUserOrderViewSet(mixins.ListModelMixin,
+                            mixins.CreateModelMixin,
                             mixins.RetrieveModelMixin,
-                            mixins.UpdateModelMixin,
                             viewsets.GenericViewSet):
     """学生成绩视图"""
     queryset = UserCourse.objects.all()
     serializer_class = AdminUserCourseSerializer
 
+    @list_route(['PUT'])
+    def add_score(self, request):
+        serializer = AddUserCourseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
+            .update(score=data['score'], score_grade=data['score_grade'], reporting_time=datetime.datetime.now())
+        instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
+        return Response(self.get_serializer(instance).data)
 
-class AdminUserProjectResultViewSet(mixins.ListModelMixin,
-                                    mixins.RetrieveModelMixin,
+    @list_route(['PUT'])
+    def confirm_course(self, request):
+        serializer = ConfirmUserCourseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        self.queryset.filter(user=data['user'], course=data['course'], order=data['order']) \
+            .update(status=data['status'])
+        instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
+        return Response(self.get_serializer(instance).data)
+
+
+class AdminUserProjectResultViewSet(mixins.RetrieveModelMixin,
                                     mixins.UpdateModelMixin,
                                     viewsets.GenericViewSet):
     """学生学分转换视图"""
