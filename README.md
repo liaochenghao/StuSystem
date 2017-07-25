@@ -91,6 +91,12 @@
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
 
+- [管理员账户设置/账户列表](docs/admin/account_info_list.md)
+- [管理员账户设置/账户创建](docs/admin/account_info_create.md)
+- [管理员账户设置/账户详情](docs/admin/account_info_detail.md)
+- [管理员账户设置/更新账户](docs/admin/account_info_update.md)
+- [管理员账户设置/删除账户](docs/admin/account_info_delete.md)
+
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
 - [获取暑校类型列表](docs/campus/campus_type_list.md)

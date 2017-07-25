@@ -130,8 +130,7 @@ class ProjectResult(models.Model):
         ('SUCCESS', '学分转换成功'),
         ('FAILURE', '学分转换失败')
     )
-    project = models.ForeignKey(Project)
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     create_time = models.DateTimeField(auto_now=True)
     post_date = models.DateField('快递日期', null=True)
     post_channel = models.CharField('快递方式', max_length=30, null=True)
@@ -141,4 +140,3 @@ class ProjectResult(models.Model):
 
     class Meta:
         db_table = 'project_result'
-        unique_together = ['user', 'project']

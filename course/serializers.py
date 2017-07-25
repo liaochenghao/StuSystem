@@ -143,8 +143,8 @@ class GetProjectResultSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user = self.context['user']
-        if ProjectResult.objects.filter(user=user, project=instance, status__isnull=False).exists():
-            project_result = ProjectResultSerializer(ProjectResult.objects.get(user=user, project=instance)).data
+        if ProjectResult.objects.filter(user=user, status__isnull=False).exists():
+            project_result = ProjectResultSerializer(ProjectResult.objects.get(user=user)).data
         else:
             project_result = None
         data['project_result'] = project_result
@@ -215,7 +215,7 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        ProjectResult.objects.get_or_create(user=validated_data['user'], project=validated_data['order'].project)
+        ProjectResult.objects.get_or_create(user=validated_data['user'])
         return super().create(validated_data)
 
 
@@ -252,7 +252,7 @@ class UpdateImgSerializer(serializers.Serializer):
     img = Base64ImageField()
 
     def validate_project_result(self, project, user):
-        if not ProjectResult.objects.filter(project=project, user=user, status='SUCCESS').exists():
+        if not ProjectResult.objects.filter(user=user, status='SUCCESS').exists():
             raise serializers.ValidationError('学分转换未完成，不能上传图片')
         return
 

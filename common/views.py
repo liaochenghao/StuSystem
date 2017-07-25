@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from course.models import Campus, ProjectResult
 from order.models import Order, UserCourse
 from authentication.models import UserInfo
+from admin.models import PaymentAccountInfo
 from common.models import SalesManUser
 from coupon.models import UserCoupon
 from common.serializers import CampusSerializer
@@ -20,6 +21,7 @@ class CampusViewSet(mixins.ListModelMixin,
 class GlobalEnumsViewSet(APIView):
     def get(self, request):
         res = {
+            'account_payment': get_key_verbose_data(dict(PaymentAccountInfo.PAYMENT)),
             'user_info_gender': get_key_verbose_data(dict(UserInfo.GENDER)),
             'order_payment': get_key_verbose_data(dict(Order.PAYMENT)),
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),

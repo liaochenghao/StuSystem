@@ -162,11 +162,10 @@ class CustomAdminProjectSerializer(serializers.ModelSerializer):
 
 class AdminProjectResultSerializer(serializers.ModelSerializer):
     status = VerboseChoiceField(choices=ProjectResult.STATUS)
-    project = CustomAdminProjectSerializer(read_only=True)
 
     class Meta:
         model = ProjectResult
-        fields = ['id', 'project', 'project', 'post_date', 'post_channel', 'post_number', 'status', 'img']
+        fields = ['id', 'post_date', 'post_channel', 'post_number', 'status', 'img']
         read_only_fields = ['img']
 
     def validate(self, attrs):

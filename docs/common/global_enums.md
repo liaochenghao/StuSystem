@@ -16,6 +16,16 @@
   "code": 0,
   "msg": "请求成功",
   "data": {
+    "account_payment": [
+            {
+                "key": "ALI_PAY",
+                "verbose": "支付宝转账"
+            },
+            {
+                "key": "BANK",
+                "verbose": "银行转账"
+            }
+        ],
     "user_info_gender": [                   # 用户性别信息
         {
             "key": "MALE",
