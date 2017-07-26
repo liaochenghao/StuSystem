@@ -24,6 +24,7 @@
             "score": 0,                             成绩
             "score_grade": "",                      课程等级
             "user": 6
+            "order": 77
         }
     ],
     "field_name": ""

@@ -69,7 +69,7 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user']
+        fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user', 'order']
 
 
 class UserScoreDetailSerializer(serializers.ModelSerializer):
