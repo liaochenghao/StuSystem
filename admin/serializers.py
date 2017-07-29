@@ -186,7 +186,7 @@ class AdminProjectResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectResult
-        fields = ['id', 'post_date', 'post_channel', 'post_number', 'status', 'img']
+        fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'status', 'img']
         read_only_fields = ['img']
 
     def validate(self, attrs):

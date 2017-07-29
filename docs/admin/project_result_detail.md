@@ -24,7 +24,7 @@
             "campus_name": "北京校区",
             "name": "北京校区一期项目"
         },
-        "post_date": null,          快递日期
+        "post_datetime": null,          快递日期
         "post_channel": null,       快递方式
         "post_number": null,        快递单号
         "status": null,             状态值

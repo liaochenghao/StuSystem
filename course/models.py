@@ -132,7 +132,7 @@ class ProjectResult(models.Model):
     )
     user = models.OneToOneField(User)
     create_time = models.DateTimeField(auto_now=True)
-    post_date = models.DateField('快递日期', null=True)
+    post_datetime = models.DateTimeField('快递时间', null=True)
     post_channel = models.CharField('快递方式', max_length=30, null=True)
     post_number = models.CharField('快递单号', max_length=30, null=True)
     status = models.CharField(max_length=30, choices=STATUS, null=True)

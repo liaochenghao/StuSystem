@@ -131,7 +131,7 @@ class ProjectResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectResult
-        fields = ['id', 'status', 'post_date', 'post_channel', 'post_number', 'img']
+        fields = ['id', 'status', 'post_datetime', 'post_channel', 'post_number', 'img']
 
 
 class GetProjectResultSerializer(serializers.ModelSerializer):

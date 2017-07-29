@@ -27,7 +27,7 @@
                     "campus_name": "北京校区",
                     "name": "北京校区一期项目"
                 },
-                "post_date": null,
+                "post_datetime": null,
                 "post_channel": null,
                 "post_number": null,
                 "status": null,

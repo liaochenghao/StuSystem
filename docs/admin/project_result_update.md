@@ -8,7 +8,7 @@
 **请求参数**:
 ```
     {
-        "post_date":    str     快递时间
+        "post_datetime":    str     快递时间
         "post_channel": str     快递方式
         "post_number":  str     快递单号
         "status":       str     状态值(响应状态值在/common/global_enums/接口中获取)
@@ -27,7 +27,7 @@
             "campus_name": "北京校区",
             "name": "北京校区一期项目"
         },
-        "post_date": "2017-07-25",
+        "post_datetime": "2017-07-25",
         "post_channel": "DHL",
         "post_number": "56468987243131",
         "status": {
