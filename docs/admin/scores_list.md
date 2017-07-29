@@ -23,8 +23,9 @@
             "end_time": "2017-07-19T00:00:00Z",
             "score": 0,                             成绩
             "score_grade": "",                      课程等级
-            "user": 6
-            "order": 77
+            "user": 6                               用户id
+            "order": 77,                            订单id
+            "course": 1                             课程id
         }
     ],
     "field_name": ""
