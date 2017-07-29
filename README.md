@@ -77,6 +77,8 @@
 - [销售顾问/创建销售顾问](docs/sales_man/sales_man_create.md)
 - [销售顾问/获取销售顾问详情](docs/sales_man/sales_man_detail.md)
 - [销售顾问/更新销售顾问](docs/sales_man/sales_man_update.md)
+- [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
+
 - [优惠券/创建优惠券](docs/coupon/coupon_create.md)
 - [优惠券/优惠券列表](docs/coupon/coupon_list.md)
 - [优惠券／优惠券详情](docs/coupon/coupon_detail.md)

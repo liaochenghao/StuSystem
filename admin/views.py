@@ -14,6 +14,7 @@ from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet
 from rest_framework import exceptions
 from utils.mysql_db import execute_sql
+from weixin_server.client import client
 import datetime
 
 
@@ -138,6 +139,21 @@ class SalesManViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = SalesMan.objects.all()
     serializer_class = SalsesManSerializer
+
+    @detail_route()
+    def qr_code(self, request, pk):
+        instance = self.get_object()
+        data = {
+            'action_name': 'QR_LIMIT_SCENE',
+            'action_info': {
+                'scene': {'scene_id': 'sales_man_id_%s' % instance.id}
+            }
+        }
+        res = client.create_qrcode(data)
+        qr_code = ''
+        if res.get('url') and res.get('ticket'):
+            qr_code = client.show_qrcode(res['ticket']).url
+        return Response({'qr_code': qr_code})
 
 
 class AdminUserOrderViewSet(mixins.ListModelMixin,
