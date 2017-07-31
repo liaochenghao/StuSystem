@@ -12,7 +12,7 @@
         "course": int    课程id
         "order": int     订单id
         "score": int     分数
-        "score_degree":  varchar    课程等级
+        "score_grade":  varchar    课程等级
     }
 ```
 
