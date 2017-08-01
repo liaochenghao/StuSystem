@@ -37,8 +37,7 @@ class Campus(models.Model):
     """
     校区信息表
     """
-    name = models.CharField('校区名称', max_length=30, unique=True)
-    # campus_country = models.ForeignKey(CampusCountry)
+    name = models.CharField('校区名称', max_length=30)
     info = models.CharField("校区描述", max_length=100)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 

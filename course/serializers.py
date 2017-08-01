@@ -52,6 +52,9 @@ class CampusSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'info', 'create_time', 'campus_country']
 
     def validate(self, attrs):
+        if not self.instance:
+            if Campus.objects.filter(name=attrs['name']):
+                raise serializers.ValidationError('校区名称已存在，不能重复创建')
         if 'campus_country' in attrs.keys():
             campus_country = attrs['campus_country']
             campus_country_instance = []
