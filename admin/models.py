@@ -10,7 +10,7 @@ class PaymentAccountInfo(models.Model):
     )
     account_number = models.CharField('账号', max_length=30, unique=True)
     account_name = models.CharField('账户姓名', max_length=30)
-    opening_bank = models.CharField('开户行', max_length=30, null=True)
+    opening_bank = models.CharField('开户行', max_length=30, null=True, blank=True)
     payment = models.CharField(choices=PAYMENT, max_length=30, unique=True)
     create_time = models.DateTimeField(auto_now_add=True)
 
