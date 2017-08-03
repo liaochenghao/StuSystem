@@ -11,7 +11,7 @@ from course.models import Project, Campus, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail, User
-from admin.filters import UserInfoFilterSet
+from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from rest_framework import exceptions
 from utils.mysql_db import execute_sql
 from weixin_server.client import client
@@ -163,6 +163,7 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     """学生成绩视图"""
     queryset = UserCourse.objects.all()
     serializer_class = AdminUserCourseSerializer
+    filter_class = UserCourseFilterSet
 
     @list_route(['PUT'])
     def add_score(self, request):

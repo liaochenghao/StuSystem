@@ -12,6 +12,7 @@
         "currency":     str     支付币种
         "payment":      str     支付方式
         "status":       str     订单状态
+        "user":         int     用户id
    }
    currency, payment, status传入字段到/common/global_enums/接口中获取
 ```

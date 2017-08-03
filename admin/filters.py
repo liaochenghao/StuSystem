@@ -1,6 +1,7 @@
 # coding: utf-8
 from rest_framework.filters import FilterSet
 from authentication.models import UserInfo
+from order.models import UserCourse
 import django_filters
 
 
@@ -12,3 +13,10 @@ class UserInfoFilterSet(FilterSet):
     class Meta:
         model = UserInfo
         fields = ['name', 'email', 'wechat']
+
+
+class UserCourseFilterSet(FilterSet):
+
+    class Meta:
+        model = UserCourse
+        fields = ['user']

@@ -13,7 +13,7 @@ class OrderViewSet(mixins.CreateModelMixin,
                    viewsets.GenericViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    filter_fields = ['currency', 'payment', 'status']
+    filter_fields = ['currency', 'payment', 'status', 'user']
 
     @list_route()
     def check_order(self, request):

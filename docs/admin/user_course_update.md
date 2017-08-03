@@ -39,7 +39,7 @@
             "verbose": "待上传"
         },
         "user_info": {
-            "id": 1,
+            "user_id": 1,
             "name": "zxc",
             "email": "xcz1899@163.com",
             "wechat": "34343"
