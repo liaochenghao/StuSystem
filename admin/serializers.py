@@ -3,6 +3,7 @@ from rest_framework import serializers
 from admin.models import PaymentAccountInfo
 from course.models import Project, Campus, Course, ProjectResult
 from common.models import SalesMan
+from coupon.models import UserCoupon
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
 from utils.serializer_fields import VerboseChoiceField
@@ -48,6 +49,21 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
                   'cschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        user_coupon = None
+        if UserCoupon.objects.filter(user=instance.user).exists():
+            user_coupon = UserCoupon.objects.filter(user=instance.user).values(
+                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code')
+            for item in user_coupon:
+                item['id'] = item.pop('coupon__id')
+                item['info'] = item.pop('coupon__info')
+                item['start_time'] = item.pop('coupon__start_time')
+                item['end_time'] = item.pop('coupon__end_time')
+                item['coupon_code'] = item.pop('coupon__coupon_code')
+        data['user_coupon'] = user_coupon
+        return data
 
 
 class ConfirmCourseSerializer(serializers.ModelSerializer):

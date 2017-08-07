@@ -37,6 +37,16 @@
                 "remark": "I Love you not because who you are!",
                 "create_time": "2017-07-07T15:31:23Z"
             },
+        ],
+        "user_coupon": [
+            {
+                "user": 20,
+                "id": 1,
+                "info": "??I????",
+                "start_time": "2017-06-18T16:40:49Z",
+                "end_time": "2017-06-29T16:40:53Z",
+                "coupon_code": "HGENY0X92N"
+            }
         ]
     },
     "field_name": ""
