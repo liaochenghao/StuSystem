@@ -1,9 +1,10 @@
 # coding: utf-8
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route
+from rest_framework.response import Response
+from authentication.models import User
 from order.models import Order, OrderPayment, UserCourse
 from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer
-from rest_framework.response import Response
 
 
 class OrderViewSet(mixins.CreateModelMixin,
@@ -14,6 +15,14 @@ class OrderViewSet(mixins.CreateModelMixin,
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_fields = ['currency', 'payment', 'status', 'user']
+
+    def get_serializer(self, *args, **kwargs):
+        try:
+            user = User.objects.get(id=int(self.request.query_params.get('user')))  # 如果管理后台传入了user，则获取该user
+        except Exception as e:
+            user = self.request.user
+        self.request.user = user
+        return super().get_serializer(*args, **kwargs)
 
     @list_route()
     def check_order(self, request):
