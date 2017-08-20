@@ -1,5 +1,6 @@
 # coding: utf-8
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
 from course.models import Project, Campus, Course, ProjectResult
 from common.models import SalesMan
@@ -7,6 +8,7 @@ from coupon.models import UserCoupon
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
 from utils.serializer_fields import VerboseChoiceField
+from utils.functions import get_long_qr_code
 from drf_extra_fields.fields import Base64ImageField
 
 
@@ -85,11 +87,11 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user', 'order', 'course']
+        fields = ['project_name', 'course_code', 'start_time', 'end_time', 'score', 'score_grade', 'user', 'order',
+                  'course']
 
 
 class UserScoreDetailSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserScoreDetail
         fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
@@ -119,7 +121,6 @@ class ProjectOverViewSerializer(serializers.ModelSerializer):
 
 
 class CampusOverViewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time']
@@ -150,7 +151,8 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.instance:
-            if self.instance.status == 'TO_UPLOAD' and (attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
+            if self.instance.status == 'TO_UPLOAD' and (
+                    attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
                 raise serializers.ValidationError('用户还未上传审课图片，不能更改审课状态为通过或不通过')
             if self.instance.status == 'TO_UPLOAD' and attrs.get('status') == 'TO_CONFIRM':
                 raise serializers.ValidationError('用户还未上传审课图片，管理员不能更改状态为待审核')
@@ -183,12 +185,6 @@ class ConfirmUserCourseSerializer(serializers.Serializer):
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     status = VerboseChoiceField(choices=UserCourse.STATUS)
 
-    # def validate(self, attrs):
-    #     user_instance = UserCourse.objects.filter(user=attrs['user'], course=attrs['course'], order=attrs['order']).first()
-    #     if user_instance and user_instance.status == 'TO_UPLOAD':
-    #         raise serializers.ValidationError('用户还未上传审课图片，不能审核')
-    #     return attrs
-
 
 class CustomAdminProjectSerializer(serializers.ModelSerializer):
     campus_name = serializers.CharField(source='campus.name')
@@ -217,3 +213,21 @@ class AdminProjectResultSerializer(serializers.ModelSerializer):
         user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
         data['user_info'] = user_info
         return data
+
+
+class ChildUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+    role = VerboseChoiceField(User.ROLE)
+
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'password', 'username', 'is_active', 'qr_code', 'role']
+        read_only_fields = ['qr_code']
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        instance = super().create(validated_data)
+        qr_code = get_long_qr_code('child_user_%s' % instance.id)
+        instance.qr_code = qr_code
+        instance.save()
+        return instance

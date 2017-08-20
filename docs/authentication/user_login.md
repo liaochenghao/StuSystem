@@ -25,9 +25,14 @@
   "data": {
     "user_id": 1,
     "ticket": "TK-VbT5EBfMGlFOCicKdDjo"
+    "role": "ADMIN"
   },
   "field_name": ""
 }
+```
+
+```
+    role类型： ADMIN--管理员，STUDENT--学生，MARKET--市场人员，FINANCE--财务人员
 ```
 
 **失败返回**：

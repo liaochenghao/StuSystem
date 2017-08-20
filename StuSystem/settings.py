@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'common',
     'course',
     'coupon',
+    'market',
     'order',
     'gunicorn'
 ]

@@ -6,7 +6,7 @@ from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
-    AdminProjectResultSerializer, AddUserCourseSerializer, ConfirmUserCourseSerializer
+    AdminProjectResultSerializer, AddUserCourseSerializer, ConfirmUserCourseSerializer, ChildUserSerializer
 from course.models import Project, Campus, ProjectResult
 from common.models import SalesMan
 from order.models import UserCourse, Order
@@ -14,7 +14,6 @@ from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from rest_framework import exceptions
 from utils.mysql_db import execute_sql
-from weixin_server.client import client
 import datetime
 
 
@@ -140,21 +139,6 @@ class SalesManViewSet(mixins.ListModelMixin,
     queryset = SalesMan.objects.all()
     serializer_class = SalsesManSerializer
 
-    @detail_route()
-    def qr_code(self, request, pk):
-        instance = self.get_object()
-        data = {
-            'action_name': 'QR_LIMIT_SCENE',
-            'action_info': {
-                'scene': {'scene_id': 'sales_man_id_%s' % instance.id}
-            }
-        }
-        res = client.create_qrcode(data)
-        qr_code = ''
-        if res.get('url') and res.get('ticket'):
-            qr_code = client.show_qrcode(res['ticket']).url
-        return Response({'qr_code': qr_code})
-
 
 class AdminUserOrderViewSet(mixins.ListModelMixin,
                             mixins.CreateModelMixin,
@@ -201,3 +185,24 @@ class AdminUserProjectResultViewSet(mixins.RetrieveModelMixin,
             raise exceptions.NotFound('未找到用户信息')
         project_result, created = self.queryset.get_or_create(user=user)
         return project_result
+
+
+class ChildUserViewSet(mixins.CreateModelMixin,
+                       mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.UpdateModelMixin,
+                       viewsets.GenericViewSet):
+    queryset = User.objects.exclude(role='STUDENT')
+    serializer_class = ChildUserSerializer
+
+    @detail_route(['PUT'])
+    def update_password(self, request, pk):
+        instance = self.get_object()
+        password = request.data.get('password')
+        if not password:
+            raise exceptions.ValidationError('请传入正确的password')
+        if not len(password) >= 6:
+            raise exceptions.ValidationError('密码必须大于6位')
+        instance.password = instance.set_password(password)
+        instance.save()
+        return Response({'msg': '密码修改成功'})

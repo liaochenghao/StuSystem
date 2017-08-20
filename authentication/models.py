@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 
 
 class User(AbstractBaseUser):
+    name = models.CharField('姓名', max_length=30, null=True)
     password = models.CharField(max_length=128, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
     username = models.CharField('用户名', max_length=50, unique=True)
@@ -13,10 +14,12 @@ class User(AbstractBaseUser):
     ROLE = (
         ('STUDENT', '学生'),
         ('ADMIN', '管理员'),
-        ('MARKET', '市场部')
+        ('MARKET', '市场部'),
+        ('FINANCE', '财务部')
     )
     role = models.CharField(choices=ROLE, max_length=30)
     USERNAME_FIELD = 'username'
+    qr_code = models.CharField('二维码', max_length=255, null=True)
 
     class Meta:
         db_table = 'user'
