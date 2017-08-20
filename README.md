@@ -161,4 +161,4 @@
 - [子账号创建](docs/child_user/child_user_create.md)
 - [子账号详情](docs/child_user/child_user_detail.md)
 - [子账号更新](docs/child_user/child_user_update.md)
-- [修改密码])(docs/child_user/password_update.md)
+- [修改密码](docs/child_user/password_update.md)
