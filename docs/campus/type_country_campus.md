@@ -17,52 +17,59 @@
     "msg": "请求成功",
     "data": [
         {
-            "id": 1,
-            "title": "北美暑校",
-            "create_time": "2017-07-04T00:00:00Z",
-            "campuscountry_set": [
+            "campus_country": {
+                "key": "NORTH_AMERICA",
+                "verbose": "北美暑校"
+            },
+            "campus_type": [
                 {
                     "id": 1,
-                    "name": "加拿大",
-                    "campus_type": 1,
-                    "create_time": "2017-07-16T14:52:26Z",
-                    "campus_set": [
+                    "title": "太阳系暑校",
+                    "create_time": "2017-09-04T13:59:43Z",
+                    "campus": [
                         {
                             "id": 1,
-                            "name": "北京校区",
-                            "campus_country": 1,
+                            "name": "成都校区",
                             "info": "123",
                             "create_time": "2017-06-14T23:40:30Z"
                         },
                         {
-                            "id": 2,
-                            "name": "上海校区",
-                            "campus_country": 1,
+                            "id": 6,
+                            "name": "å—æ˜Œæ ¡åŒº",
                             "info": "123",
-                            "create_time": "2017-06-14T23:40:47Z"
+                            "create_time": "2017-06-14T23:42:18Z"
                         },
+                        {
+                            "id": 11,
+                            "name": "åŒ—äº¬æ ¡åŒº",
+                            "info": "65",
+                            "create_time": "2017-07-17T15:35:43Z"
+                        }
                     ]
                 },
                 {
                     "id": 2,
-                    "name": "美国",
-                    "campus_type": 1,
-                    "create_time": "2017-07-16T14:52:52Z",
-                    "campus_set": [
+                    "title": "地球暑校",
+                    "create_time": "2017-09-04T07:44:02Z",
+                    "campus": [
                         {
-                            "id": 5,
+                            "id": 2,
                             "name": "成都校区",
-                            "campus_country": 2,
                             "info": "123",
-                            "create_time": "2017-06-14T23:41:50Z"
+                            "create_time": "2017-06-14T23:40:47Z"
                         },
                         {
-                            "id": 6,
-                            "name": "武汉校区",
-                            "campus_country": 2,
+                            "id": 7,
+                            "name": "å¹¿å·žæ ¡åŒº",
                             "info": "123",
-                            "create_time": "2017-06-14T23:42:18Z"
+                            "create_time": "2017-06-14T23:42:45Z"
                         },
+                        {
+                            "id": 12,
+                            "name": "åŒ—äº¬æ ¡åŒº",
+                            "info": "45",
+                            "create_time": "2017-07-17T15:36:27Z"
+                        }
                     ]
                 }
             ]

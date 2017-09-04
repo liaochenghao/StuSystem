@@ -17,13 +17,6 @@ class CampusTypeSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'create_time', 'campus_country']
 
 
-class CustomCampusTypeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CampusType
-        fields = ['id', 'title', 'create_time']
-
-
 class CampusSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -40,6 +33,39 @@ class CampusSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['campus_type'] = CampusTypeSerializer(instance=instance.campus_type).data
         return data
+
+
+class CustomCampusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'info', 'create_time']
+
+
+class CustomCampusTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CampusType
+        fields = ['id', 'title', 'create_time']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['campus'] = CustomCampusSerializer(Campus.objects.filter(campus_type=instance), many=True).data
+        return data
+
+
+class TypeCountryCampusSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+
+        data = super().to_representation(instance)
+        res = []
+        for item in dict(CampusType.CAMPUS_COUNTRY):
+            res.append({
+                'key': item,
+                'verbose': dict(CampusType.CAMPUS_COUNTRY).get(item)
+            })
+        return res
 
 
 class ProjectCourseFeeSerializer(serializers.ModelSerializer):

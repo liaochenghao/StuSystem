@@ -7,7 +7,7 @@ from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, CustomCampusTypeSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, TypeCountryCampusSerializer, CustomCampusTypeSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -29,11 +29,19 @@ class CampusTypeViewSet(BaseViewSet):
     queryset = CampusType.objects.all()
     serializer_class = CampusTypeSerializer
 
-    @list_route(serializer_class=CustomCampusTypeSerializer)
+    @list_route(serializer_class=TypeCountryCampusSerializer)
     def type_country_campus(self, request):
         """根据暑校类型，获取所在国家，获取所在校区"""
-        serializer = self.serializer_class(self.queryset, many=True)
-        return Response(serializer.data)
+        res = []
+        for item in dict(CampusType.CAMPUS_COUNTRY).keys():
+            res.append({
+                'campus_country': {
+                        "key": item,
+                        "verbose": dict(CampusType.CAMPUS_COUNTRY).get(item)},
+                'campus_type': CustomCampusTypeSerializer(CampusType.objects.filter(campus_country=item),
+                                                          many=True).data
+            })
+        return Response(res)
 
 
 class CampusViewSet(BaseViewSet):
