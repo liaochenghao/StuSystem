@@ -10,16 +10,11 @@ from order.models import Order
 
 
 class CampusTypeSerializer(serializers.ModelSerializer):
+    campus_country = VerboseChoiceField(CampusType.CAMPUS_COUNTRY)
 
     class Meta:
         model = CampusType
-        fields = ['id', 'title', 'create_time']
-
-
-class CustomCampusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Campus
-        fields = ['id', 'name', 'info', 'create_time']
+        fields = ['id', 'title', 'create_time', 'campus_country']
 
 
 class CustomCampusTypeSerializer(serializers.ModelSerializer):
@@ -30,17 +25,21 @@ class CustomCampusTypeSerializer(serializers.ModelSerializer):
 
 
 class CampusSerializer(serializers.ModelSerializer):
-    campus_country = serializers.ListField(write_only=True)
 
     class Meta:
         model = Campus
-        fields = ['id', 'name', 'info', 'create_time', 'campus_country']
+        fields = ['id', 'name', 'info', 'create_time', 'campus_type']
 
     def validate(self, attrs):
         if not self.instance:
             if Campus.objects.filter(name=attrs['name']):
                 raise serializers.ValidationError('校区名称已存在，不能重复创建')
         return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['campus_type'] = CampusTypeSerializer(instance=instance.campus_type).data
+        return data
 
 
 class ProjectCourseFeeSerializer(serializers.ModelSerializer):

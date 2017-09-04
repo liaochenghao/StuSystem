@@ -9,7 +9,7 @@
 ```
 {
     "name": str  校区名称  最大长度30
-    "campus_country": list   暑校国家类型id的list
+    "campus_type": int    暑校类型id
     "info"： str  校区描述  最大长度100
 }
 ```
@@ -24,20 +24,15 @@
         "name": "测试校区",
         "info": "123456",
         "create_time": "2017-07-18T16:27:08.808114Z",
-        "campus_country": [
-            {
-                "id": 1,
-                "name": "加拿大1",
-                "campus_type": 1,
-                "create_time": "2017-07-16T14:52:26Z"
-            },
-            {
-                "id": 2,
-                "name": "美国",
-                "campus_type": 1,
-                "create_time": "2017-07-16T14:52:52Z"
+        "campus_type": {
+            "id": 1,
+            "title": "太阳系暑校",
+            "create_time": "2017-09-04T13:59:43Z",
+            "campus_country": {
+                "key": "NORTH_AMERICA",
+                "verbose": "北美暑校"
             }
-        ]
+        }
     },
     "field_name": ""
 }

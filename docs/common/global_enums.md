@@ -141,6 +141,16 @@
                 "key": "FINANCE",
                 "verbose": "财务部"
             }
+        ],
+        "campus_country": [
+            {
+                "key": "NORTH_AMERICA",
+                "verbose": "北美暑校"
+            },
+            {
+                "key": "AUSTRALIA",
+                "verbose": "澳洲暑校"
+            }
         ]
     },
 "field_name": ""

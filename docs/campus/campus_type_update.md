@@ -20,7 +20,11 @@
     "data": {
         "id": 4,
         "title": "欧洲暑校",
-        "create_time": "2017-06-19T14:34:32.826399Z"
+        "create_time": "2017-06-19T14:34:32.826399Z",
+        "campus_country":{
+            "key": "NORTH_AMERICA",
+            "verbose": "北美暑校"
+        },
     },
     "field_name": ""
 }

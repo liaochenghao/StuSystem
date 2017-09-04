@@ -18,18 +18,12 @@
     "msg": "请求成功",
     "data": {
         "id": 4,
-        "title": "欧洲暑校",
-        "create_time": "2017-06-19T14:34:32.826399Z"
-        "campus_set": [
-                    {
-                        "id": 1,
-                        "name": "北京校区",
-                        "campus_type": 1,
-                        "info": "123",
-                        "create_time": "2017-06-14T23:40:30Z"
-                    },
-                ]
-            },
+        "title": "非洲暑校",
+        "create_time": "2017-07-13T15:43:52.714693Z",
+        "campus_country":{
+            "key": "NORTH_AMERICA",
+            "verbose": "北美暑校"
+        },
     },
     "field_name": ""
 }

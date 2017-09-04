@@ -8,8 +8,13 @@ class CampusType(models.Model):
     """
     校区类型表
     """
+    CAMPUS_COUNTRY = (
+        ('NORTH_AMERICA', '北美暑校'),
+        ('AUSTRALIA', '澳洲暑校')
+    )
     title = models.CharField('暑校类型', max_length=30, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now=True)
+    campus_country = models.CharField('暑校国家', max_length=30, choices=CAMPUS_COUNTRY)
 
     class Meta:
         db_table = "campus_type"
@@ -25,6 +30,7 @@ class Campus(models.Model):
     name = models.CharField('校区名称', max_length=30)
     info = models.CharField("校区描述", max_length=100)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    campus_type = models.ForeignKey(CampusType)
 
     class Meta:
         db_table = "campus"

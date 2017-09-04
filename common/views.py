@@ -2,7 +2,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from course.models import Campus, ProjectResult
+from course.models import Campus, ProjectResult, CampusType
 from authentication.models import User
 from order.models import Order, UserCourse
 from authentication.models import UserInfo
@@ -31,6 +31,7 @@ class GlobalEnumsViewSet(APIView):
             'project_result': get_key_verbose_data(dict(ProjectResult.STATUS)),
             'user_course_status': get_key_verbose_data(dict(UserCourse.STATUS)),
             'coupon_status': get_key_verbose_data(dict(UserCoupon.STATUS)),
-            'user_role': get_key_verbose_data(dict(User.ROLE))
+            'user_role': get_key_verbose_data(dict(User.ROLE)),
+            'campus_country': get_key_verbose_data(dict(CampusType.CAMPUS_COUNTRY))
         }
         return Response(res)
