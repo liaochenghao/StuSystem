@@ -13,7 +13,6 @@ class SalesManSerializer(serializers.ModelSerializer):
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-    sales_man = SalesManSerializer()
 
     class Meta:
         model = Channel
@@ -26,3 +25,8 @@ class ChannelSerializer(serializers.ModelSerializer):
         instance.qr_code = get_long_qr_code('channel_id_%s' % instance.id)
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['sales_man'] = SalesManSerializer(instance=instance.sales_man).data
+        return data
