@@ -123,6 +123,24 @@
                 "key": "USED",
                 "verbose": "已使用"
             }
+        ],
+        "user_role": [              # 用户角色
+            {
+                "key": "STUDENT",
+                "verbose": "学生"
+            },
+            {
+                "key": "ADMIN",
+                "verbose": "管理员"
+            },
+            {
+                "key": "MARKET",
+                "verbose": "市场部"
+            },
+            {
+                "key": "FINANCE",
+                "verbose": "财务部"
+            }
         ]
     },
 "field_name": ""

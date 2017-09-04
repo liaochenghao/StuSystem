@@ -18,21 +18,6 @@ class CampusType(models.Model):
         return self.title
 
 
-class CampusCountry(models.Model):
-    """
-    校区对应国家
-    """
-    name = models.CharField('国家名称', max_length=30, unique=True)
-    campus_type = models.ForeignKey(CampusType)
-    create_time = models.DateTimeField('创建时间', auto_now_add=True)
-
-    class Meta:
-        db_table = 'campus_country'
-
-    def __str__(self):
-        return self.name
-
-
 class Campus(models.Model):
     """
     校区信息表
@@ -46,15 +31,6 @@ class Campus(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class CampusCountryRelation(models.Model):
-    """校区和国家关系表"""
-    campus = models.ForeignKey(Campus)
-    campus_country = models.ForeignKey(CampusCountry)
-
-    class Meta:
-        db_table = 'campus_country_relation'
 
 
 class Project(models.Model):
