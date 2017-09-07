@@ -77,13 +77,14 @@ class Project(models.Model):
 
     @property
     def current_applyed_number(self):
-        data = execute_sql('select * from stu_system.order o where o.project_id=%d group by o.user_id' % self.id)
+        from order.models import Order
+        data = set(Order.objects.all().values_list('user_id', flat=True))
         return len(data)
 
     @property
     def current_payed_number(self):
-        data = execute_sql('select * from stu_system.order o where o.project_id=%d and o.status="CONFIRMED" '
-                           'group by o.user_id' % self.id)
+        from order.models import Order
+        data = set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True))
         return len(data)
 
 
