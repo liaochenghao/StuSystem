@@ -6,8 +6,8 @@ from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
-    AdminProjectResultSerializer, AddUserCourseSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
-    AdminCourseSerializer
+    AdminProjectResultSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
+    AdminCourseSerializer, AdminCreateUserCourseSerializer
 from course.models import Project, Campus, ProjectResult, Course
 from common.models import SalesMan
 from order.models import UserCourse, Order
@@ -149,7 +149,7 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
 
     @list_route(['PUT'])
     def add_score(self, request):
-        serializer = AddUserCourseSerializer(data=request.data)
+        serializer = AddUserCourseScoreSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
@@ -210,6 +210,14 @@ class AdminCourseViewSet(mixins.ListModelMixin,
                          mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
                          viewsets.GenericViewSet):
+    """管理员选课"""
     queryset = Course.objects.all()
     serializer_class = AdminCourseSerializer
+
+    @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
+    def create_user_course(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'msg': '选课成功'})
 

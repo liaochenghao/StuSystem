@@ -206,7 +206,36 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
         return data
 
 
-class AddUserCourseSerializer(serializers.Serializer):
+class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course', 'order', 'user']
+
+    def validate(self, attrs):
+        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
+                                    ).exists():
+            raise serializers.ValidationError('订单不存在')
+
+        if attrs['order'] == 'TO_CONFIRM':
+            raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
+
+        if attrs['order'] == 'TO_PAY':
+            raise serializers.ValidationError('订单尚未支付')
+
+        if UserCourse.objects.filter(order=attrs['order']).count() >= int(attrs['order'].course_num):
+            raise serializers.ValidationError('已达到订单最大选课数，不能再继续选课')
+
+        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
+                                     course=attrs['course']).exists():
+            raise serializers.ValidationError('已选该课程，不能重复选择')
+        return attrs
+
+    def create(self, validated_data):
+        ProjectResult.objects.get_or_create(user=validated_data['user'])
+        return super().create(validated_data)
+
+
+class AddUserCourseScoreSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())

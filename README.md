@@ -89,7 +89,6 @@
 
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
 - [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
-
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
 
@@ -98,6 +97,8 @@
 - [管理员账户设置/账户详情](docs/admin/account_info_detail.md)
 - [管理员账户设置/更新账户](docs/admin/account_info_update.md)
 - [管理员账户设置/删除账户](docs/admin/account_info_delete.md)
+
+- [管理员为学生分配课程](docs/admin/create_user_course.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
