@@ -101,7 +101,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wcountry', 'wcampus', 'cschool', 'headimgurl']
+        fields = ['id', 'name', 'email', 'wechat', 'wcountry', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
