@@ -78,7 +78,7 @@ class ProjectViewSet(BaseViewSet):
 
     @list_route(serializer_class=GetProjectResultSerializer)
     def project_result(self, request):
-        projects = self.queryset.filter(order__user=request.user)
+        projects = self.queryset.filter(order__user=request.user, order__status='CONFIRMED')
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
 
