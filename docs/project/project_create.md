@@ -16,7 +16,12 @@
     "info":     str       必填  项目描述     最大长度255
     "apply_fee":  float   选填  申请费
     "course_num": int     必填  课程数量
-    ""
+    "project_fees": [     必填  课程费用
+			{
+				"course_number": 1,
+				"course_fee": 1000
+			},
+		]
 }
 ```
 
