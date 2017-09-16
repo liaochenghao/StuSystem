@@ -32,7 +32,7 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def check_order(self, request):
-        order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
+        order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).first()
         if order:
             order_course_count = UserCourse.objects.filter(order=order).count()
             if order_course_count < int(order.course_num):
