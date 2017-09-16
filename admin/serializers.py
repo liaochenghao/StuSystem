@@ -50,7 +50,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
-                  'cschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+                  'cschool', 'wschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
