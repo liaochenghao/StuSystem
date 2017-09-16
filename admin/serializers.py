@@ -3,7 +3,7 @@ import json
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
-from course.models import Project, Campus, Course, ProjectResult
+from course.models import Project, Campus, Course, ProjectResult, CampusCountry
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from order.models import UserCourse, Order
@@ -52,7 +52,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
-                  'cschool', 'wschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+                  'cschool', 'wcountry', 'major', 'graduate_year', 'gpa', 'user_info_remark']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -77,10 +77,16 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
             }
         else:
             data['channel'] = None
+
         try:
-            data['wschool'] = json.loads(instance.wschool)
+            w_country = CampusCountry.objects.filter(id__in=json.loads(instance.wcountry)).first()
+            data['wcountry'] = {
+                'id': w_country.id,
+                'name': w_country.name,
+                'create_time': w_country.create_time
+            }
         except:
-            data['wschool'] = instance.wschool
+            data['wcountry'] = None
         return data
 
 

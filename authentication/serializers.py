@@ -55,7 +55,7 @@ class CreateAccountSerializer(serializers.Serializer):
             # 自动分配课程顾问
             auto_assign_sales_man(user)
 
-        if any([student_info.name, student_info.email, student_info.wechat, student_info.wschool, student_info.wcampus]) is False:
+        if any([student_info.name, student_info.email, student_info.wechat, student_info.wcountry, student_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
@@ -96,16 +96,16 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    wschool = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    wcountry = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wschool', 'wcampus', 'cschool', 'headimgurl']
+        fields = ['id', 'name', 'email', 'wechat', 'wcountry', 'wcampus', 'cschool', 'headimgurl']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        if attrs.get('wschool'):
-            attrs['wschool'] = json.dumps(attrs['wschool'])
+        if attrs.get('wcountry'):
+            attrs['wcountry'] = json.dumps(attrs['wcountry'])
         if attrs.get('wcampus'):
             attrs['wcampus'] = json.dumps(attrs['wcampus'])
         return attrs
@@ -114,7 +114,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
         data['wcampus'] = campus_list
-        data['wschool'] = json.loads(instance.wschool)
+        data['wcountry'] = json.loads(instance.wcountry)
         return data
 
 

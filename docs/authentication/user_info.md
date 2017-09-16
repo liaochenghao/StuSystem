@@ -21,7 +21,7 @@
             "name": "yirantai",                 str     用户姓名,   最大长度30
             "email": "896275756@qq.com",        str     email，    最大长度30
             "wechat": "flyerweixin",            str     微信号      最大长度30
-            "wschool":  ["加拿大", "新西兰"],    list     意向学校
+            "wcountry":  ["加拿大", "新西兰"],    list     意向学校
             "wcampus": ["北京校区", "上海校区"]   list     意向校区
             "cshool": "北京大学"                 str      当前学校    最大长度30
             "headimgurl": ""                    str      用户头像
