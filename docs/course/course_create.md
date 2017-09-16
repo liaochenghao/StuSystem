@@ -16,7 +16,8 @@
     "end_time": str        课程结束时间
     "address":  str        上课地点     最大长度 30
     "max_num":  int        最大选课人数,
-    "syllabus": File       课程大纲
+    "syllabus": File       课程大纲,
+    "course_code":  str  必填  课程代码 最大长度30
 }
 ```
 
