@@ -108,7 +108,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num', 'project_course_fee']
+                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees']
 
     def validate(self, attrs):
         if not self.instance:
