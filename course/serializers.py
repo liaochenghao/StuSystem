@@ -108,7 +108,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees']
+                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'campus_country']
 
     def validate(self, attrs):
         if not self.instance:
@@ -158,6 +158,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         serializer = CampusSerializer(instance=instance.campus)
         data['campus'] = serializer.data
+        data['campus_country'] = CampusCountrySerializer(instance=instance.campus_country).data \
+            if instance.campus_country else None
         return data
 
 

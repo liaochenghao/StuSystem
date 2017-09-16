@@ -68,6 +68,7 @@ class Project(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     apply_fee = models.FloatField('申请费', null=True)
     course_num = models.IntegerField('课程数')
+    campus_country = models.ForeignKey(CampusCountry, null=True)
 
     class Meta:
         db_table = 'project'
