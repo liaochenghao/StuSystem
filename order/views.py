@@ -81,7 +81,13 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def user_order_list(self, request):
         user = request.user
-        user_orders = self.queryset.filter(user=user)
+        status = self.request.query_params.get('status')
+        none_canceled_order = self.request.query_params.get('none_canceled_order')
+        user_orders = self.queryset.filter(user=user).exclude()
+        if status:
+            user_orders = user_orders.filter(status=status)
+        if none_canceled_order:
+            user_orders = user_orders.exclude(status='CANCELED')
         return Response(self.serializer_class(user_orders, many=True, context={'request': request}).data)
 
     @list_route()
