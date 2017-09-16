@@ -24,6 +24,12 @@ class OrderViewSet(mixins.CreateModelMixin,
         self.request.user = user
         return super().get_serializer(*args, **kwargs)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.query_params.get('none_canceled_order'):
+            queryset = queryset.exclude(status='CANCELED')
+        return queryset
+
     @list_route()
     def check_order(self, request):
         order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
