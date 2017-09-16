@@ -25,6 +25,13 @@
             "wcampus": ["北京校区", "上海校区"]   list     意向校区
             "cshool": "北京大学"                 str      当前学校    最大长度30
             "headimgurl": ""                    str      用户头像
+            "sales_man":  {
+                "id": 1,
+                "name": "zhangsan",
+                "email": "896254545@qq.com",
+                "qr_code": "http://www.baidu.com",
+                "wechat": "flyerweixin"
+            }
         },
         "field_name": ""
     }

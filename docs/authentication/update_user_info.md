@@ -38,7 +38,14 @@
             "北京校区",
             "上海校区"
             ],
-        "cschool": "北京大学"
+        "cschool": "北京大学",
+        "sales_man":  {
+                "id": 1,
+                "name": "zhangsan",
+                "email": "896254545@qq.com",
+                "qr_code": "http://www.baidu.com",
+                "wechat": "flyerweixin"
+            }
     },
 "field_name": ""
 }
