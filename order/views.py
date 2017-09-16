@@ -40,6 +40,45 @@ class OrderViewSet(mixins.CreateModelMixin,
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
+    def order_currency_payment(self, request):
+        """订单币种及支付方式"""
+        data = [
+            {
+                'key': 'DOLLAR',
+                'verbose': dict(Order.CURRENCY).get('DOLLAR'),
+                'payment': [
+                    {
+                        'key': 'BANK',
+                        'verbose': dict(Order.PAYMENT).get('BANK')
+                    },
+                    {
+                        'key': 'PAY_PAL',
+                        'verbose': dict(Order.PAYMENT).get('PAY_PAL')
+                    }
+                ]
+            },
+            {
+                'key': 'RMB',
+                'verbose': dict(Order.CURRENCY).get('RMB'),
+                'payment': [
+                    {
+                        'key': 'BANK',
+                        'verbose': dict(Order.PAYMENT).get('BANK')
+                    },
+                    {
+                        'key': 'ALI_PAY',
+                        'verbose': dict(Order.PAYMENT).get('ALI_PAY')
+                    },
+                    {
+                        'key': 'OFF_LINE',
+                        'verbose': dict(Order.PAYMENT).get('OFF_LINE')
+                    }
+                ]
+            }
+        ]
+        return Response(data)
+
+    @list_route()
     def user_order_list(self, request):
         user = request.user
         user_orders = self.queryset.filter(user=user)

@@ -149,6 +149,7 @@
 - [取消订单，确认订单](docs/order/update_order.md)
 - [获取当前用户所有订单](docs/order/user_order_list.md)
 - [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)
+- [订单币种及支付方式](docs/order/order_currency_payment.md)
 
 
 **渠道模块**：
