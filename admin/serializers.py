@@ -1,4 +1,5 @@
 # coding: utf-8
+import json
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
@@ -76,6 +77,10 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
             }
         else:
             data['channel'] = None
+        try:
+            data['wschool'] = json.loads(instance.wschool)
+        except:
+            data['wschool'] = instance.wschool
         return data
 
 
