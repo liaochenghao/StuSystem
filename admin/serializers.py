@@ -70,7 +70,8 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         if channel:
             data['channel'] = {
                 'id': channel.id,
-                'name': channel.name
+                'name': channel.name,
+                'create_time': channel.create_time
             }
         else:
             data['channel'] = None
