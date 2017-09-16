@@ -143,6 +143,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         project_fees = []
         if 'project_fees' in validated_data.keys():
             project_fees = validated_data.pop('project_fees')
+        instance = super().update(instance, validated_data)
         if project_fees:
             ProjectCourseFee.objects.filter(project=instance).delete()
             bulk_data = []
