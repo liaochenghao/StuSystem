@@ -6,6 +6,7 @@ from course.models import Project, Campus, Course, ProjectResult
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from order.models import UserCourse, Order
+from market.models import Channel
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
 from utils.serializer_fields import VerboseChoiceField
 from utils.functions import get_long_qr_code
@@ -65,6 +66,14 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
         data['user_coupon'] = user_coupon
+        channel = Channel.objects.first()
+        if channel:
+            data['channel'] = {
+                'id': channel.id,
+                'name': channel.name
+            }
+        else:
+            data['channel'] = None
         return data
 
 
