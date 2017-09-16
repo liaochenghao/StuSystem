@@ -58,13 +58,14 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         user_coupon = None
         if UserCoupon.objects.filter(user=instance.user).exists():
             user_coupon = UserCoupon.objects.filter(user=instance.user).values(
-                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code')
+                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code', 'coupon__amount')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
                 item['info'] = item.pop('coupon__info')
                 item['start_time'] = item.pop('coupon__start_time')
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
+                item['amount'] = item.pop('coupon_amount')
         data['user_coupon'] = user_coupon
         channel = Channel.objects.first()
         if channel:
