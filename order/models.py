@@ -30,7 +30,8 @@ class Order(models.Model):
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')
     standard_fee = models.FloatField('标准费用')
     pay_fee = models.FloatField('支付费用', null=True)
-    create_time = models.DateTimeField(auto_now=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+    modified_time = models.DateTimeField(auto_now=True)
     course_num = models.IntegerField()
     remark = models.CharField('订单备注', max_length=255, null=True)
 
