@@ -126,20 +126,27 @@ class ProjectSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        project_fees = []
+        if 'project_fees' in validated_data.keys():
+            project_fees = validated_data.pop('project_fees')
         instance = super().create(validated_data)
-        ProjectCourseFee.objects.filter(project=instance).delete()
-        bulk_data = []
-        for item in validated_data.pop('project_fees'):
-            item['project'] = instance
-            bulk_data.append(ProjectCourseFee(**item))
-        ProjectCourseFee.objects.bulk_create(bulk_data)
+        if project_fees:
+            ProjectCourseFee.objects.filter(project=instance).delete()
+            bulk_data = []
+            for item in project_fees:
+                item['project'] = instance
+                bulk_data.append(ProjectCourseFee(**item))
+            ProjectCourseFee.objects.bulk_create(bulk_data)
         return instance
 
     def update(self, instance, validated_data):
-        if validated_data.get('project_fees'):
+        project_fees = []
+        if 'project_fees' in validated_data.keys():
+            project_fees = validated_data.pop('project_fees')
+        if project_fees:
             ProjectCourseFee.objects.filter(project=instance).delete()
             bulk_data = []
-            for item in validated_data.pop('project_fees'):
+            for item in project_fees:
                 item['project'] = instance
                 bulk_data.append(ProjectCourseFee(**item))
             ProjectCourseFee.objects.bulk_create(bulk_data)
