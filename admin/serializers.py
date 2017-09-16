@@ -78,6 +78,8 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         else:
             data['channel'] = None
 
+        data['wcampus'] = json.loads(instance.wcampus)
+
         try:
             w_country = CampusCountry.objects.filter(id__in=json.loads(instance.wcountry)).first()
             data['wcountry'] = {
