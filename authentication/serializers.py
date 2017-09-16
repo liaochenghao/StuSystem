@@ -97,7 +97,6 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    # wcountry = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserInfo

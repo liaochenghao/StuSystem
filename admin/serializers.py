@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
 from course.models import Project, Campus, Course, ProjectResult, CampusCountry
-from common.models import SalesMan
+from common.models import SalesMan, SalesManUser
 from coupon.models import UserCoupon
 from order.models import UserCourse, Order
 from market.models import Channel
@@ -93,6 +93,17 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
             }
         except Exception as e:
             data['wcountry'] = None
+
+        sales_man_user = SalesManUser.objects.filter(user=instance.user).first()
+        if sales_man_user:
+            data['sales_man'] = {
+                'id': sales_man_user.sales_man.id,
+                'name': sales_man_user.sales_man.name,
+                'email': sales_man_user.sales_man.email,
+                'qr_code': sales_man_user.sales_man.qr_code
+            }
+        else:
+            data['sales_man'] = None
         return data
 
 
