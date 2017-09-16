@@ -201,6 +201,6 @@ class ChildUserViewSet(mixins.CreateModelMixin,
             raise exceptions.ValidationError('请传入正确的password')
         if not len(password) >= 6:
             raise exceptions.ValidationError('密码必须大于6位')
-        instance.password = instance.set_password(password)
+        instance.set_password(password)
         instance.save()
         return Response({'msg': '密码修改成功'})
