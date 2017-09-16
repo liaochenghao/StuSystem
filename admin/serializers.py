@@ -9,6 +9,7 @@ from coupon.models import UserCoupon
 from order.models import UserCourse, Order
 from market.models import Channel
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
+from authentication.functions import auto_assign_sales_man
 from utils.serializer_fields import VerboseChoiceField
 from utils.functions import get_long_qr_code
 from drf_extra_fields.fields import Base64ImageField
@@ -94,14 +95,9 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         except Exception as e:
             data['wcountry'] = None
 
-        sales_man_user = SalesManUser.objects.filter(user=instance.user).first()
-        if sales_man_user:
-            data['sales_man'] = {
-                'id': sales_man_user.sales_man.id,
-                'name': sales_man_user.sales_man.name,
-                'email': sales_man_user.sales_man.email,
-                'qr_code': sales_man_user.sales_man.qr_code
-            }
+        sales_man = auto_assign_sales_man(instance.user)
+        if sales_man:
+            data['sales_man'] = sales_man
         else:
             data['sales_man'] = None
         return data
