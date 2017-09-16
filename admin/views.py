@@ -1,5 +1,5 @@
 # coding: utf-8
-from rest_framework import mixins, viewsets, views
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
@@ -13,7 +13,6 @@ from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from rest_framework import exceptions
-from utils.mysql_db import execute_sql
 import datetime
 
 
