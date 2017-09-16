@@ -77,8 +77,11 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
             }
         else:
             data['channel'] = None
-
-        data['wcampus'] = json.loads(instance.wcampus)
+        try:
+            data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)).\
+                values('id', 'name', 'info', 'create_time')
+        except Exception as e:
+            data['wcampus'] = None
 
         try:
             w_country = CampusCountry.objects.filter(id__in=json.loads(instance.wcountry)).first()
@@ -87,7 +90,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 'name': w_country.name,
                 'create_time': w_country.create_time
             }
-        except:
+        except Exception as e:
             data['wcountry'] = None
         return data
 
