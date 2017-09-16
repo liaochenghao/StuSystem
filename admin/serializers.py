@@ -65,7 +65,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['start_time'] = item.pop('coupon__start_time')
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
-                item['amount'] = item.pop('coupon_amount')
+                item['amount'] = item.pop('coupon__amount')
         data['user_coupon'] = user_coupon
         channel = Channel.objects.first()
         if channel:
