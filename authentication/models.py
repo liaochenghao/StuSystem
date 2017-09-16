@@ -52,6 +52,7 @@ class UserInfo(models.Model):
     major = models.CharField('专业', max_length=30, null=True)
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA')
+    valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
 
     class Meta:
         db_table = 'student_info'

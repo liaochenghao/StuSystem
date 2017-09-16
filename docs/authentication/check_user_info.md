@@ -16,6 +16,7 @@
     "msg": "请求成功",
     "data": {
         "need_complete_student_info"： True   Boolean        # 是否需要完善用户信息,
+        "valid_sales_man": True   Boolean   # 学生是否添加销售顾问微信
         "user_id":  int    # 当前用户的id
     }
 }
