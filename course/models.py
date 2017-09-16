@@ -104,7 +104,7 @@ class ProjectCourseFee(models.Model):
 
 class Course(models.Model):
     project = models.ForeignKey(Project)
-    course_code = models.CharField('课程代码', max_length=30, unique=True)
+    course_code = models.CharField('课程代码', max_length=30)
     name = models.CharField('课程名称', max_length=30)
     max_num = models.IntegerField('最大容纳人数')
     credit = models.IntegerField('学分')
