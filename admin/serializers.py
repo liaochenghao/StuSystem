@@ -16,10 +16,11 @@ from drf_extra_fields.fields import Base64ImageField
 
 class PaymentAccountInfoSerializer(serializers.ModelSerializer):
     payment = VerboseChoiceField(PaymentAccountInfo.PAYMENT)
+    currency = VerboseChoiceField(PaymentAccountInfo.CURRENCY)
 
     class Meta:
         model = PaymentAccountInfo
-        fields = ['id', 'account_number', 'account_name', 'opening_bank', 'payment']
+        fields = ['id', 'account_number', 'account_name', 'opening_bank', 'payment', 'currency', 'swift_code']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

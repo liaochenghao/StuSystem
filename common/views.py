@@ -23,6 +23,7 @@ class GlobalEnumsViewSet(APIView):
     def get(self, request):
         res = {
             'account_payment': get_key_verbose_data(dict(PaymentAccountInfo.PAYMENT)),
+            'account_currency': get_key_verbose_data(dict(PaymentAccountInfo.CURRENCY)),
             'user_info_gender': get_key_verbose_data(dict(UserInfo.GENDER)),
             'order_payment': get_key_verbose_data(dict(Order.PAYMENT)),
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),

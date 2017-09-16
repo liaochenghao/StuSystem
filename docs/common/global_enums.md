@@ -26,6 +26,16 @@
                 "verbose": "银行转账"
             }
         ],
+    "account_currency": [
+            {
+                "key": "DOLLAR",
+                "verbose": "美金"
+            },
+            {
+                "key": "RMB",
+                "verbose": "人民币"
+            }
+        ],
     "user_info_gender": [                   # 用户性别信息
         {
             "key": "MALE",

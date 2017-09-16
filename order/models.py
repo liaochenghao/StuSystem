@@ -13,6 +13,7 @@ class Order(models.Model):
     PAYMENT = (
         ('BANK', '银行转账'),
         ('ALI_PAY', '支付宝转账'),
+        ('PAY_PAL', 'PAY_PAL支付'),
         ('OFF_LINE', '面付')
     )
     STATUS = (
