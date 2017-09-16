@@ -53,7 +53,7 @@ class UserViewSet(mixins.ListModelMixin,
             need_complete_stu_info = False
         return Response({'need_complete_stu_info': need_complete_stu_info,
                          'user_id': user.id,
-                         "valid_sales_man": user_info.valid_sales_man})
+                         "valid_sales_man": True if user_info.valid_sales_man else False})
 
     @list_route(['put'])
     def logout(self, request):

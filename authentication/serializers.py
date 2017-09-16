@@ -60,7 +60,7 @@ class CreateAccountSerializer(serializers.Serializer):
         else:
             need_complete_stu_info = False
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
-                'valid_sales_man': student_info.valid_sales_man}
+                'valid_sales_man': True if student_info.valid_sales_man else False}
 
 
 class AssignSalesManSerializer(serializers.Serializer):
