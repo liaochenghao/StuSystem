@@ -33,6 +33,7 @@ class CampusCountrySerializer(serializers.ModelSerializer):
         campus_set = Campus.objects.filter(campuscountryrelation__campus_country=instance)
         campus_set_data = CustomCampusSerializer(campus_set, many=True).data
         data['campus_set'] = campus_set_data
+        data['campus_country'] = CampusTypeSerializer(instance=instance.campus_type).data
         return data
 
 
