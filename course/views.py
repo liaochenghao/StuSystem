@@ -7,7 +7,8 @@ from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, CampusCountrySerializer, CustomCampusTypeSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, CampusCountrySerializer, CustomCampusTypeSerializer, \
+    UpdateProjectCourseFeeSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -98,6 +99,15 @@ class ProjectViewSet(BaseViewSet):
         serializer.validate_project_result(instance, request.user)
         ProjectResult.objects.filter(project=instance, user=request.user).update(img=serializer.validated_data['img'])
         return Response({'msg': '图片上传成功'})
+
+    @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
+    def project_course_fee(self, request, pk):
+        instance = self.get_object()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        project_fees = serializer.validated_data['project_fees']
+        serializer.save_project_course_fee(instance, project_fees)
+        return Response(ProjectSerializer(instance=instance).data)
 
 
 class CourseViewSet(BaseViewSet):

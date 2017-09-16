@@ -116,6 +116,33 @@ class ProjectSerializer(serializers.ModelSerializer):
         return data
 
 
+class UpdateProjectCourseFeeSerializer(serializers.Serializer):
+    project_fees = serializers.ListField()
+
+    def validate(self, attrs):
+        project_fees = attrs['project_fees']
+        if not project_fees:
+            raise serializers.ValidationError('project_fees不能空')
+        project_fees_list = [item['course_number'] for item in project_fees]
+        if max(project_fees_list) != len(project_fees):
+            raise serializers.ValidationError('project_fees参数传入错误，project_fees最大课程数量与传入要设置课程费用的个数不匹配')
+        for item in project_fees:
+            if not isinstance(item, dict):
+                raise serializers.ValidationError('project_fees的子项必须为dict')
+            if ('course_number' not in item.keys()) or ('course_fee' not in item.keys()):
+                raise serializers.ValidationError('project_fees子项传入错误，必须含有course_number, course_fee字段')
+        return attrs
+
+    def save_project_course_fee(self, project, validated_data):
+        ProjectCourseFee.objects.filter(project=project).delete()
+        bulk_data = []
+        for item in validated_data:
+            item['project'] = project
+            bulk_data.append(ProjectCourseFee(**item))
+        ProjectCourseFee.objects.bulk_create(bulk_data)
+        return
+
+
 class MyProjectsSerializer(ProjectSerializer):
     def to_representation(self, instance):
         user = self.context['user']
