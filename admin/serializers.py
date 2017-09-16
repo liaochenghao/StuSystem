@@ -85,7 +85,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
             data['wcampus'] = None
 
         try:
-            w_country = CampusCountry.objects.filter(id__in=json.loads(instance.wcountry)).first()
+            w_country = CampusCountry.objects.get(id=instance.wcountry)
             data['wcountry'] = {
                 'id': w_country.id,
                 'name': w_country.name,

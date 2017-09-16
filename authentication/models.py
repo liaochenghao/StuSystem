@@ -31,7 +31,7 @@ class UserInfo(models.Model):
     email = models.EmailField('email', max_length=30)
     wechat = models.CharField('微信号', max_length=30)
     cschool = models.CharField('当前学校', max_length=30)
-    wcountry = models.CharField('意向学校', max_length=60)
+    wcountry = models.IntegerField('意向学校', max_length=60)
     wcampus = models.CharField('意向校区', max_length=60)
     create_time = models.DateTimeField('新建时间', auto_now=True)
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)

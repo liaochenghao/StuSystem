@@ -11,15 +11,13 @@
         "name":         str   姓名,   最大长度30
         "email":        str   email   最大长度30
         "wechat"：       str  微信号    最大长度30
-        "wcountry"：      list    意向学校
+        "wcountry"：      int    意向国家
         "wcampus"：      list    意向校区
         "cshool"：       str     当前学校    最大长度30
     }
 ```
 
 ```
-备注： 传入wcountry参数时，list中元素为str，如["美国"， "加拿大"]
-      传入wcountry参数时，list中元素为int校区的id值， 如[1,2,3]
 ```
 
 **成功返回**：

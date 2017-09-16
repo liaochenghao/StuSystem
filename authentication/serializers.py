@@ -97,7 +97,7 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    wcountry = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    # wcountry = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserInfo
@@ -105,8 +105,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        if attrs.get('wcountry'):
-            attrs['wcountry'] = json.dumps(attrs['wcountry'])
         if attrs.get('wcampus'):
             attrs['wcampus'] = json.dumps(attrs['wcampus'])
         return attrs
@@ -115,7 +113,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
         data['wcampus'] = campus_list
-        data['wcountry'] = json.loads(instance.wcountry)
         return data
 
 
