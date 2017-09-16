@@ -28,6 +28,7 @@ def auto_assign_sales_man(user):
                'qr_code': qr_code, 'wechat': random_sales_man.wechat}
     else:
         res = SalesMan.objects.filter(salesmanuser__user=user).values('id', 'name', 'email', 'qr_code', 'wechat')[0]
+        res['qr_code'] = '%s%s%s' % (DOMAIN, MEDIA_URL, res['qr_code'])
     return res
 
 
