@@ -4,26 +4,17 @@ from order.models import Order, OrderCoupon, OrderPayment, UserCourse
 from course.models import ProjectCourseFee, Course
 from course.serializers import ProjectSerializer
 from admin.models import PaymentAccountInfo
-from authentication.models import User
+from authentication.models import UserInfo
 from admin.serializers import PaymentAccountInfoSerializer
 from coupon.models import Coupon
 from utils.serializer_fields import VerboseChoiceField
 from drf_extra_fields.fields import Base64ImageField
 
 
-class UserSerializer(serializers.ModelSerializer):
-    create_time = serializers.DateTimeField()
-
-    class Meta:
-        model = User
-        exclude = ['password', 'is_active']
-
-
 class OrderSerializer(serializers.ModelSerializer):
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
-    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Order
@@ -75,6 +66,7 @@ class OrderSerializer(serializers.ModelSerializer):
         data['user_course'] = Course.objects.filter(
             usercourse__order=instance, usercourse__user=self.context['request'].user).\
             values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
+        data['user'] = UserInfo.objects.get(user=instance.user).name
         return data
 
 
