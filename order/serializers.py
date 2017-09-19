@@ -28,6 +28,11 @@ class OrderSerializer(serializers.ModelSerializer):
         if not self.instance:
             if attrs['course_num'] > attrs['project'].course_num:
                 raise serializers.ValidationError('所选课程数大于项目最大课程数, 项目最大选课数{}'.format(attrs['project'].course_num))
+            if attrs.get('coupon_list'):
+                for coupon_id in attrs['coupon_list']:
+                    if not UserCoupon.objects.filter(user=self.context['request'].user, coupon_id=coupon_id, status='TO_USE').exists():
+                        raise serializers.ValidationError('无效的优惠券, coupon_id: %s' % coupon_id)
+
             order = Order.objects.filter(user=self.context['request'].user,
                                          status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
             if order:
