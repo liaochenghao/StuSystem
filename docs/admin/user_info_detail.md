@@ -47,7 +47,12 @@
                 "end_time": "2017-06-29T16:40:53Z",
                 "coupon_code": "HGENY0X92N"
             }
-        ]
+        ],
+        "channel": {
+                    'id': 9  int,
+                    'name': '测试渠道',
+                    'create_time': "2017-09-17T06:25:23Z"
+                }
     },
     "field_name": ""
 }
