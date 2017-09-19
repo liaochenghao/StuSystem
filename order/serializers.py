@@ -1,4 +1,5 @@
 # coding: utf-8
+import json
 from rest_framework import serializers
 from order.models import Order, OrderCoupon, OrderPayment, UserCourse
 from course.models import ProjectCourseFee, Course
@@ -6,7 +7,7 @@ from course.serializers import ProjectSerializer
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo
 from admin.serializers import PaymentAccountInfoSerializer
-from coupon.models import Coupon
+from coupon.models import Coupon, UserCoupon
 from utils.serializer_fields import VerboseChoiceField
 from drf_extra_fields.fields import Base64ImageField
 
@@ -15,11 +16,12 @@ class OrderSerializer(serializers.ModelSerializer):
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
+    coupon_list = serializers.ListField(write_only=True, required=False)
 
     class Meta:
         model = Order
         fields = ['id', 'user', 'project', 'currency', 'payment', 'create_time', 'modified_time', 'status',
-                  'course_num', 'standard_fee', 'pay_fee', 'project', 'remark']
+                  'course_num', 'standard_fee', 'pay_fee', 'project', 'remark', 'coupon_list']
         read_only_fields = ['user', 'pay_fee', 'standard_fee']
 
     def validate(self, attrs):
@@ -48,13 +50,32 @@ class OrderSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        coupon_list = validated_data.pop('coupon_list', None)
         user = self.context['request'].user
         course_fee = ProjectCourseFee.objects.filter(project=validated_data['project'],
                                                      course_number=validated_data['course_num']).first()
         validated_data['standard_fee'] = validated_data['project'].apply_fee + course_fee.course_fee if course_fee else 0
         validated_data['user'] = user
+        if coupon_list:
+            validated_data['coupon_list'] = json.dumps(coupon_list)
         order = super().create(validated_data)
+        if coupon_list:
+            for coupon_id in coupon_list:
+                if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
+                    UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
         return order
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        if instance.status in ['CONFIRMED', 'CONFIRM_FAILED']:
+            coupon_list = json.loads(instance.coupon_list)
+            if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
+                UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='USED')
+        if instance.status == 'CANCELED':
+            coupon_list = json.loads(instance.coupon_list)
+            if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
+                UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='TO_USE')
+        return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

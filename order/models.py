@@ -34,6 +34,7 @@ class Order(models.Model):
     modified_time = models.DateTimeField(auto_now=True)
     course_num = models.IntegerField()
     remark = models.CharField('订单备注', max_length=255, null=True)
+    coupon_list = models.CharField('优惠券列表', null=True, max_length=255)
 
     class Meta:
         db_table = 'order'

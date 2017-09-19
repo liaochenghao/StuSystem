@@ -62,8 +62,8 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user_coupon = None
-        if UserCoupon.objects.filter(user=instance.user).exists():
-            user_coupon = UserCoupon.objects.filter(user=instance.user).values(
+        if UserCoupon.objects.filter(user=instance.user, status='TO_USE').exists():
+            user_coupon = UserCoupon.objects.filter(user=instance.user, status='TO_USE').values(
                 'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code', 'coupon__amount')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
