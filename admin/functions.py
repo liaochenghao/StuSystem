@@ -11,7 +11,7 @@ def get_channel_info(user_info_instance):
             'create_time': channel_instance.create_time
         }
     else:
-        channel_instance = Channel.objects.filter(user_channel__openid=user_info_instance.openid).first()
+        channel_instance = Channel.objects.filter(userchannel__openid=user_info_instance.openid).first()
         if channel_instance:
             channel = {
                 'id': channel_instance.id,
