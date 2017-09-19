@@ -1,6 +1,7 @@
 # coding: utf-8
 from django.db import models
 from common.models import SalesMan
+from authentication.models import User
 
 
 class Channel(models.Model):
@@ -19,3 +20,14 @@ class Channel(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserChannel(models.Model):
+    openid = models.CharField('微信openid', max_length=255)
+    user = models.ForeignKey(User)
+    channel = models.ForeignKey(Channel)
+    create_time = models.DateTimeField(auto_now_add=True)
+    modified_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'user_channel'

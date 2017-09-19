@@ -3,6 +3,7 @@ import json
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
+from admin.functions import get_channel_info
 from course.models import Project, Campus, Course, ProjectResult, CampusCountry
 from common.models import SalesMan, SalesManUser
 from coupon.models import UserCoupon
@@ -36,6 +37,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
         personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
+
+        data['channel'] = get_channel_info(instance)
         return data
 
 
@@ -70,15 +73,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['coupon_code'] = item.pop('coupon__coupon_code')
                 item['amount'] = item.pop('coupon__amount')
         data['user_coupon'] = user_coupon
-        channel = Channel.objects.first()
-        if channel:
-            data['channel'] = {
-                'id': channel.id,
-                'name': channel.name,
-                'create_time': channel.create_time
-            }
-        else:
-            data['channel'] = None
+        data['channel'] = get_channel_info(instance)
         try:
             data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)).\
                 values('id', 'name', 'info', 'create_time')

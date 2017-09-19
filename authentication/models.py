@@ -53,6 +53,8 @@ class UserInfo(models.Model):
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA')
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
+    channel_id = models.IntegerField('用户渠道信息')
+    recommand_user_id = models.IntegerField('推荐用户id')
 
     class Meta:
         db_table = 'student_info'
