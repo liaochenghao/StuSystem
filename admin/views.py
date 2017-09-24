@@ -221,3 +221,9 @@ class AdminCourseViewSet(mixins.ListModelMixin,
         serializer.save()
         return Response({'msg': '选课成功'})
 
+    @list_route()
+    def course_to_confirm_count(self, request):
+        """用户上传凭证待审核数量"""
+        count = UserCourse.objects.filter(status='TO_CONFIRM').count()
+        return Response({'course_to_confirm_count': count})
+

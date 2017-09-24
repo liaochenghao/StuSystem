@@ -56,7 +56,7 @@ class UserCourse(models.Model):
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_photo = models.ImageField('审课照片', upload_to='course/confirm_photo', null=True)
-    status = models.CharField(choices=STATUS, default='TO_UPLOAD', max_length=30)
+    status = models.CharField('学生审课状态', choices=STATUS, default='TO_UPLOAD', max_length=30)
 
     class Meta:
         db_table = 'user_course'

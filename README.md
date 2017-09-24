@@ -78,7 +78,6 @@
 - [销售顾问/获取销售顾问详情](docs/sales_man/sales_man_detail.md)
 - [销售顾问/更新销售顾问](docs/sales_man/sales_man_update.md)
 - [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
-
 - [优惠券/创建优惠券](docs/coupon/coupon_create.md)
 - [优惠券/优惠券列表](docs/coupon/coupon_list.md)
 - [优惠券／优惠券详情](docs/coupon/coupon_detail.md)
@@ -86,19 +85,17 @@
 - [优惠券/给学生分配优惠券](docs/coupon/add_coupon.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
-
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
 - [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
-
 - [管理员账户设置/账户列表](docs/admin/account_info_list.md)
 - [管理员账户设置/账户创建](docs/admin/account_info_create.md)
 - [管理员账户设置/账户详情](docs/admin/account_info_detail.md)
 - [管理员账户设置/更新账户](docs/admin/account_info_update.md)
 - [管理员账户设置/删除账户](docs/admin/account_info_delete.md)
-
 - [管理员为学生分配课程](docs/admin/create_user_course.md)
+- [用户上传凭证待审核数量](docs/admin/course_to_confirm_count.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
