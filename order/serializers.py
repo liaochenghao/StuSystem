@@ -36,10 +36,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
             order = Order.objects.filter(user=self.context['request'].user,
                                          status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
-            if order:
-                order_course_count = UserCourse.objects.filter(order=order).count()
-                if order_course_count < int(order.course_num):
-                    raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
+            # if order:
+            #     order_course_count = UserCourse.objects.filter(order=order).count()
+            #     if order_course_count < int(order.course_num):
+            #         raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
         else:
             if self.instance.status == 'CANCELED':
                 raise serializers.ValidationError('该订单已被取消，不能进行更新任何操作')
@@ -61,9 +61,17 @@ class OrderSerializer(serializers.ModelSerializer):
         course_fee = ProjectCourseFee.objects.filter(project=validated_data['project'],
                                                      course_number=validated_data['course_num']).first()
         validated_data['standard_fee'] = validated_data['project'].apply_fee + course_fee.course_fee if course_fee else 0
+        validated_data['pay_fee'] = validated_data['standard_fee']
         validated_data['user'] = user
         if coupon_list:
             validated_data['coupon_list'] = json.dumps(coupon_list)
+            # 计算优惠券费用
+            coupon_list_fee = 0
+            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount', flat=True)
+            for item in coupon_list_fee_values:
+                coupon_list_fee += item
+            validated_data['pay_fee'] = validated_data['standard_fee'] - coupon_list_fee if \
+                (validated_data['standard_fee'] - coupon_list_fee) >= 0 else 0
         order = super().create(validated_data)
         if coupon_list:
             for coupon_id in coupon_list:
