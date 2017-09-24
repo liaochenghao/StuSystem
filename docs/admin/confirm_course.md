@@ -17,15 +17,22 @@
     "msg": "请求成功",
     "data": [
         {
-            "project_name": "北京校区二期项目",
-            "course_code": "46QARX80KM",
             "syllabus": "",
             "confirm_photo": null,
             "status": {
                 "key": "TO_UPLOAD",
                 "verbose": "待上传"
             }
-            "user": 6
+            "user": 6,
+            "project": {
+                "id": int,
+                "name": str
+            },
+            "course": {
+                "id":  int,
+                "name": str,
+                "course_code": str
+            }
         }
     ],
     "field_name": ""
