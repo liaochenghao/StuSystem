@@ -55,30 +55,31 @@ class CreateAccountSerializer(serializers.Serializer):
             # 自动分配课程顾问
             auto_assign_sales_man(user)
 
-        if any([student_info.name, student_info.email, student_info.wechat, student_info.wschool, student_info.wcampus]) is False:
+        if any([student_info.name, student_info.email, student_info.wechat, student_info.wcountry, student_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
-        return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket}
+        return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
+                'valid_sales_man': True if student_info.valid_sales_man else False}
 
 
 class AssignSalesManSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
 
     def create(self, validated_data):
-        # res = client.get_web_access_token(validated_data['code'])
-        # if not (res.get('access_token') and res.get('openid')):
-        #     raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-        res = {
-            'openid': 'kjader234kldjlji344k'
-        }
+        res = client.get_web_access_token(validated_data['code'])
+        if not (res.get('access_token') and res.get('openid')):
+            raise serializers.ValidationError('无效的code值, 微信网页认证失败')
+        # res = {
+        #     'openid': 'kjader234kldjlji344k'
+        # }
         user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
-        # weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
-        weixin_info = {
-            'unionid': 'lkafjkljoerewojdlfj',
-            'headimgurl': 'http://www.baidu.com',
-            'nickname': 'I love you baby'
-        }
+        weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
+        # weixin_info = {
+        #     'unionid': 'lkafjkljoerewojdlfj',
+        #     'headimgurl': 'http://www.baidu.com',
+        #     'nickname': 'I love you baby'
+        # }
         ticket = UserTicket.create_ticket(user)
         user.last_login = datetime.datetime.now()
         user.save()
@@ -96,16 +97,13 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    wschool = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wschool', 'wcampus', 'cschool', 'headimgurl']
+        fields = ['id', 'name', 'email', 'wechat', 'wcountry', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        if attrs.get('wschool'):
-            attrs['wschool'] = json.dumps(attrs['wschool'])
         if attrs.get('wcampus'):
             attrs['wcampus'] = json.dumps(attrs['wcampus'])
         return attrs
@@ -114,7 +112,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
         data['wcampus'] = campus_list
-        data['wschool'] = json.loads(instance.wschool)
         return data
 
 

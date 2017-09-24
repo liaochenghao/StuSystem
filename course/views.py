@@ -2,12 +2,13 @@
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-from course.models import Project, Campus, CampusType, Course, ProjectResult
+from course.models import Project, Campus, CampusCountry, CampusType, Course, ProjectResult
 from order.models import UserCourse
 from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, CampusTypeSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetProjectResultSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, TypeCountryCampusSerializer, CustomCampusTypeSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, CampusCountrySerializer, CustomCampusTypeSerializer, \
+    UpdateProjectCourseFeeSerializer
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -29,19 +30,19 @@ class CampusTypeViewSet(BaseViewSet):
     queryset = CampusType.objects.all()
     serializer_class = CampusTypeSerializer
 
-    @list_route(serializer_class=TypeCountryCampusSerializer)
+    @list_route(serializer_class=CustomCampusTypeSerializer)
     def type_country_campus(self, request):
         """根据暑校类型，获取所在国家，获取所在校区"""
-        res = []
-        for item in dict(CampusType.CAMPUS_COUNTRY).keys():
-            res.append({
-                'campus_country': {
-                        "key": item,
-                        "verbose": dict(CampusType.CAMPUS_COUNTRY).get(item)},
-                'campus_type': CustomCampusTypeSerializer(CampusType.objects.filter(campus_country=item),
-                                                          many=True).data
-            })
-        return Response(res)
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+
+
+class CampusCountryViewSet(BaseViewSet):
+    """
+    暑校国家
+    """
+    queryset = CampusCountry.objects.all()
+    serializer_class = CampusCountrySerializer
 
 
 class CampusViewSet(BaseViewSet):
@@ -77,7 +78,7 @@ class ProjectViewSet(BaseViewSet):
 
     @list_route(serializer_class=GetProjectResultSerializer)
     def project_result(self, request):
-        projects = self.queryset.filter(order__user=request.user)
+        projects = self.queryset.filter(order__user=request.user, order__status='CONFIRMED')
         data = self.serializer_class(projects, many=True, context={'user': request.user}).data
         return Response(data)
 
@@ -98,6 +99,15 @@ class ProjectViewSet(BaseViewSet):
         serializer.validate_project_result(instance, request.user)
         ProjectResult.objects.filter(project=instance, user=request.user).update(img=serializer.validated_data['img'])
         return Response({'msg': '图片上传成功'})
+
+    @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
+    def project_course_fee(self, request, pk):
+        instance = self.get_object()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        project_fees = serializer.validated_data['project_fees']
+        serializer.save_project_course_fee(instance, project_fees)
+        return Response(ProjectSerializer(instance=instance).data)
 
 
 class CourseViewSet(BaseViewSet):

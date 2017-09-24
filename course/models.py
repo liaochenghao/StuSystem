@@ -8,19 +8,29 @@ class CampusType(models.Model):
     """
     校区类型表
     """
-    CAMPUS_COUNTRY = (
-        ('NORTH_AMERICA', '北美暑校'),
-        ('AUSTRALIA', '澳洲暑校')
-    )
     title = models.CharField('暑校类型', max_length=30, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now=True)
-    campus_country = models.CharField('暑校国家', max_length=30, choices=CAMPUS_COUNTRY)
 
     class Meta:
         db_table = "campus_type"
 
     def __str__(self):
         return self.title
+
+
+class CampusCountry(models.Model):
+    """
+    校区对应国家
+    """
+    name = models.CharField('国家名称', max_length=30, unique=True)
+    campus_type = models.ForeignKey(CampusType)
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+
+    class Meta:
+        db_table = 'campus_country'
+
+    def __str__(self):
+        return self.name
 
 
 class Campus(models.Model):
@@ -30,13 +40,21 @@ class Campus(models.Model):
     name = models.CharField('校区名称', max_length=30)
     info = models.CharField("校区描述", max_length=100)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
-    campus_type = models.ForeignKey(CampusType)
 
     class Meta:
         db_table = "campus"
 
     def __str__(self):
         return self.name
+
+
+class CampusCountryRelation(models.Model):
+    """校区和国家关系表"""
+    campus = models.ForeignKey(Campus)
+    campus_country = models.ForeignKey(CampusCountry)
+
+    class Meta:
+        db_table = 'campus_country_relation'
 
 
 class Project(models.Model):
@@ -50,6 +68,7 @@ class Project(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     apply_fee = models.FloatField('申请费', null=True)
     course_num = models.IntegerField('课程数')
+    campus_country = models.ForeignKey(CampusCountry, null=True)
 
     class Meta:
         db_table = 'project'
@@ -59,13 +78,14 @@ class Project(models.Model):
 
     @property
     def current_applyed_number(self):
-        data = execute_sql('select * from stu_system.order o where o.project_id=%d group by o.user_id' % self.id)
+        from order.models import Order
+        data = set(Order.objects.all().values_list('user_id', flat=True))
         return len(data)
 
     @property
     def current_payed_number(self):
-        data = execute_sql('select * from stu_system.order o where o.project_id=%d and o.status="CONFIRMED" '
-                           'group by o.user_id' % self.id)
+        from order.models import Order
+        data = set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True))
         return len(data)
 
 
@@ -85,13 +105,13 @@ class ProjectCourseFee(models.Model):
 
 class Course(models.Model):
     project = models.ForeignKey(Project)
-    course_code = models.CharField('课程代码', max_length=30, unique=True)
+    course_code = models.CharField('课程代码', max_length=30)
     name = models.CharField('课程名称', max_length=30)
     max_num = models.IntegerField('最大容纳人数')
     credit = models.IntegerField('学分')
     professor = models.CharField('授课教授', max_length=30)
-    start_time = models.DateTimeField('上课开始时间')
-    end_time = models.DateTimeField('上课结束时间')
+    start_time = models.CharField('上课开始时间', max_length=30)
+    end_time = models.CharField('上课结束时间', max_length=30)
     address = models.CharField('上课地点', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     syllabus = models.FileField('课程大纲', upload_to='course/syllabus', null=True)

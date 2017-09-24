@@ -21,7 +21,8 @@
         "id": 1,
         "name": "zhangsan",
         "email": "896254545@qq.com",
-        "qr_code": "http://www.baidu.com"
+        "qr_code": "http://www.baidu.com",
+        "wechat": "flyerweixin"
     },
     "field_name": ""
 }

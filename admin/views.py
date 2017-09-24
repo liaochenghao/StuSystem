@@ -1,19 +1,19 @@
 # coding: utf-8
-from rest_framework import mixins, viewsets, views
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from admin.models import PaymentAccountInfo
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
-    AdminProjectResultSerializer, AddUserCourseSerializer, ConfirmUserCourseSerializer, ChildUserSerializer
-from course.models import Project, Campus, ProjectResult
+    AdminProjectResultSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
+    AdminCourseSerializer, AdminCreateUserCourseSerializer
+from course.models import Project, Campus, ProjectResult, Course
 from common.models import SalesMan
 from order.models import UserCourse, Order
 from authentication.models import UserInfo, UserScoreDetail, User
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from rest_framework import exceptions
-from utils.mysql_db import execute_sql
 import datetime
 
 
@@ -113,10 +113,8 @@ class StatisticsViewSet(mixins.ListModelMixin,
                                                  id_number__isnull=False,
                                                  major__isnull=False,
                                                  gpa__isnull=False).count()
-        # students_applyed = Order.objects.extra(select={'a': 'GROUP BY user_id'}).count()
-        # students_payed = Order.objects.filter(status='CONFIRMED').count()
-        students_applyed = len(execute_sql('select * from stu_system.order GROUP by user_id'))
-        students_payed = len(execute_sql('select * from stu_system.order where status="CONFIRMED" GROUP by user_id'))
+        students_applyed = len(set(Order.objects.all().values_list('user_id', flat=True)))
+        students_payed = len(set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True)))
         res = {
             'students_num': students_num,
             'personal_file_num': personal_file_num,
@@ -151,7 +149,7 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
 
     @list_route(['PUT'])
     def add_score(self, request):
-        serializer = AddUserCourseSerializer(data=request.data)
+        serializer = AddUserCourseScoreSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
@@ -203,6 +201,23 @@ class ChildUserViewSet(mixins.CreateModelMixin,
             raise exceptions.ValidationError('请传入正确的password')
         if not len(password) >= 6:
             raise exceptions.ValidationError('密码必须大于6位')
-        instance.password = instance.set_password(password)
+        instance.set_password(password)
         instance.save()
         return Response({'msg': '密码修改成功'})
+
+
+class AdminCourseViewSet(mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         viewsets.GenericViewSet):
+    """管理员选课"""
+    queryset = Course.objects.all()
+    serializer_class = AdminCourseSerializer
+
+    @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
+    def create_user_course(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'msg': '选课成功'})
+

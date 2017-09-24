@@ -32,7 +32,12 @@
                 "cschool": "青蛙大学",
                 "last_login": "2017-07-06T15:04:47Z",
                 "wechat":   "",
-                "personal_file": "已建档"
+                "personal_file": "已建档",
+                "channel": {
+                    'id': 9  int,
+                    'name': '测试渠道',
+                    'create_time': "2017-09-17T06:25:23Z"
+                }
             }
         ]
     },

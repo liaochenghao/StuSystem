@@ -1,29 +1,22 @@
-### 创建项目
+###  设置项目课程数量及相应费用
 
 **请求地址**:
 ```
-    POST   /course/project/
+    PUT  /course/project/[project_id]/project_course_fee/
 ```
 
 **请求参数**:
 ```
 {
-    "campus":   int    必填  校区id
-    "name":     str    必填  项目名称     最大长度30
-    "start_date":  str    必填  项目开始时间
-    "end_date": str       必填  项目结束时间
-    "address":  str       必填  上课地点     最大长度 30
-    "info":     str       必填  项目描述     最大长度255
-    "apply_fee":  float   选填  申请费
-    "course_num": int     必填  课程数量
-    "campus_country"： int  必填 项目归属国家
-    "project_fees": [     必填  课程费用
+	"project_fees": [
 			{
 				"course_number": 1,
 				"course_fee": 1000
 			},
 		]
 }
+
+备注： project_fees子项中course_number, course_fee为必填字段， course_number的最大值必须等于project_fees对应list的长度。
 ```
 
 **成功返回**：
@@ -53,9 +46,18 @@
         "create_time": "2017-06-19T14:09:43Z"
         "apply_fee": 2000.0,        float  申请奋勇
         "course_num": 3             int    课程数量
+        "project_course_fee": [
+                    {
+                        "id": 1,
+                        "course_number": 1,         int 课程数量
+                        "course_fee": 1000.0,       float 课程费用
+                        "course_info": "1门"         varchar 课程门数
+                    },
+                ]
     }
     "field_name": ""
 }
+
 ```
 
 **失败返回**：

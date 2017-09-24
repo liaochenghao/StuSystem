@@ -89,7 +89,6 @@
 
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
 - [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
-
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
 
@@ -98,6 +97,8 @@
 - [管理员账户设置/账户详情](docs/admin/account_info_detail.md)
 - [管理员账户设置/更新账户](docs/admin/account_info_update.md)
 - [管理员账户设置/删除账户](docs/admin/account_info_delete.md)
+
+- [管理员为学生分配课程](docs/admin/create_user_course.md)
 
 **校区模块**:
 - [创建暑校类型](docs/campus/campus_type_create.md)
@@ -121,6 +122,7 @@
 - [上传学分转换结果图片](docs/project/upload_img.md)
 - [根据项目该获取所有课程信息](docs/project/my_course.md)
 - [根据项目获取课程信息,成绩信息](docs/project/my_score.md)
+- [设置项目课程数量及相应费用](docs/project/project_course_fee.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)
@@ -143,6 +145,7 @@
 - [取消订单，确认订单](docs/order/update_order.md)
 - [获取当前用户所有订单](docs/order/user_order_list.md)
 - [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)
+- [订单币种及支付方式](docs/order/order_currency_payment.md)
 
 
 **渠道模块**：

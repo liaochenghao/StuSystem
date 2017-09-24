@@ -11,7 +11,8 @@
     "project":   int     项目id,
     "currency":  varchar   DOLLAR--美金, RMB--人民币
     "payment":   varchar  支付方式
-    "course_num": int     课程数量
+    "course_num": int,     课程数量
+    "coupon_list": list  选填  优惠券列表
 }
 ```
 

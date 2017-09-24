@@ -13,6 +13,7 @@
         "payment":      str     支付方式
         "status":       str     订单状态
         "user":         int     用户id
+        "none_canceled_order":  boolean 筛选未取消的订单
    }
    currency, payment, status传入字段到/common/global_enums/接口中获取
 ```

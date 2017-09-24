@@ -31,7 +31,7 @@ class UserInfo(models.Model):
     email = models.EmailField('email', max_length=30)
     wechat = models.CharField('微信号', max_length=30)
     cschool = models.CharField('当前学校', max_length=30)
-    wschool = models.CharField('意向学校', max_length=60)
+    wcountry = models.IntegerField('意向学校')
     wcampus = models.CharField('意向校区', max_length=60)
     create_time = models.DateTimeField('新建时间', auto_now=True)
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
@@ -52,6 +52,9 @@ class UserInfo(models.Model):
     major = models.CharField('专业', max_length=30, null=True)
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA')
+    valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
+    channel_id = models.IntegerField('用户渠道信息')
+    recommand_user_id = models.IntegerField('推荐用户id')
 
     class Meta:
         db_table = 'student_info'

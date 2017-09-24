@@ -17,13 +17,18 @@
     "msg": "请求成功",
     "data": {
         "id": 3,
-        "account_number": "6217234402000423137",        账户号
-        "account_name": "李总",                          账户名
-        "opening_bank": "工商银行",                      开户行(可能为空字符串)
-        "payment": {                                    支付方式
-            "key": "BANK",
-            "verbose": "银行转账"
-        }
+        "account_number": "896275756@qq.com",
+        "account_name": "邱雷",
+        "opening_bank": null,
+        "payment": {
+            "key": "ALI_PAY",
+            "verbose": "支付宝转账"
+        },
+        "currency": {
+            "key": "RMB",
+            "verbose": "人民币"
+        },
+        "swift_code": null
     },
     "field_name": ""
 }

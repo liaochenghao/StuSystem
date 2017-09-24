@@ -1,7 +1,7 @@
 # coding: utf-8
 import random, string
 from rest_framework import serializers
-from course.models import Project, ProjectCourseFee, Campus,\
+from course.models import Project, ProjectCourseFee, Campus, CampusCountry, CampusCountryRelation,\
     CampusType, Course, ProjectResult
 from order.models import UserCourse
 from drf_extra_fields.fields import Base64ImageField
@@ -10,62 +10,87 @@ from order.models import Order
 
 
 class CampusTypeSerializer(serializers.ModelSerializer):
-    campus_country = VerboseChoiceField(CampusType.CAMPUS_COUNTRY)
-
-    class Meta:
-        model = CampusType
-        fields = ['id', 'title', 'create_time', 'campus_country']
-
-
-class CampusSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Campus
-        fields = ['id', 'name', 'info', 'create_time', 'campus_type']
-
-    def validate(self, attrs):
-        if not self.instance:
-            if Campus.objects.filter(name=attrs['name']):
-                raise serializers.ValidationError('校区名称已存在，不能重复创建')
-        return attrs
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['campus_type'] = CampusTypeSerializer(instance=instance.campus_type).data
-        return data
-
-
-class CustomCampusSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Campus
-        fields = ['id', 'name', 'info', 'create_time']
-
-
-class CustomCampusTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CampusType
         fields = ['id', 'title', 'create_time']
 
+
+class CustomCampusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'info', 'create_time']
+
+
+class CampusCountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CampusCountry
+        fields = ['id', 'name', 'campus_type', 'create_time']
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['campus'] = CustomCampusSerializer(Campus.objects.filter(campus_type=instance), many=True).data
+        campus_set = Campus.objects.filter(campuscountryrelation__campus_country=instance)
+        campus_set_data = CustomCampusSerializer(campus_set, many=True).data
+        data['campus_set'] = campus_set_data
+        data['campus_type'] = CampusTypeSerializer(instance=instance.campus_type).data
         return data
 
 
-class TypeCountryCampusSerializer(serializers.Serializer):
+class CustomCampusTypeSerializer(serializers.ModelSerializer):
+    campuscountry_set = CampusCountrySerializer(many=True)
+
+    class Meta:
+        model = CampusType
+        fields = ['id', 'title', 'create_time', 'campuscountry_set']
+
+
+class CampusSerializer(serializers.ModelSerializer):
+    campus_country = serializers.ListField(write_only=True)
+
+    class Meta:
+        model = Campus
+        fields = ['id', 'name', 'info', 'create_time', 'campus_country']
+
+    def validate(self, attrs):
+        if not self.instance:
+            if Campus.objects.filter(name=attrs['name']):
+                raise serializers.ValidationError('校区名称已存在，不能重复创建')
+        if 'campus_country' in attrs.keys():
+            campus_country = attrs['campus_country']
+            campus_country_instance = []
+            for item in campus_country:
+                if not CampusCountry.objects.filter(id=item).exists():
+                    raise serializers.ValidationError('无效的campus_country id值：%s' % item)
+                campus_country_instance.append(CampusCountry.objects.get(id=item))
+            attrs['campus_country'] = campus_country_instance
+        return attrs
+
+    def create(self, validated_data):
+        campus_countries = validated_data.pop('campus_country')
+        instance = super().create(validated_data)
+        campus_country_relation_instance = []
+        for campus_country in campus_countries:
+            campus_country_relation_instance.append(CampusCountryRelation(campus=instance, campus_country=campus_country))
+        CampusCountryRelation.objects.bulk_create(campus_country_relation_instance)
+        return instance
+
+    def update(self, instance, validated_data):
+        if 'campus_country' in validated_data.keys():
+            campus_countries = validated_data.pop('campus_country')
+            CampusCountryRelation.objects.filter(campus=instance).delete()
+            campus_country_relation_instance = []
+            for campus_country in campus_countries:
+                campus_country_relation_instance.append(CampusCountryRelation(campus=instance, campus_country=campus_country))
+            CampusCountryRelation.objects.bulk_create(campus_country_relation_instance)
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
-
         data = super().to_representation(instance)
-        res = []
-        for item in dict(CampusType.CAMPUS_COUNTRY):
-            res.append({
-                'key': item,
-                'verbose': dict(CampusType.CAMPUS_COUNTRY).get(item)
-            })
-        return res
+        campus_countries = CampusCountry.objects.filter(campuscountryrelation__campus=instance)
+        campus_countries_data = CampusCountrySerializer(campus_countries, many=True).data
+        data['campus_country'] = campus_countries_data
+        return data
 
 
 class ProjectCourseFeeSerializer(serializers.ModelSerializer):
@@ -78,17 +103,91 @@ class ProjectCourseFeeSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     project_course_fee = ProjectCourseFeeSerializer(many=True, read_only=True)
+    project_fees = serializers.ListField(write_only=True)
 
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num', 'project_course_fee']
+                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'campus_country']
+
+    def validate(self, attrs):
+        if not self.instance:
+            project_fees = attrs['project_fees']
+            if not project_fees:
+                raise serializers.ValidationError('project_fees不能空')
+            project_fees_list = [item['course_number'] for item in project_fees]
+            if max(project_fees_list) != len(project_fees):
+                raise serializers.ValidationError('project_fees参数传入错误，project_fees最大课程数量与传入要设置课程费用的个数不匹配')
+            for item in project_fees:
+                if not isinstance(item, dict):
+                    raise serializers.ValidationError('project_fees的子项必须为dict')
+                if ('course_number' not in item.keys()) or ('course_fee' not in item.keys()):
+                    raise serializers.ValidationError('project_fees子项传入错误，必须含有course_number, course_fee字段')
+        return attrs
+
+    def create(self, validated_data):
+        project_fees = []
+        if 'project_fees' in validated_data.keys():
+            project_fees = validated_data.pop('project_fees')
+        instance = super().create(validated_data)
+        if project_fees:
+            ProjectCourseFee.objects.filter(project=instance).delete()
+            bulk_data = []
+            for item in project_fees:
+                item['project'] = instance
+                bulk_data.append(ProjectCourseFee(**item))
+            ProjectCourseFee.objects.bulk_create(bulk_data)
+        return instance
+
+    def update(self, instance, validated_data):
+        project_fees = []
+        if 'project_fees' in validated_data.keys():
+            project_fees = validated_data.pop('project_fees')
+        instance = super().update(instance, validated_data)
+        if project_fees:
+            ProjectCourseFee.objects.filter(project=instance).delete()
+            bulk_data = []
+            for item in project_fees:
+                item['project'] = instance
+                bulk_data.append(ProjectCourseFee(**item))
+            ProjectCourseFee.objects.bulk_create(bulk_data)
+            return instance
+        return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         serializer = CampusSerializer(instance=instance.campus)
         data['campus'] = serializer.data
+        data['campus_country'] = CampusCountrySerializer(instance=instance.campus_country).data \
+            if instance.campus_country else None
         return data
+
+
+class UpdateProjectCourseFeeSerializer(serializers.Serializer):
+    project_fees = serializers.ListField()
+
+    def validate(self, attrs):
+        project_fees = attrs['project_fees']
+        if not project_fees:
+            raise serializers.ValidationError('project_fees不能空')
+        project_fees_list = [item['course_number'] for item in project_fees]
+        if max(project_fees_list) != len(project_fees):
+            raise serializers.ValidationError('project_fees参数传入错误，project_fees最大课程数量与传入要设置课程费用的个数不匹配')
+        for item in project_fees:
+            if not isinstance(item, dict):
+                raise serializers.ValidationError('project_fees的子项必须为dict')
+            if ('course_number' not in item.keys()) or ('course_fee' not in item.keys()):
+                raise serializers.ValidationError('project_fees子项传入错误，必须含有course_number, course_fee字段')
+        return attrs
+
+    def save_project_course_fee(self, project, validated_data):
+        ProjectCourseFee.objects.filter(project=project).delete()
+        bulk_data = []
+        for item in validated_data:
+            item['project'] = project
+            bulk_data.append(ProjectCourseFee(**item))
+        ProjectCourseFee.objects.bulk_create(bulk_data)
+        return
 
 
 class MyProjectsSerializer(ProjectSerializer):
@@ -133,16 +232,11 @@ class GetProjectResultSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     start_time = serializers.DateTimeField()
     end_time = serializers.DateTimeField()
-    course_code = serializers.CharField(read_only=True)
 
     class Meta:
         model = Course
         fields = ['id', 'project', 'course_code', 'name', 'max_num', 'credit', 'professor', 'start_time', 'end_time',
                   'create_time', 'address', 'syllabus']
-
-    def create(self, validated_data):
-        validated_data['course_code'] = ''.join(random.sample(string.digits + string.ascii_uppercase, 10))
-        return super().create(validated_data)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

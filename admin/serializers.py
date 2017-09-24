@@ -1,12 +1,16 @@
 # coding: utf-8
+import json
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from admin.models import PaymentAccountInfo
-from course.models import Project, Campus, Course, ProjectResult
-from common.models import SalesMan
+from admin.functions import get_channel_info
+from course.models import Project, Campus, Course, ProjectResult, CampusCountry
+from common.models import SalesMan, SalesManUser
 from coupon.models import UserCoupon
 from order.models import UserCourse, Order
+from market.models import Channel
 from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
+from authentication.functions import auto_assign_sales_man
 from utils.serializer_fields import VerboseChoiceField
 from utils.functions import get_long_qr_code
 from drf_extra_fields.fields import Base64ImageField
@@ -14,10 +18,11 @@ from drf_extra_fields.fields import Base64ImageField
 
 class PaymentAccountInfoSerializer(serializers.ModelSerializer):
     payment = VerboseChoiceField(PaymentAccountInfo.PAYMENT)
+    currency = VerboseChoiceField(PaymentAccountInfo.CURRENCY)
 
     class Meta:
         model = PaymentAccountInfo
-        fields = ['id', 'account_number', 'account_name', 'opening_bank', 'payment']
+        fields = ['id', 'account_number', 'account_name', 'opening_bank', 'payment', 'currency', 'swift_code']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
@@ -32,6 +37,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
         personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
+
+        data['channel'] = get_channel_info(instance)
         return data
 
 
@@ -50,21 +57,44 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
-                  'cschool', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+                  'cschool', 'wcountry', 'wcampus', 'major', 'graduate_year', 'gpa', 'user_info_remark']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user_coupon = None
-        if UserCoupon.objects.filter(user=instance.user).exists():
-            user_coupon = UserCoupon.objects.filter(user=instance.user).values(
-                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code')
+        if UserCoupon.objects.filter(user=instance.user, status='TO_USE').exists():
+            user_coupon = UserCoupon.objects.filter(user=instance.user, status='TO_USE').values(
+                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code', 'coupon__amount')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
                 item['info'] = item.pop('coupon__info')
                 item['start_time'] = item.pop('coupon__start_time')
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
+                item['amount'] = item.pop('coupon__amount')
         data['user_coupon'] = user_coupon
+        data['channel'] = get_channel_info(instance)
+        try:
+            data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)).\
+                values('id', 'name', 'info', 'create_time')
+        except Exception as e:
+            data['wcampus'] = None
+
+        try:
+            w_country = CampusCountry.objects.get(id=instance.wcountry)
+            data['wcountry'] = {
+                'id': w_country.id,
+                'name': w_country.name,
+                'create_time': w_country.create_time
+            }
+        except Exception as e:
+            data['wcountry'] = None
+
+        sales_man = auto_assign_sales_man(instance.user)
+        if sales_man:
+            data['sales_man'] = sales_man
+        else:
+            data['sales_man'] = None
         return data
 
 
@@ -171,7 +201,36 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
         return data
 
 
-class AddUserCourseSerializer(serializers.Serializer):
+class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course', 'order', 'user']
+
+    def validate(self, attrs):
+        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
+                                    ).exists():
+            raise serializers.ValidationError('订单不存在')
+
+        if attrs['order'] == 'TO_CONFIRM':
+            raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
+
+        if attrs['order'] == 'TO_PAY':
+            raise serializers.ValidationError('订单尚未支付')
+
+        if UserCourse.objects.filter(order=attrs['order']).count() >= int(attrs['order'].course_num):
+            raise serializers.ValidationError('已达到订单最大选课数，不能再继续选课')
+
+        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
+                                     course=attrs['course']).exists():
+            raise serializers.ValidationError('已选该课程，不能重复选择')
+        return attrs
+
+    def create(self, validated_data):
+        ProjectResult.objects.get_or_create(user=validated_data['user'])
+        return super().create(validated_data)
+
+
+class AddUserCourseScoreSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
