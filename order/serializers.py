@@ -72,11 +72,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
-        if instance.status in ['CONFIRMED', 'CONFIRM_FAILED']:
+        if instance.status in ['CONFIRMED', 'CONFIRM_FAILED'] and instance.coupon_list:
             coupon_list = json.loads(instance.coupon_list)
             if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
                 UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='USED')
-        if instance.status == 'CANCELED':
+        if instance.status == 'CANCELED' and instance.coupon_list:
             coupon_list = json.loads(instance.coupon_list)
             if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
                 UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='TO_USE')
