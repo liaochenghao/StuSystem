@@ -104,7 +104,7 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['project_name', 'course_code', 'syllabus', 'confirm_photo', 'status', 'user']
+        fields = ['syllabus', 'confirm_photo', 'status', 'user']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
