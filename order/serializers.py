@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 from rest_framework import serializers
+from common.models import SalesManUser, SalesMan
 from order.models import Order, OrderCoupon, OrderPayment, UserCourse
 from course.models import ProjectCourseFee, Course
 from course.serializers import ProjectSerializer
@@ -93,6 +94,15 @@ class OrderSerializer(serializers.ModelSerializer):
             usercourse__order=instance, usercourse__user=self.context['request'].user).\
             values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
         data['user'] = UserInfo.objects.get(user=instance.user).name
+        sales_man = SalesMan.objects.filter(salesmanuser__user=instance.user).first()
+        if sales_man:
+            data['sales_man'] = {
+                'id': sales_man.id,
+                'name': sales_man.name
+            }
+        else:
+            data['sales_man'] = None
+
         return data
 
 
