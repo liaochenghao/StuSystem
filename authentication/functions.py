@@ -22,7 +22,10 @@ def auto_assign_sales_man(user):
     if not SalesManUser.objects.filter(user=user).exists():
         rand_int = random.randint(1, len(sales_man))
         random_sales_man = sales_man[rand_int-1]
-        qr_code = '%s%s%s' % (DOMAIN, MEDIA_URL, random_sales_man.qr_code.path)
+        if DOMAIN in random_sales_man.qr_code.path:
+            qr_code = random_sales_man.qr_code.path
+        else:
+            qr_code = '%s%s%s' % (DOMAIN, MEDIA_URL, random_sales_man.qr_code.path)
         SalesManUser.objects.get_or_create(user=user, sales_man=random_sales_man)
         res = {'id': random_sales_man.id, 'name': random_sales_man.name, 'email': random_sales_man.email,
                'qr_code': qr_code, 'wechat': random_sales_man.wechat}
