@@ -11,6 +11,7 @@ from admin.serializers import PaymentAccountInfoSerializer
 from coupon.models import Coupon, UserCoupon
 from utils.serializer_fields import VerboseChoiceField
 from drf_extra_fields.fields import Base64ImageField
+from StuSystem.settings import DOMAIN, MEDIA_URL
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -36,10 +37,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
             order = Order.objects.filter(user=self.context['request'].user,
                                          status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
-            # if order:
-            #     order_course_count = UserCourse.objects.filter(order=order).count()
-            #     if order_course_count < int(order.course_num):
-            #         raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
+            if order:
+                order_course_count = UserCourse.objects.filter(order=order).count()
+                if order_course_count < int(order.course_num):
+                    raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
         else:
             if self.instance.status == 'CANCELED':
                 raise serializers.ValidationError('该订单已被取消，不能进行更新任何操作')
@@ -179,3 +180,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         validated_data['order'].save()
         instance = super().create(validated_data)
         return instance
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['img'] = '%s%s%s' % (DOMAIN, MEDIA_URL, instance.img)
+        return data
