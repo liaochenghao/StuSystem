@@ -37,7 +37,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
     queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
-    permission_classes = AdminOperatePermission
+    permission_classes = [AdminOperatePermission]
 
     def get_serializer(self, *args, **kwargs):
         if kwargs.get('many'):
@@ -190,7 +190,6 @@ class ChildUserViewSet(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
     queryset = User.objects.exclude(role='STUDENT')
     serializer_class = ChildUserSerializer
-    permission_classes = AdminOperatePermission
 
     @detail_route(['PUT'])
     def update_password(self, request, pk):
