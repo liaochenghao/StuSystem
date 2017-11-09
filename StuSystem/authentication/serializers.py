@@ -67,19 +67,19 @@ class AssignSalesManSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
 
     def create(self, validated_data):
-        res = client.get_web_access_token(validated_data['code'])
-        if not (res.get('access_token') and res.get('openid')):
-            raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-        # res = {
-        #     'openid': 'kjader234kldjlji344k'
-        # }
+        # res = client.get_web_access_token(validated_data['code'])
+        # if not (res.get('access_token') and res.get('openid')):
+        #     raise serializers.ValidationError('无效的code值, 微信网页认证失败')
+        res = {
+            'openid': 'kjader234kldjlji344k'
+        }
         user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
-        weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
-        # weixin_info = {
-        #     'unionid': 'lkafjkljoerewojdlfj',
-        #     'headimgurl': 'http://www.baidu.com',
-        #     'nickname': 'I love you baby'
-        # }
+        # weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
+        weixin_info = {
+            'unionid': 'lkafjkljoerewojdlfj',
+            'headimgurl': 'http://www.baidu.com',
+            'nickname': 'I love you baby'
+        }
         ticket = UserTicket.create_ticket(user)
         user.last_login = datetime.datetime.now()
         user.save()
