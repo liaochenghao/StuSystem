@@ -1,5 +1,5 @@
 # coding: utf-8
-from weixin_server import client
+from weixin_server.client import client
 
 
 def get_key_verbose_data(data: dict):
