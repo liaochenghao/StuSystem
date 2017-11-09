@@ -1,7 +1,7 @@
 # coding: utf-8
 from admin.models import PaymentAccountInfo
-from common.models import SalesManUser
-from common.serializers import CampusSerializer
+from common.models import SalesManUser, FirstLevel
+from common.serializers import CampusSerializer, FirstLevelSerializer
 from coupon.models import UserCoupon
 from course.models import Campus, ProjectResult
 from rest_framework import mixins, viewsets
@@ -36,3 +36,10 @@ class GlobalEnumsViewSet(APIView):
             'user_role': get_key_verbose_data(dict(User.ROLE)),
         }
         return Response(res)
+
+
+class NavigationViewSet(mixins.ListModelMixin,
+                        viewsets.GenericViewSet):
+    queryset = FirstLevel.objects.all()
+    serializer_class = FirstLevelSerializer
+    pagination_class = None

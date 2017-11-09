@@ -36,3 +36,24 @@ class SalesManUser(models.Model):
 
     class Meta:
         db_table = 'sales_man_user'
+
+
+class FirstLevel(models.Model):
+    """导航栏一级目录"""
+    name = models.CharField('一级目录名称', max_length=20)
+    key = models.CharField('一级目录key', max_length=30)
+    rank = models.IntegerField('排序', null=True)
+
+    class Meta:
+        db_table = 'common_first_level'
+
+
+class SecondLevel(models.Model):
+    """导航栏二级目录"""
+    name = models.CharField('一级目录名称', max_length=20)
+    key = models.CharField('一级目录key', max_length=30)
+    pre = models.ForeignKey(FirstLevel, related_name='second_levels')
+    rank = models.IntegerField('排序', null=True)
+
+    class Meta:
+        db_table = 'common_second_level'
