@@ -4,6 +4,7 @@ import datetime
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, UserScoreDetail, User
+from authentication.permissions import AdminOperatePermission
 from common.models import SalesMan
 from course.models import Project, Campus, ProjectResult, Course
 from rest_framework import exceptions
@@ -33,15 +34,10 @@ class UserInfoViewSet(mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
-    queryset = UserInfo.objects.all()
+    queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
-
-    def get_queryset(self):
-        if self.request.user.role != 'ADMIN':
-            raise exceptions.PermissionDenied('非管理员无权限访问该接口')
-        queryset = self.queryset.exclude(user__role='ADMIN')
-        return queryset
+    permission_classes = AdminOperatePermission
 
     def get_serializer(self, *args, **kwargs):
         if kwargs.get('many'):
@@ -194,6 +190,7 @@ class ChildUserViewSet(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
     queryset = User.objects.exclude(role='STUDENT')
     serializer_class = ChildUserSerializer
+    permission_classes = AdminOperatePermission
 
     @detail_route(['PUT'])
     def update_password(self, request, pk):
