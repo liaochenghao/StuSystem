@@ -1,12 +1,12 @@
 # coding: utf-8
 from werobot.client import Client
-from django.conf import settings
+from StuSystem.settings import WX_CONFIG
 import requests
 
 
 class WxClient(Client):
     def __init__(self):
-        self.config = settings.WX_CONFIG
+        self.config = WX_CONFIG
         self._token = None
         self.token_expires_at = None
 
@@ -23,8 +23,8 @@ class WxClient(Client):
         """
         url = "https://api.weixin.qq.com/sns/oauth2/access_token"
         params = {
-            "appid": settings.WX_CONFIG["APP_ID"],
-            "secret": settings.WX_CONFIG["APP_SECRET"],
+            "appid": WX_CONFIG["APP_ID"],
+            "secret": WX_CONFIG["APP_SECRET"],
             "code": code,
             "grant_type": "authorization_code"
         }
@@ -44,7 +44,7 @@ class WxClient(Client):
         """
         url = "https://api.weixin.qq.com/sns/oauth2/refresh_token"
         params = {
-            "appid": settings.WX_CONFIG['APP_ID'],
+            "appid": WX_CONFIG['APP_ID'],
             "grant_type": "refresh_token",
             "refresh_token": refresh_token
         }
