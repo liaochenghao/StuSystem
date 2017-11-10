@@ -95,6 +95,11 @@ class AdminProjectViewSet(mixins.ListModelMixin,
     queryset = Project.objects.all()
     serializer_class = AdminProjectSerializer
 
+    def list(self, request, *args, **kwargs):
+        if self.request.query_params.get('pagination').upper() == "FALSE":
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
+
 
 class StatisticsViewSet(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
