@@ -159,6 +159,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         data['campus'] = serializer.data
         data['campus_country'] = CampusCountrySerializer(instance=instance.campus_country).data \
             if instance.campus_country else None
+        data['name'] = '%s(%s)' % (instance.name, instance.campus_country.name)
         return data
 
 
