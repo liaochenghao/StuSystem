@@ -153,6 +153,8 @@ class AdminProjectSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['applyed_num'] = instance.order_set.all().count()
         data['payed_num'] = instance.order_set.filter(status__in=['PAYED', 'CONFIRMED']).count()
+        data['name'] = '%s(%s)' % (
+            instance.name, instance.campus_country.name) if instance.campus_country else instance.name
         return data
 
 
