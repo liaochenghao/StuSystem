@@ -3,6 +3,7 @@ from django.db import models
 
 
 class PaymentAccountInfo(models.Model):
+    """支付账号"""
     PAYMENT = (
         ('ALI_PAY', '支付宝转账'),
         # ('WECHAT', '微信转账'),

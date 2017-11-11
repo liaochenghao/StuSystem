@@ -50,8 +50,8 @@ class FirstLevel(models.Model):
 
 class SecondLevel(models.Model):
     """导航栏二级目录"""
-    name = models.CharField('一级目录名称', max_length=20)
-    key = models.CharField('一级目录key', max_length=30)
+    name = models.CharField('二级目录名称', max_length=20)
+    key = models.CharField('二级目录key', max_length=30)
     pre = models.ForeignKey(FirstLevel, related_name='second_levels')
     rank = models.IntegerField('排序', null=True)
 

@@ -6,6 +6,7 @@ from authentication.models import User
 
 
 class Channel(models.Model):
+    """推广渠道"""
     name = models.CharField('推广名称', unique=True, max_length=30)
     plan_date = models.DateField('计划推广日期')
     sales_man = models.ForeignKey(SalesMan)
@@ -17,7 +18,7 @@ class Channel(models.Model):
     qr_code = models.CharField('推广二维码', max_length=255, null=True)
 
     class Meta:
-        db_table = 'market_channel'
+        db_table = ''
 
     def __str__(self):
         return self.name

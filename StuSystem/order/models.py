@@ -64,6 +64,7 @@ class UserCourse(models.Model):
 
 
 class OrderPayment(models.Model):
+    """订单支付信息"""
     order = models.ForeignKey(Order)
     amount = models.FloatField()
     account_number = models.CharField('支付账号', max_length=30)
