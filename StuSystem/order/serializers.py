@@ -12,7 +12,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from admin.serializers import PaymentAccountInfoSerializer
-from order.models import Order, OrderCoupon, OrderPayment, UserCourse
+from order.models import Order, OrderPayment, UserCourse
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -166,14 +166,10 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img', 'amount']
 
     def create(self, validated_data):
-        order_coupon = []
         coupon_list = validated_data.pop('coupon_list')
         pay_fee = validated_data['order'].standard_fee
         if coupon_list:
             amount = Coupon.objects.filter(id__in=coupon_list).values_list('amount', flat=True)
-            for item in coupon_list:
-                order_coupon.append(OrderCoupon(**{'order': validated_data['order'], 'coupon_id': item}))
-            OrderCoupon.objects.bulk_create(order_coupon)
 
             for item in amount:
                 pay_fee -= item

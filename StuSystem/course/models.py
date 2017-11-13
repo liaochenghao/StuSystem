@@ -114,7 +114,7 @@ class Course(models.Model):
     end_time = models.CharField('上课结束时间', max_length=30)
     address = models.CharField('上课地点', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
-    syllabus = models.CharField('课程大纲', null=True)
+    syllabus = models.CharField('课程大纲', null=True, max_length=255)
 
     class Meta:
         db_table = 'course'

@@ -76,12 +76,3 @@ class OrderPayment(models.Model):
 
     class Meta:
         db_table = 'order_payment'
-
-
-class OrderCoupon(models.Model):
-    order = models.ForeignKey(Order)
-    coupon = models.ForeignKey(Coupon)
-    create_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'order_coupon'
