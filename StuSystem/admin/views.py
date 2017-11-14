@@ -3,21 +3,21 @@ import datetime
 
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo, UserScoreDetail, User
+from authentication.models import UserInfo, StudentScoreDetail, User
 from authentication.permissions import AdminOperatePermission
 from common.models import SalesMan
-from course.models import Project, Campus, ProjectResult, Course
+from course.models import Project, Campus, Course
 from rest_framework import exceptions
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
 from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
-    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, UserScoreDetailSerializer, \
+    UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
-    AdminProjectResultSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
+    AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer
-from order.models import UserCourse, Order
+from order.models import UserCourse, Order, CourseCreditSwitch
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -75,11 +75,11 @@ class UserInfoViewSet(mixins.ListModelMixin,
         return Response(CourseScoreSerializer(user_course, many=True).data)
 
 
-class UserScoreDetailViewSet(mixins.RetrieveModelMixin,
+class StudentScoreDetailViewSet(mixins.RetrieveModelMixin,
                              mixins.UpdateModelMixin,
                              viewsets.GenericViewSet):
-    queryset = UserScoreDetail.objects.all()
-    serializer_class = UserScoreDetailSerializer
+    queryset = StudentScoreDetail.objects.all()
+    serializer_class = StudentScoreDetailSerializer
 
     def get_object(self):
         # pk 传过来的是user_id，需要转换为user_score_detail
@@ -172,12 +172,12 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
         return Response(self.get_serializer(instance).data)
 
 
-class AdminUserProjectResultViewSet(mixins.RetrieveModelMixin,
+class AdminUserCourseCreditSwitchViewSet(mixins.RetrieveModelMixin,
                                     mixins.UpdateModelMixin,
                                     viewsets.GenericViewSet):
     """学生学分转换视图"""
-    queryset = ProjectResult.objects.all()
-    serializer_class = AdminProjectResultSerializer
+    queryset = CourseCreditSwitch.objects.all()
+    serializer_class = AdminCourseCreditSwitchSerializer
 
     def get_object(self):
         pk = self.kwargs.get('pk')

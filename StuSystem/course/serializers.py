@@ -2,46 +2,15 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from course.models import Project, ProjectCourseFee, Campus, CampusCountry, CampusCountryRelation, \
-    CampusType, Course, ProjectResult
-from order.models import Order, UserCourse
+from course.models import Project, ProjectCourseFee, Campus, Course
+from order.models import Order, UserCourse, CourseCreditSwitch
 from utils.serializer_fields import VerboseChoiceField
-
-
-class CampusTypeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CampusType
-        fields = ['id', 'title', 'create_time']
 
 
 class CustomCampusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time']
-
-
-class CampusCountrySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CampusCountry
-        fields = ['id', 'name', 'campus_type', 'create_time']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        campus_set = Campus.objects.filter(campuscountryrelation__campus_country=instance)
-        campus_set_data = CustomCampusSerializer(campus_set, many=True).data
-        data['campus_set'] = campus_set_data
-        data['campus_type'] = CampusTypeSerializer(instance=instance.campus_type).data
-        return data
-
-
-class CustomCampusTypeSerializer(serializers.ModelSerializer):
-    campuscountry_set = CampusCountrySerializer(many=True)
-
-    class Meta:
-        model = CampusType
-        fields = ['id', 'title', 'create_time', 'campuscountry_set']
 
 
 class CampusSerializer(serializers.ModelSerializer):
@@ -56,39 +25,12 @@ class CampusSerializer(serializers.ModelSerializer):
             if Campus.objects.filter(name=attrs['name']):
                 raise serializers.ValidationError('校区名称已存在，不能重复创建')
         if 'campus_country' in attrs.keys():
-            campus_country = attrs['campus_country']
             campus_country_instance = []
-            for item in campus_country:
-                if not CampusCountry.objects.filter(id=item).exists():
-                    raise serializers.ValidationError('无效的campus_country id值：%s' % item)
-                campus_country_instance.append(CampusCountry.objects.get(id=item))
             attrs['campus_country'] = campus_country_instance
         return attrs
 
-    def create(self, validated_data):
-        campus_countries = validated_data.pop('campus_country')
-        instance = super().create(validated_data)
-        campus_country_relation_instance = []
-        for campus_country in campus_countries:
-            campus_country_relation_instance.append(CampusCountryRelation(campus=instance, campus_country=campus_country))
-        CampusCountryRelation.objects.bulk_create(campus_country_relation_instance)
-        return instance
-
-    def update(self, instance, validated_data):
-        if 'campus_country' in validated_data.keys():
-            campus_countries = validated_data.pop('campus_country')
-            CampusCountryRelation.objects.filter(campus=instance).delete()
-            campus_country_relation_instance = []
-            for campus_country in campus_countries:
-                campus_country_relation_instance.append(CampusCountryRelation(campus=instance, campus_country=campus_country))
-            CampusCountryRelation.objects.bulk_create(campus_country_relation_instance)
-        return super().update(instance, validated_data)
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        campus_countries = CampusCountry.objects.filter(campuscountryrelation__campus=instance)
-        campus_countries_data = CampusCountrySerializer(campus_countries, many=True).data
-        data['campus_country'] = campus_countries_data
         return data
 
 
@@ -157,8 +99,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         serializer = CampusSerializer(instance=instance.campus)
         data['campus'] = serializer.data
-        data['campus_country'] = CampusCountrySerializer(instance=instance.campus_country).data \
-            if instance.campus_country else None
         return data
 
 
@@ -203,15 +143,15 @@ class MyProjectsSerializer(ProjectSerializer):
         return data
 
 
-class ProjectResultSerializer(serializers.ModelSerializer):
-    status = VerboseChoiceField(choices=ProjectResult.STATUS)
+class CourseCreditSwitchSerializer(serializers.ModelSerializer):
+    status = VerboseChoiceField(choices=CourseCreditSwitch.STATUS)
 
     class Meta:
-        model = ProjectResult
+        model = CourseCreditSwitch
         fields = ['id', 'status', 'post_datetime', 'post_channel', 'post_number', 'img']
 
 
-class GetProjectResultSerializer(serializers.ModelSerializer):
+class GetCourseCreditSwitchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
@@ -220,8 +160,8 @@ class GetProjectResultSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user = self.context['user']
-        if ProjectResult.objects.filter(user=user, status__isnull=False).exists():
-            project_result = ProjectResultSerializer(ProjectResult.objects.get(user=user)).data
+        if CourseCreditSwitch.objects.filter(user=user, status__isnull=False).exists():
+            project_result = CourseCreditSwitchSerializer(CourseCreditSwitch.objects.get(user=user)).data
         else:
             project_result = None
         data['project_result'] = project_result
@@ -287,7 +227,7 @@ class CreateUserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        ProjectResult.objects.get_or_create(user=validated_data['user'])
+        CourseCreditSwitch.objects.get_or_create(user=validated_data['user'])
         return super().create(validated_data)
 
 
@@ -324,7 +264,7 @@ class UpdateImgSerializer(serializers.Serializer):
     img = Base64ImageField()
 
     def validate_project_result(self, project, user):
-        if not ProjectResult.objects.filter(user=user, status='SUCCESS').exists():
+        if not CourseCreditSwitch.objects.filter(user=user, status='SUCCESS').exists():
             raise serializers.ValidationError('学分转换未完成，不能上传图片')
         return
 

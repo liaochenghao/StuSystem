@@ -3,14 +3,13 @@ from admin.models import PaymentAccountInfo
 from common.models import SalesManUser, FirstLevel
 from common.serializers import CampusSerializer, FirstLevelSerializer
 from coupon.models import UserCoupon
-from course.models import Campus, ProjectResult
+from course.models import Campus
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from authentication.models import User
 from authentication.models import UserInfo
-from order.models import Order, UserCourse
+from order.models import Order, UserCourse, CourseCreditSwitch
 from utils.functions import get_key_verbose_data
 
 
@@ -30,7 +29,7 @@ class GlobalEnumsViewSet(APIView):
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),
             'order_status': get_key_verbose_data(dict(Order.STATUS)),
             'user_status': get_key_verbose_data(dict(SalesManUser.STATUS)),
-            'project_result': get_key_verbose_data(dict(ProjectResult.STATUS)),
+            'course_credit_switch': get_key_verbose_data(dict(CourseCreditSwitch.STATUS)),
             'user_course_status': get_key_verbose_data(dict(UserCourse.STATUS)),
             'coupon_status': get_key_verbose_data(dict(UserCoupon.STATUS)),
             'user_role': get_key_verbose_data(dict(User.ROLE)),

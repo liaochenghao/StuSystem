@@ -6,14 +6,14 @@ from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan
 from coupon.models import UserCoupon
-from course.models import Project, Campus, Course, ProjectResult, CampusCountry
+from course.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from utils.functions import get_long_qr_code
 
-from authentication.models import UserInfo, UserInfoRemark, UserScoreDetail, User
-from order.models import UserCourse, Order
+from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
+from order.models import UserCourse, Order, CourseCreditSwitch
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -81,16 +81,6 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         except Exception as e:
             data['wcampus'] = None
 
-        try:
-            w_country = CampusCountry.objects.get(id=instance.wcountry)
-            data['wcountry'] = {
-                'id': w_country.id,
-                'name': w_country.name,
-                'create_time': w_country.create_time
-            }
-        except Exception as e:
-            data['wcountry'] = None
-
         sales_man = auto_assign_sales_man(instance.user)
         if sales_man:
             data['sales_man'] = sales_man
@@ -136,9 +126,9 @@ class CourseScoreSerializer(serializers.ModelSerializer):
                   'course']
 
 
-class UserScoreDetailSerializer(serializers.ModelSerializer):
+class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserScoreDetail
+        model = StudentScoreDetail
         fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
 
 
@@ -243,7 +233,7 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        ProjectResult.objects.get_or_create(user=validated_data['user'])
+        CourseCreditSwitch.objects.get_or_create(user=validated_data['user'])
         return super().create(validated_data)
 
 
@@ -270,11 +260,11 @@ class CustomAdminProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'campus_name', 'name']
 
 
-class AdminProjectResultSerializer(serializers.ModelSerializer):
-    status = VerboseChoiceField(choices=ProjectResult.STATUS)
+class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
+    status = VerboseChoiceField(choices=CourseCreditSwitch.STATUS)
 
     class Meta:
-        model = ProjectResult
+        model = CourseCreditSwitch
         fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'status', 'img']
         read_only_fields = ['img']
 

@@ -2,7 +2,7 @@
 
 from authentication.functions import UserTicket, auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
-    UserInfoSerializer, PersonalFIleUserInfoSerializer, UserScoreDetailSerializer, SalesManUserSerializer, \
+    UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
     AssignSalesManSerializer
 from coupon.models import Coupon
 from rest_framework import exceptions
@@ -10,7 +10,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from authentication.models import User, UserInfo, UserScoreDetail
+from authentication.models import User, UserInfo, StudentScoreDetail
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -134,11 +134,11 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
         return Response(self.get_serializer(instance).data)
 
 
-class UserScoreDetailViewSet(mixins.CreateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             viewsets.GenericViewSet):
-    queryset = UserScoreDetail.objects.all()
-    serializer_class = UserScoreDetailSerializer
+class StudentScoreDetailViewSet(mixins.CreateModelMixin,
+                                mixins.RetrieveModelMixin,
+                                viewsets.GenericViewSet):
+    queryset = StudentScoreDetail.objects.all()
+    serializer_class = StudentScoreDetailSerializer
 
     def get_object(self):
         user = self.request.user

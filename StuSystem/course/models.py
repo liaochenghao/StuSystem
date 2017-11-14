@@ -4,35 +4,6 @@ from django.db import models
 from authentication.models import User
 
 
-class CampusType(models.Model):
-    """
-    校区类型表
-    """
-    title = models.CharField('暑校类型', max_length=30, unique=True)
-    create_time = models.DateTimeField('创建时间', auto_now=True)
-
-    class Meta:
-        db_table = "campus_type"
-
-    def __str__(self):
-        return self.title
-
-
-class CampusCountry(models.Model):
-    """
-    暑校类型对应国家
-    """
-    name = models.CharField('国家名称', max_length=30, unique=True)
-    campus_type = models.ForeignKey(CampusType)
-    create_time = models.DateTimeField('创建时间', auto_now_add=True)
-
-    class Meta:
-        db_table = 'campus_country'
-
-    def __str__(self):
-        return self.name
-
-
 class Campus(models.Model):
     """
     校区信息表
@@ -48,15 +19,6 @@ class Campus(models.Model):
         return self.name
 
 
-class CampusCountryRelation(models.Model):
-    """校区和国家关系表"""
-    campus = models.ForeignKey(Campus)
-    campus_country = models.ForeignKey(CampusCountry)
-
-    class Meta:
-        db_table = 'campus_country_relation'
-
-
 class Project(models.Model):
     """项目表"""
     campus = models.ForeignKey(Campus)
@@ -68,7 +30,6 @@ class Project(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     apply_fee = models.FloatField('申请费', null=True)
     course_num = models.IntegerField('课程数')
-    campus_country = models.ForeignKey(CampusCountry, null=True)
 
     class Meta:
         db_table = 'project'
@@ -109,12 +70,8 @@ class Course(models.Model):
     name = models.CharField('课程名称', max_length=30)
     max_num = models.IntegerField('最大容纳人数')
     credit = models.IntegerField('学分')
-    professor = models.CharField('授课教授', max_length=30)
-    start_time = models.CharField('上课开始时间', max_length=30)
-    end_time = models.CharField('上课结束时间', max_length=30)
-    address = models.CharField('上课地点', max_length=30)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
-    syllabus = models.CharField('课程大纲', null=True, max_length=255)
+    modified_time = models.DateTimeField('修改时间', auto_now=True)
 
     class Meta:
         db_table = 'course'
@@ -123,21 +80,12 @@ class Course(models.Model):
         return self.name
 
 
-class ProjectResult(models.Model):
-    """用户学分转换"""
-    STATUS = (
-        ('POSTED', '成绩单已寄出'),
-        ('RECEIVED', '学校已收到'),
-        ('SUCCESS', '学分转换成功'),
-        ('FAILURE', '学分转换失败')
-    )
-    user = models.OneToOneField(User)
-    create_time = models.DateTimeField(auto_now=True)
-    post_datetime = models.DateTimeField('快递时间', null=True)
-    post_channel = models.CharField('快递方式', max_length=30, null=True)
-    post_number = models.CharField('快递单号', max_length=30, null=True)
-    status = models.CharField(max_length=30, choices=STATUS, null=True)
-    img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
-
-    class Meta:
-        db_table = 'project_result'
+class CourseProject(models.Model):
+    project = models.ForeignKey(Project, verbose_name='项目名称')
+    course = models.ForeignKey(Course, verbose_name='课程名称')
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    modified_time = models.DateTimeField('修改时间', auto_now=True)
+    professor = models.CharField('授课教授', max_length=30)
+    start_time = models.CharField('上课开始时间', max_length=30)
+    end_time = models.CharField('上课结束时间', max_length=30)
+    address = models.CharField('上课地点', max_length=30)

@@ -36,7 +36,7 @@ class UserInfo(models.Model):
     wcampus = models.CharField('意向校区', max_length=60)
     create_time = models.DateTimeField('新建时间', auto_now=True)
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
-    unionid = models.CharField('', max_length=60, null=True, blank=True, unique=True)
+    unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True, unique=True)
     openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
     headimgurl = models.CharField('微信头像url', max_length=255, null=True)
     wx_name = models.CharField('微信昵称', max_length=30, null=True)
@@ -53,7 +53,7 @@ class UserInfo(models.Model):
     major = models.CharField('专业', max_length=30, null=True)
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA')
-    valid_sales_man = models.BooleanField('', default=False)
+    valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
     channel_id = models.IntegerField('用户渠道信息')
     recommand_user_id = models.IntegerField('推荐用户id')
 
@@ -81,7 +81,7 @@ class Ticket(models.Model):
         db_table = 'ticket'
 
 
-class UserScoreDetail(models.Model):
+class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
     user = models.ForeignKey(User)
     department = models.CharField('收件部门', max_length=30)
@@ -91,4 +91,4 @@ class UserScoreDetail(models.Model):
     address = models.CharField('详细地址', max_length=60)
 
     class Meta:
-        db_table = 'x'
+        db_table = 'student_score_detail'

@@ -1,12 +1,33 @@
 # coding: utf-8
-from coupon.models import Coupon
 from course.models import Project, Course
 from django.db import models
 
-from authentication.models import User
+from authentication.models import User, StudentScoreDetail
+
+
+class ShoppingChart(models.Model):
+    """购物车"""
+    STATUS = (
+        ('NEW', '新添加'),
+        ('ORDERED', '已下单'),
+        ('CANCELED', '已取消'),
+        ('DELETED', '已删除')
+    )
+    project = models.ForeignKey(Project)
+    user = models.ForeignKey(User)
+    course_number = models.IntegerField('课程数量')
+    course_fee = models.FloatField('课程费用')
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    modified_time = models.DateTimeField('修改时间', auto_now=True)
+    status = models.CharField('状态', max_length=30, choices=STATUS, default='NEW')
+    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址')
+
+    class Meta:
+        db_table = 'shopping_chart'
 
 
 class Order(models.Model):
+    """订单"""
     CURRENCY = (
         ('DOLLAR', '美金'),
         ('RMB', '人民币')
@@ -25,7 +46,7 @@ class Order(models.Model):
         ('CONFIRM_FAILED', '验证失败')
     )
     user = models.ForeignKey(User)
-    project = models.ForeignKey(Project)
+    chart_ids = models.CharField('商品ids', max_length=255)
     currency = models.CharField('币种', choices=CURRENCY, max_length=30)
     payment = models.CharField('支付方式', choices=PAYMENT, max_length=30)
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')
@@ -33,7 +54,6 @@ class Order(models.Model):
     pay_fee = models.FloatField('支付费用')
     create_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
-    course_num = models.IntegerField()
     remark = models.CharField('订单备注', max_length=255, null=True)
     coupon_list = models.CharField('优惠券列表', null=True, max_length=255)
 
@@ -52,7 +72,9 @@ class UserCourse(models.Model):
     user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
     order = models.ForeignKey(Order)
-    create_time = models.DateTimeField(auto_now=True)
+    project = models.ForeignKey(Project)
+    create_time = models.DateTimeField('创建时间', auto_now=True)
+    modified_time = models.DateTimeField('修改时间', auto_now=True)
     score = models.IntegerField('课程成绩分数', default=0)
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
@@ -61,6 +83,27 @@ class UserCourse(models.Model):
 
     class Meta:
         db_table = 'user_course'
+
+
+class CourseCreditSwitch(models.Model):
+    """用户学分转换"""
+    STATUS = (
+        ('POSTED', '成绩单已寄出'),
+        ('RECEIVED', '学校已收到'),
+        ('SUCCESS', '学分转换成功'),
+        ('FAILURE', '学分转换失败')
+    )
+    user = models.OneToOneField(User)
+    user_course = models.OneToOneField(UserCourse)
+    create_time = models.DateTimeField(auto_now=True)
+    post_datetime = models.DateTimeField('快递时间', null=True)
+    post_channel = models.CharField('快递方式', max_length=30, null=True)
+    post_number = models.CharField('快递单号', max_length=30, null=True)
+    status = models.CharField(max_length=30, choices=STATUS, null=True)
+    img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
+
+    class Meta:
+        db_table = 'course_credit_switch'
 
 
 class OrderPayment(models.Model):

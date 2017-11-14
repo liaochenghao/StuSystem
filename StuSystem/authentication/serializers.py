@@ -8,7 +8,7 @@ from course.models import Campus
 from rest_framework import serializers
 from weixin_server.client import client
 
-from authentication.models import User, UserInfo, UserScoreDetail
+from authentication.models import User, UserInfo, StudentScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -40,15 +40,14 @@ class CreateAccountSerializer(serializers.Serializer):
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
-            print({'openid': res['openid']}, {"user": user, "unionid": user_info.get('unionid'), "openid": res['openid']})
 
             # 创建用户信息
             student_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
-                                                                   **{
-                                                                    "user": user,
-                                                                    "unionid": user_info.get('unionid'),
-                                                                    "openid": res['openid'],
-                                                                    })
+                                                                      **{
+                                                                          "user": user,
+                                                                          "unionid": user_info.get('unionid'),
+                                                                          "openid": res['openid']
+                                                                      })
             student_info.headimgurl = user_info['headimgurl']
             student_info.wx_name = user_info['nickname']
             student_info.save()
@@ -76,14 +75,14 @@ class AssignSalesManSerializer(serializers.Serializer):
         ticket = UserTicket.create_ticket(user)
         user.last_login = datetime.datetime.now()
         user.save()
-        user_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
-                                                               **{
-                                                                   "user": user,
-                                                                   "unionid": weixin_info.get('unionid'),
-                                                                   "headimgurl": weixin_info['headimgurl'],
-                                                                   "openid": res['openid'],
-                                                                   "wx_name": weixin_info['nickname']
-                                                               })
+        UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
+                                          **{
+                                               "user": user,
+                                               "unionid": weixin_info.get('unionid'),
+                                               "headimgurl": weixin_info['headimgurl'],
+                                               "openid": res['openid'],
+                                               "wx_name": weixin_info['nickname']
+                                           })
         sales_man_info = auto_assign_sales_man(user)
         return {'sales_man': sales_man_info, 'ticket': ticket}
 
@@ -133,9 +132,9 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
 
 
-class UserScoreDetailSerializer(serializers.ModelSerializer):
+class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserScoreDetail
+        model = StudentScoreDetail
         fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
 
     def create(self, validated_data):
