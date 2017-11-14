@@ -55,7 +55,7 @@ class CreateAccountSerializer(serializers.Serializer):
             # 自动分配课程顾问
             auto_assign_sales_man(user)
 
-        if any([student_info.name, student_info.email, student_info.wechat, student_info.wcountry, student_info.wcampus]) is False:
+        if all([student_info.name, student_info.email, student_info.wechat, student_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
@@ -88,11 +88,11 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    wcampus = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    wcampus = serializers.ListField(child=serializers.CharField(max_length=30), write_only=True)
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wcountry', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
+        fields = ['id', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
@@ -102,8 +102,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        campus_list = Campus.objects.filter(id__in=json.loads(instance.wcampus)).values_list('name', flat=True)
-        data['wcampus'] = campus_list
+        data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
         return data
 
 
@@ -136,6 +135,7 @@ class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
         fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
+        read_only_fields = ['user']
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user

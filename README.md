@@ -50,14 +50,15 @@
 
 
 **用户模块**：
-- [登录接口](docs/authentication/user_login.md)             管理员网页登录
+- [登录接口](docs/authentication/user_login.md)
 - [检查用户账户信息](docs/authentication/check_account.md)
-- [获取用户信息](docs/authentication/user_info.md)
-- [更新用户信息](docs/authentication/update_user_info.md)
+- [获取用户信息(***)](docs/authentication/user_info.md)
+- [更新用户信息(***)](docs/authentication/update_user_info.md)
 - [获取用户档案信息](docs/authentication/user_personal_file.md)
 - [更新用户档案信息](docs/authentication/update_personal_file.md)
-- [创建用户成绩单信息](docs/authentication/create_score_detail.md)
-- [获取用户成绩单详情](docs/authentication/get_score_detail.md)
+- [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
+- [获取用户成绩邮寄信息列表(***)](docs/authentication/get_score_list.md)
+- [获取用户成绩邮寄信息详情](docs/authentication/get_score_detail.md)
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 - [已发送好友申请](docs/authentication/post_sales_man.md)
@@ -100,32 +101,23 @@
 - [用户上传凭证待审核数量](docs/admin/course_to_confirm_count.md)
 
 **校区模块**:
-- [创建暑校类型](docs/campus/campus_type_create.md)
-- [获取暑校类型列表](docs/campus/campus_type_list.md)
-- [获取暑校详情](docs/campus/campus_type_detail.md)
-- [更新暑校类型](docs/campus/campus_type_update.md)
-- [暑校国家/暑校国家列表](docs/campus/campus_country_list.md)
-- [暑校国家/创建暑校国家](docs/campus/campus_country_create.md)
-- [暑校国家/暑校国家详情](docs/campus/campus_country_detail.md)
-- [暑校国家/更新暑校国家](docs/campus/campus_country_update.md)
-- [创建校区](docs/campus/campus_create.md)
-- [获取校区列表](docs/campus/campus_list.md)
-- [获取校区详情](docs/campus/campus_detail.md)
-- [更新校区](docs/campus/campus_update.md)
-- [获取该校区所有项目](docs/campus/all_projects.md)
-- [根据暑校类型获取对应国家，校区信息](docs/campus/type_country_campus.md)
+- [创建校区(***)](docs/campus/campus_create.md)
+- [获取校区列表(***)](docs/campus/campus_list.md)
+- [获取校区详情(***)](docs/campus/campus_detail.md)
+- [更新校区(***)](docs/campus/campus_update.md)
+- [获取校区所有项目(***)](docs/campus/all_projects.md)
 
 **项目模块**：
-- [创建项目](docs/project/project_create.md)
-- [项目列表](docs/project/project_list.md)
-- [项目详情](docs/project/project_detail.md)
-- [项目更新](docs/project/project_update.md)
+- [创建项目(***)](docs/project/project_create.md)
+- [项目列表(***)](docs/project/project_list.md)
+- [项目详情(***)）](docs/project/project_detail.md)
+- [项目更新](***)(docs/project/project_update.md)
 - [我的项目](docs/project/my_project.md)
 - [项目学分转换结果](docs/project/project_result.md)
 - [上传学分转换结果图片](docs/project/upload_img.md)
 - [根据项目该获取所有课程信息](docs/project/my_course.md)
 - [根据项目获取课程信息,成绩信息](docs/project/my_score.md)
-- [设置项目课程数量及相应费用](docs/project/project_course_fee.md)
+- [设置项目课程数量及相应费用(***)](docs/project/project_course_fee.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)

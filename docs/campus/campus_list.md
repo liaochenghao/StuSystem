@@ -25,15 +25,6 @@
                 "name": "北京校区",
                 "info": "23456",
                 "create_time": "2017-06-14T23:40:30Z",
-                "campus_type": {
-                    "id": 1,
-                    "title": "太阳系暑校",
-                    "create_time": "2017-09-04T13:59:43Z",
-                    "campus_country": {
-                        "key": "NORTH_AMERICA",
-                        "verbose": "北美暑校"
-                    }
-                }
             },
         ]
     "field_name": ""

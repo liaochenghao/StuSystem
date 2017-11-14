@@ -33,8 +33,8 @@ class CampusViewSet(BaseViewSet):
     @detail_route()
     def all_projects(self, request, pk):
         instance = self.get_object()
-        all_projects = instance.project_set.all()
-        return Response(ProjectSerializer(all_projects, many=True).data)
+        serializer = self.serializer_class(instance=instance, context={'api_key': 'all_projects'})
+        return Response(serializer.data)
 
 
 class ProjectViewSet(BaseViewSet):

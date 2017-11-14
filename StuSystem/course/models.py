@@ -25,7 +25,7 @@ class Project(models.Model):
     name = models.CharField('项目名称', max_length=30, null=True)
     start_date = models.DateField('开始时间')
     end_date = models.DateField('结束时间')
-    address = models.CharField('上课地点', max_length=100, null=True)
+    address = models.CharField('项目地点', max_length=100, null=True)
     info = models.CharField('项目描述', max_length=255, null=True)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     apply_fee = models.FloatField('申请费', null=True)
@@ -65,7 +65,6 @@ class ProjectCourseFee(models.Model):
 
 
 class Course(models.Model):
-    project = models.ForeignKey(Project)
     course_code = models.CharField('课程代码', max_length=30, unique=True)
     name = models.CharField('课程名称', max_length=30)
     max_num = models.IntegerField('最大容纳人数')
@@ -81,11 +80,15 @@ class Course(models.Model):
 
 
 class CourseProject(models.Model):
+    """课程与项目对应表"""
     project = models.ForeignKey(Project, verbose_name='项目名称')
     course = models.ForeignKey(Course, verbose_name='课程名称')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     professor = models.CharField('授课教授', max_length=30)
-    start_time = models.CharField('上课开始时间', max_length=30)
-    end_time = models.CharField('上课结束时间', max_length=30)
-    address = models.CharField('上课地点', max_length=30)
+    start_time = models.DateField('上课开始时间')
+    end_time = models.DateField('上课结束时间')
+    address = models.CharField('上课地点', max_length=100)
+
+    class Meta:
+        db_table = 'course_project'

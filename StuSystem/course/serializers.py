@@ -14,23 +14,22 @@ class CustomCampusSerializer(serializers.ModelSerializer):
 
 
 class CampusSerializer(serializers.ModelSerializer):
-    campus_country = serializers.ListField(write_only=True)
 
     class Meta:
         model = Campus
-        fields = ['id', 'name', 'info', 'create_time', 'campus_country']
+        fields = ['id', 'name', 'info', 'create_time']
 
     def validate(self, attrs):
         if not self.instance:
             if Campus.objects.filter(name=attrs['name']):
                 raise serializers.ValidationError('校区名称已存在，不能重复创建')
-        if 'campus_country' in attrs.keys():
-            campus_country_instance = []
-            attrs['campus_country'] = campus_country_instance
         return attrs
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        if self.context.get('api_key') == 'all_projects':
+            projects = instance.project_set.all()
+            data['projects'] = ProjectSerializer(projects, many=True).data
         return data
 
 
@@ -49,7 +48,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'campus_country']
+                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees']
 
     def validate(self, attrs):
         if not self.instance:
@@ -92,13 +91,11 @@ class ProjectSerializer(serializers.ModelSerializer):
                 item['project'] = instance
                 bulk_data.append(ProjectCourseFee(**item))
             ProjectCourseFee.objects.bulk_create(bulk_data)
-            return instance
         return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        serializer = CampusSerializer(instance=instance.campus)
-        data['campus'] = serializer.data
+        data['campus'] = CampusSerializer(instance=instance.campus).data
         return data
 
 
@@ -174,13 +171,12 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'project', 'course_code', 'name', 'max_num', 'credit', 'professor', 'start_time', 'end_time',
-                  'create_time', 'address', 'syllabus']
+        fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time', 'syllabus']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
-        return data
+    # def to_representation(self, instance):
+    #     data = super().to_representation(instance)
+    #     data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
+    #     return data
 
 
 class CurrentCourseProjectSerializer(serializers.Serializer):

@@ -48,7 +48,7 @@ class UserViewSet(mixins.ListModelMixin,
         user_info = UserInfo.objects.filter(user=user).first()
         if not user_info:
             raise exceptions.ValidationError('不存在基础的用户信息')
-        if any([user_info.name, user_info.email, user_info.wechat, user_info.wcountry, user_info.wcampus]) is False:
+        if all([user_info.name, user_info.email, user_info.wechat, user_info.wcampus]) is False:
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
@@ -135,10 +135,12 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
 
 
 class StudentScoreDetailViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
                                 mixins.RetrieveModelMixin,
                                 viewsets.GenericViewSet):
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
+    pagination_class = None
 
     def get_object(self):
         user = self.request.user

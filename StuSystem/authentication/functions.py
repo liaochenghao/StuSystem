@@ -20,7 +20,7 @@ def auto_assign_sales_man(user):
     """
     sales_man = SalesMan.objects.all()
     if not sales_man:
-        return None
+        return dict()
     if not SalesManUser.objects.filter(user=user).exists():
         rand_int = random.randint(1, len(sales_man))
         random_sales_man = sales_man[rand_int-1]
