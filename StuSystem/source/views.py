@@ -56,7 +56,7 @@ class ProjectViewSet(BaseViewSet):
 
     @detail_route()
     def my_course(self, request, pk):
-        my_course = Course.objects.filter(project=self.get_object())
+        my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
         res = CourseSerializer(my_course, many=True).data
         return Response(res)
 
