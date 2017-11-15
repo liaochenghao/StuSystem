@@ -42,6 +42,11 @@ class ProjectViewSet(BaseViewSet):
     queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
 
+    def get_queryset(self):
+        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+            self.pagination_class = None
+        return super().get_queryset()
+
     @detail_route()
     def related_courses(self, request, pk):
         """获取关联的课程"""
@@ -97,6 +102,11 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.filter(is_active=True)
     serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+            self.pagination_class = None
+        return super().get_queryset()
 
     @detail_route()
     def related_projects(self, request, pk):

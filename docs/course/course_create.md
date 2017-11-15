@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    POST   /course/
+    POST   /source/course/
 ```
 
 **请求参数**:

@@ -2,12 +2,11 @@
 
 **请求地址**:
 ```
-    GET   /course/
+    GET   /source/course/
 ```
 
 **请求参数**:
 ```
-    筛选项： {"project": int}   以项目id来搜索订单
 ```
 
 **成功返回**：
