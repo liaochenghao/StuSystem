@@ -66,7 +66,7 @@ class ProjectCourseFee(models.Model):
 
 class Course(models.Model):
     course_code = models.CharField('课程代码', max_length=30, unique=True)
-    name = models.CharField('课程名称', max_length=100)
+    name = models.CharField('课程名称', max_length=255)
     max_num = models.IntegerField('最大容纳人数')
     credit = models.IntegerField('学分')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
