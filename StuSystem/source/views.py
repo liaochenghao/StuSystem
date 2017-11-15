@@ -176,3 +176,7 @@ class CourseProjectViewSet(mixins.CreateModelMixin,
                            viewsets.GenericViewSet):
     queryset = CourseProject.objects.all()
     serializer_class = CourseProjectSerializer
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'msg': '关联成功'})
