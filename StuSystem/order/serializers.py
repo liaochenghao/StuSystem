@@ -17,32 +17,33 @@ from utils.serializer_fields import VerboseChoiceField
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    """订单的serializer"""
     currency = VerboseChoiceField(choices=Order.CURRENCY)
     payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
     coupon_list = serializers.ListField(write_only=True, required=False)
+    chart_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
 
     class Meta:
         model = Order
         fields = ['id', 'user', 'chart_ids', 'currency', 'payment', 'create_time', 'modified_time', 'status',
-                  'course_num', 'standard_fee', 'pay_fee', 'project', 'remark', 'coupon_list']
+                  'standard_fee', 'pay_fee', 'remark', 'coupon_list']
         read_only_fields = ['user', 'pay_fee', 'standard_fee']
 
     def validate(self, attrs):
         if not self.instance:
-            if attrs['course_num'] > attrs['project'].course_num:
-                raise serializers.ValidationError('所选课程数大于项目最大课程数, 项目最大选课数{}'.format(attrs['project'].course_num))
+            chart_ids = attrs['chart_ids']
+            for chart_id in chart_ids:
+                if not ShoppingChart.objects.filter(id=chart_id, status='NEW').exists():
+                    raise serializers.ValidationError('无效的chart_id: %s，请检查传入参数' % chart_id)
             if attrs.get('coupon_list'):
                 for coupon_id in attrs['coupon_list']:
                     if not UserCoupon.objects.filter(user=self.context['request'].user, coupon_id=coupon_id, status='TO_USE').exists():
                         raise serializers.ValidationError('无效的优惠券, coupon_id: %s' % coupon_id)
 
-            order = Order.objects.filter(user=self.context['request'].user,
-                                         status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).last()
-            if order:
-                order_course_count = UserCourse.objects.filter(order=order).count()
-                if order_course_count < int(order.course_num):
-                    raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
+            if Order.objects.filter(user=self.context['request'].user,
+                                    status__in=['TO_PAY', 'TO_CONFIRM']).exists():
+                raise serializers.ValidationError('有未完成的订单，不能创建新的订单')
         else:
             if self.instance.status == 'CANCELED':
                 raise serializers.ValidationError('该订单已被取消，不能进行更新任何操作')
@@ -61,10 +62,11 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         coupon_list = validated_data.pop('coupon_list', None)
         user = self.context['request'].user
-        course_fee = ProjectCourseFee.objects.filter(project=validated_data['project'],
-                                                     course_number=validated_data['course_num']).first()
-        validated_data['standard_fee'] = validated_data['project'].apply_fee + course_fee.course_fee if course_fee else 0
-        validated_data['pay_fee'] = validated_data['standard_fee']
+        standard_fee = sum([item.project.apply_fee + item.course_fee for item in ShoppingChart.objects.filter(
+            id__in=validated_data['chart_ids'], status='NEW')])
+        validated_data['chart_ids'] = json.dumps(validated_data['chart_ids'])
+        validated_data['standard_fee'] = standard_fee
+        validated_data['pay_fee'] = standard_fee
         validated_data['user'] = user
         if coupon_list:
             validated_data['coupon_list'] = json.dumps(coupon_list)
@@ -96,14 +98,15 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['project'] = ProjectSerializer(instance.project).data
+        data['charts'] = ShoppingChartSerializer(ShoppingChart.objects.filter(id__in=json.loads(instance.chart_ids)),
+                                                 many=True).data
         payment_info = PaymentAccountInfo.objects.filter(payment=instance.payment).first()
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         order_payment = OrderPayment.objects.filter(order=instance).first()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
-        data['user_course'] = Course.objects.filter(
-            usercourse__order=instance, usercourse__user=self.context['request'].user).\
-            values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
+        # data['user_course'] = Course.objects.filter(
+        #     usercourse__order=instance, usercourse__user=self.context['request'].user).\
+        #     values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
         data['user'] = UserInfo.objects.get(user=instance.user).name
         sales_man = SalesMan.objects.filter(salesmanuser__user=instance.user).first()
         if sales_man:
@@ -158,22 +161,13 @@ class UserOrderCourseSerializer(serializers.ModelSerializer):
 
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
-    coupon_list = serializers.ListField(write_only=True, allow_empty=True)
-    img = Base64ImageField()
+    # img = Base64ImageField()
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'coupon_list', 'img', 'amount']
+        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'img', 'amount']
 
     def create(self, validated_data):
-        coupon_list = validated_data.pop('coupon_list')
-        pay_fee = validated_data['order'].standard_fee
-        if coupon_list:
-            amount = Coupon.objects.filter(id__in=coupon_list).values_list('amount', flat=True)
-
-            for item in amount:
-                pay_fee -= item
-        validated_data['order'].pay_fee = pay_fee if pay_fee >= 0 else 0
         validated_data['order'].status = 'TO_CONFIRM'
         validated_data['order'].save()
         instance = super().create(validated_data)

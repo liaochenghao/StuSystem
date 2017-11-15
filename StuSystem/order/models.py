@@ -109,7 +109,7 @@ class CourseCreditSwitch(models.Model):
 class OrderPayment(models.Model):
     """订单支付信息"""
     order = models.ForeignKey(Order)
-    amount = models.FloatField()
+    amount = models.FloatField('支付金额')
     account_number = models.CharField('支付账号', max_length=30)
     account_name = models.CharField('支付姓名', max_length=30)
     opening_bank = models.CharField('开户银行', max_length=30, null=True)

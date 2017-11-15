@@ -1,6 +1,6 @@
 # coding: utf-8
-from rest_framework import mixins, viewsets
-from rest_framework.decorators import list_route
+from rest_framework import mixins, viewsets, exceptions
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from authentication.models import User
@@ -11,7 +11,6 @@ from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrder
 class OrderViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
     queryset = Order.objects.all().order_by('-id')
     serializer_class = OrderSerializer
@@ -33,12 +32,8 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def check_order(self, request):
-        order = self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).first()
-        if order:
-            order_course_count = UserCourse.objects.filter(order=order).count()
-            if order_course_count < int(order.course_num):
-                return Response(self.get_serializer(order).data)
-        return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
+        if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
+            return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
     def order_currency_payment(self, request):
@@ -79,8 +74,39 @@ class OrderViewSet(mixins.CreateModelMixin,
         ]
         return Response(data)
 
+    @detail_route(['put'])
+    def cancel(self, request, pk):
+        """取消订单"""
+        instance = self.get_object()
+        if instance.status == 'CANCELED':
+            raise exceptions.ValidationError('订单已被取消')
+        elif instance.satus != 'TO_PAY':
+            raise exceptions.ValidationError('无法取消该订单')
+        instance.status = 'CANCELED'
+        instance.save()
+        return Response(self.serializer_class(instance).data)
+
+    @detail_route(['put'])
+    def confirm(self, request, pk):
+        """订单支付成功与否确认"""
+        instance = self.get_object()
+        if request.data.get('status') == 'CONFIRMED':
+            status = 'CONFIRMED'
+        elif request.data.get('status') == 'CONFIRMED_FAILED':
+            status = 'CONFIRMED_FAILED'
+        else:
+            raise exceptions.ValidationError('请传入正确的参数')
+        if request.user.role != 'ADMIN':
+            raise exceptions.ValidationError('仅管理员有权限确认订单')
+        if instance.status != 'TO_CONFIRM':
+            raise exceptions.ValidationError('仅能操作待确认下的订单')
+        instance.status = status
+        instance.save()
+        return Response(self.serializer_class(instance).data)
+
     @list_route()
     def user_order_list(self, request):
+        """用户订单列表"""
         user = request.user
         status = self.request.query_params.get('status')
         none_canceled_order = self.request.query_params.get('none_canceled_order')

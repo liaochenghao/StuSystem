@@ -17,67 +17,80 @@
     "msg": "请求成功",
     "data": [
         {
-            "id": 76,
-            "user": 1,
-            "project": {
-                "id": 2,
-                "campus": {
-                    "id": 1,
-                    "name": "北京校区",
-                    "campus_type": {
-                        "id": 1,
-                        "title": "北美暑校",
-                        "create_time": "2017-07-04T00:00:00Z"
-                    },
-                    "info": "123",
-                    "create_time": "2017-06-14T23:40:30Z"
-                },
-                "name": "北京校区一期项目",
-                "start_date": "2017-06-20",
-                "end_date": "2017-06-24",
-                "address": "长城路二段99号",
-                "info": "这是项目须知，详情联系18608146540",
-                "create_time": "2017-06-20T15:39:48Z",
-                "apply_fee": 1000,
-                "course_num": 3,
-                "remark": ""            订单备注
-                "project_course_fee": [
-                    {
-                        "id": 4,
-                        "course_number": 1,
-                        "course_fee": 1200,
-                        "course_info": "1门"
-                    },
-                    {
-                        "id": 5,
-                        "course_number": 2,
-                        "course_fee": 2000,
-                        "course_info": "2门"
-                    },
-                    {
-                        "id": 6,
-                        "course_number": 3,
-                        "course_fee": 2700,
-                        "course_info": "3门"
-                    }
-                ]
-            },
+            "id": 118,
+            "user": "yirantai",
             "currency": {
                 "key": "RMB",
                 "verbose": "人民币"
             },
             "payment": {
-                "key": "ALI_PAY",
-                "verbose": "支付宝转账"
+                "key": "BANK",
+                "verbose": "银行转账"
             },
-            "create_time": "2017-07-08T17:22:51Z",
+            "create_time": "2017-11-15T10:03:37.934921Z",
+            "modified_time": "2017-11-15T10:03:37.935073Z",
             "status": {
-                "key": "CONFIRMED",
-                "verbose": "已确认"
+                "key": "TO_PAY",
+                "verbose": "待支付"
             },
-            "course_num": 3,
-            "standard_fee": 3700,
-            "pay_fee": 3000,
+            "standard_fee": 50240,
+            "pay_fee": 50240,
+            "remark": null,
+            "charts": [
+                {
+                    "id": 2,
+                    "project": {
+                        "id": 10,
+                        "campus": {
+                            "id": 18,
+                            "name": "武汉校区",
+                            "info": "针对国际业务",
+                            "create_time": "2017-11-14T09:14:48Z",
+                            "network_course": false
+                        },
+                        "name": "冬季课程",
+                        "start_date": "2017-12-25",
+                        "end_date": "2018-01-12",
+                        "address": "武汉市",
+                        "info": "2017年12月25日至2018年1月12日（3周课程）",
+                        "create_time": "2017-11-14T10:06:32Z",
+                        "apply_fee": 2000,
+                        "course_num": 4,
+                        "project_course_fee": [
+                            {
+                                "id": 65,
+                                "course_number": 1,
+                                "course_fee": 23120,
+                                "course_info": "1门"
+                            },
+                            {
+                                "id": 66,
+                                "course_number": 2,
+                                "course_fee": 23120,
+                                "course_info": "2门"
+                            },
+                            {
+                                "id": 67,
+                                "course_number": 3,
+                                "course_fee": 28120,
+                                "course_info": "3门"
+                            }
+                        ]
+                    },
+                    "course_num": 1,
+                    "course_fee": 23120,
+                    "create_time": "2017-11-15T07:06:14Z",
+                    "stu_score_detail": {
+                        "id": 10,
+                        "user": 2,
+                        "department": "材料科学与工程学院",
+                        "phone": "18608146540",
+                        "country": "美国",
+                        "post_code": "021878768687",
+                        "address": "纽约市布鲁克林区布鲁克林大道58号"
+                    }
+                },
+            "remark": ""            订单备注
             "payment_info": {
                 "id": 1,
                 "account_number": "896275756@qq.com",
@@ -89,17 +102,16 @@
                 }
             },
             "order_payed_info": {
-                "id": 18,
-                "order": 76,
-                "account_number": "12345@qq.com",
-                "account_name": "123123",
+                "id": 2,
+                "order": 34,
+                "account_number": "yirantai@hotmail.com",
+                "account_name": "邱雷",
                 "opening_bank": null,
                 "pay_date": "2017-07-06",
                 "img": null,
-                "amount": 999.99
-            },
-            "user_course": []
-        },
+                "amount": 40000, 支付金额
+            }
+        }
     ],
     "field_name": ""
 }
