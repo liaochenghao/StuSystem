@@ -8,8 +8,9 @@
 **请求参数**:
 ```
 {
-    "name": str  校区名称  最大长度30
-    "info"： str  校区描述  最大长度100
+    "name": str 必填 校区名称  最大长度30
+    "info"： str 必填 校区描述  最大长度100,
+    "network_course": boolean 非必填 是否为网课
 }
 ```
 

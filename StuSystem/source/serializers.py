@@ -17,7 +17,7 @@ class CampusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Campus
-        fields = ['id', 'name', 'info', 'create_time']
+        fields = ['id', 'name', 'info', 'create_time', 'network_course']
 
     def validate(self, attrs):
         if not self.instance:

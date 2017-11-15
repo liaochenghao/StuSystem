@@ -1,8 +1,6 @@
 # coding: utf-8
 from django.db import models
 
-from authentication.models import User
-
 
 class Campus(models.Model):
     """
@@ -10,6 +8,7 @@ class Campus(models.Model):
     """
     name = models.CharField('校区名称', max_length=30)
     info = models.CharField("校区描述", max_length=100)
+    network_course = models.BooleanField(default=False)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
 
     class Meta:
