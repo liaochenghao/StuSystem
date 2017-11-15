@@ -120,10 +120,10 @@
 - [设置项目课程数量及相应费用(***)](docs/project/project_course_fee.md)
 
 **课程模块**:
-- [创建课程](docs/course/course_create.md)
-- [课程列表](docs/course/course_list.md)
-- [课程详情](docs/course/course_detail.md)
-- [课程更新](docs/course/course_update.md)
+- [创建课程(***)](docs/course/course_create.md)
+- [课程列表(***)](docs/course/course_list.md)
+- [课程详情(***)](docs/course/course_detail.md)
+- [课程更新(***)](docs/course/course_update.md)
 - [获取当前已选课数量和, 课程总数及课程信息](docs/course/current_courses_info.md)
 - [学生选课](docs/course/create_user_courses.md)
 - [我的课程表](docs/course/my_courses.md)
