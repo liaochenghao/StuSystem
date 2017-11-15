@@ -112,7 +112,7 @@
 - [项目列表(***)](docs/project/project_list.md)
 - [项目详情(***)](docs/project/project_detail.md)
 - [项目更新(***)](docs/project/project_update.md)
-- [项目关联课程(***)(docs/project/project_related_courses.md)]
+- [项目关联课程(***)](docs/project/project_related_courses.md)
 - [创建项目与课程的关联(***)](docs/project/create_course_project.md)
 - [我的项目](docs/project/my_project.md)
 - [项目学分转换结果](docs/project/project_result.md)
