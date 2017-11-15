@@ -10,6 +10,7 @@ class Campus(models.Model):
     info = models.CharField("校区描述", max_length=100)
     network_course = models.BooleanField(default=False)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    is_active = models.BooleanField('是否启用', default=True)
 
     class Meta:
         db_table = "campus"
@@ -29,6 +30,7 @@ class Project(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     apply_fee = models.FloatField('申请费', null=True)
     course_num = models.IntegerField('课程数')
+    is_active = models.BooleanField('是否启用', default=True)
 
     class Meta:
         db_table = 'project'
@@ -70,6 +72,7 @@ class Course(models.Model):
     credit = models.IntegerField('学分')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
+    is_active = models.BooleanField('是否启用', default=True)
 
     class Meta:
         db_table = 'course'

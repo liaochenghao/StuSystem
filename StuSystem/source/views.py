@@ -27,7 +27,7 @@ class CampusViewSet(BaseViewSet):
     """
     校区视图
     """
-    queryset = Campus.objects.all()
+    queryset = Campus.objects.filter(is_active=True)
     serializer_class = CampusSerializer
 
     @detail_route()
@@ -39,7 +39,7 @@ class CampusViewSet(BaseViewSet):
 
 class ProjectViewSet(BaseViewSet):
     """项目视图"""
-    queryset = Project.objects.all()
+    queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
 
     @detail_route()
@@ -95,7 +95,7 @@ class ProjectViewSet(BaseViewSet):
 
 
 class CourseViewSet(BaseViewSet):
-    queryset = Course.objects.all()
+    queryset = Course.objects.filter(is_active=True)
     serializer_class = CourseSerializer
 
     @detail_route()

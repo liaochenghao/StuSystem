@@ -97,7 +97,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['campus'] = CampusSerializer(instance=instance.campus).data
         if self.context.get('api_key') == 'related_courses':
-            data['related_courses'] = CourseProjectSerializer(CourseProject.objects.filter(project=instance),
+            data['related_courses'] = CourseProjectSerializer(CourseProject.objects.filter(project=instance,
+                                                                                           course__is_active=True,
+                                                                                           project__is_active=True),
                                                               context={'api_key': 'related_courses'}, many=True).data
         return data
 
@@ -176,9 +178,10 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        # data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
         if self.context.get('api_key') == 'related_projects':
-            data['related_projects'] = CourseProjectSerializer(CourseProject.objects.filter(course=instance),
+            data['related_projects'] = CourseProjectSerializer(CourseProject.objects.filter(course=instance,
+                                                                                            course__is_active=True,
+                                                                                            project__is_active=True),
                                                                context={'api_key': 'related_projects'},
                                                                many=True).data
         return data
@@ -295,7 +298,10 @@ class ProjectMyScoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['course'] = ProjectCourseSerializer(Course.objects.filter(usercourse__project=instance), many=True,
+        data['course'] = ProjectCourseSerializer(Course.objects.filter(usercourse__project=instance,
+                                                                       course__is_active=True,
+                                                                       project__is_active=True),
+                                                 many=True,
                                                  context={'user': self.context['user']}).data
         return data
 
