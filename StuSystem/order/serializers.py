@@ -6,8 +6,8 @@ from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo
 from common.models import SalesMan
 from coupon.models import Coupon, UserCoupon
-from course.models import ProjectCourseFee, Course
-from course.serializers import ProjectSerializer
+from source.models import ProjectCourseFee, Course
+from source.serializers import ProjectSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 

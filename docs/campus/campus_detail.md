@@ -3,7 +3,7 @@
 
 **请求地址**:
 ```
-    GET   /course/campus/[campus_id]/
+    GET   /source/campus/[campus_id]/
 ```
 
 **请求参数**:

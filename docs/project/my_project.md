@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    GET    /course/project/my_project/
+    GET    /source/project/my_project/
 ```
 
 **请求参数**:

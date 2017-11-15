@@ -3,7 +3,7 @@ from admin.models import PaymentAccountInfo
 from common.models import SalesManUser, FirstLevel
 from common.serializers import CampusSerializer, FirstLevelSerializer
 from coupon.models import UserCoupon
-from course.models import Campus
+from source.models import Campus
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView

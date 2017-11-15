@@ -1,5 +1,5 @@
 # coding: utf-8
-from course.models import Project, Course
+from source.models import Project, Course
 from django.db import models
 
 from authentication.models import User, StudentScoreDetail

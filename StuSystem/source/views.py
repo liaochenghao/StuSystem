@@ -3,8 +3,8 @@ from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from course.models import Project, Campus, Course
-from course.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
+from source.models import Project, Campus, Course
+from source.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, UpdateImgSerializer, \
     ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer
@@ -91,7 +91,6 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    filter_fields = ['project']
 
     @list_route(serializer_class=CurrentCourseProjectSerializer)
     def current_courses_info(self, request):

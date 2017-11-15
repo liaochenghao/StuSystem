@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'authentication',
 	'corsheaders',
     'common',
-    'course',
+    'source',
     'coupon',
     'market',
     'order',

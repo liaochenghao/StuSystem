@@ -4,7 +4,7 @@ import json
 
 from authentication.functions import UserTicket, auto_assign_sales_man
 from common.models import SalesManUser, SalesMan
-from course.models import Campus
+from source.models import Campus
 from rest_framework import serializers
 from weixin_server.client import client
 

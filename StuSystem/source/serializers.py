@@ -2,7 +2,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from course.models import Project, ProjectCourseFee, Campus, Course
+from source.models import Project, ProjectCourseFee, Campus, Course
 from order.models import Order, UserCourse, CourseCreditSwitch
 from utils.serializer_fields import VerboseChoiceField
 
@@ -166,12 +166,10 @@ class GetCourseCreditSwitchSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField()
-    end_time = serializers.DateTimeField()
 
     class Meta:
         model = Course
-        fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time', 'syllabus']
+        fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time']
 
     # def to_representation(self, instance):
     #     data = super().to_representation(instance)

@@ -1,7 +1,7 @@
 # coding: utf-8
 from rest_framework import serializers
 from common.models import FirstLevel, SecondLevel
-from course.models import Campus
+from source.models import Campus
 
 
 class CampusSerializer(serializers.ModelSerializer):

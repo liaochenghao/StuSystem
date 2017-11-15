@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^auth/', include('authentication.urls')),  # 登陆模块
     url(r'^common/', include('common.urls')),  # 通用模块
     url(r'^coupon/', include('coupon.urls')),  # 优惠券模块
-    url(r'^course/', include('course.urls')),  # 课程模块
+    url(r'^source/', include('source.urls')),  # 课程模块
     url(r'^market/', include('market.urls')),  # 市场推广模块
     url(r'^order/', include('order.urls')),  # 订单模块
     url(r'^', index.view)  # index页面

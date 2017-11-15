@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PUT/PATCH   /course/campus/[campus_id]/
+    PUT/PATCH   /source/campus/[campus_id]/
 ```
 
 **请求参数**:

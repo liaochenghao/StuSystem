@@ -8,17 +8,10 @@
 **请求参数**:
 ```
 {
-    "project":   int     项目id
     "name":      str     课程名称     最大长度30
     "max_num":   int     最大选课人数
     "credit"     int     学分
-    "professor"： str    课程教授
-    "start_time":  str     课程开始时间
-    "end_time": str        课程结束时间
-    "address":  str        上课地点     最大长度 30
     "max_num":  int        最大选课人数,
-    "address":  str        上课地点
-    "syllabus": File       课程大纲文件
 }
 ```
 

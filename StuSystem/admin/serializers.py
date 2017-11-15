@@ -6,7 +6,7 @@ from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan
 from coupon.models import UserCoupon
-from course.models import Project, Campus, Course
+from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers

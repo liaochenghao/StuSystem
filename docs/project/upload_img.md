@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PUT     /course/project/[project_id]/upload_img/
+    PUT     /source/project/[project_id]/upload_img/
 ```
 
 **请求参数**:

@@ -6,7 +6,7 @@ from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
 from authentication.permissions import AdminOperatePermission
 from common.models import SalesMan
-from course.models import Project, Campus, Course
+from source.models import Project, Campus, Course
 from rest_framework import exceptions
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
