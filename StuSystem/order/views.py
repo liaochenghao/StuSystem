@@ -4,8 +4,8 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from authentication.models import User
-from order.models import Order, OrderPayment, UserCourse
-from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer
+from order.models import Order, OrderPayment, UserCourse, ShoppingChart
+from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, ShoppingChartSerializer
 
 
 class OrderViewSet(mixins.CreateModelMixin,
@@ -105,3 +105,21 @@ class OrderPaymentViewSet(mixins.CreateModelMixin,
                           viewsets.GenericViewSet):
     queryset = OrderPayment.objects.all()
     serializer_class = OrderPaymentSerializer
+
+
+class ShoppingChartViewSet(mixins.ListModelMixin,
+                           mixins.CreateModelMixin,
+                           mixins.RetrieveModelMixin,
+                           mixins.UpdateModelMixin,
+                           mixins.DestroyModelMixin,
+                           viewsets.GenericViewSet):
+    queryset = ShoppingChart.objects.filter(status='NEW')
+    serializer_class = ShoppingChartSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
+
+    def perform_destroy(self, instance):
+        instance.status = 'DELETED'
+        instance.save()

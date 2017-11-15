@@ -7,12 +7,12 @@ from authentication.models import UserInfo
 from common.models import SalesMan
 from coupon.models import Coupon, UserCoupon
 from source.models import ProjectCourseFee, Course
-from source.serializers import ProjectSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-
+from authentication.serializers import StudentScoreDetailSerializer
+from source.serializers import ProjectSerializer
 from admin.serializers import PaymentAccountInfoSerializer
-from order.models import Order, OrderPayment, UserCourse
+from order.models import Order, OrderPayment, UserCourse, ShoppingChart
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -182,4 +182,29 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['img'] = '%s%s%s' % (DOMAIN, MEDIA_URL, instance.img)
+        return data
+
+
+class ShoppingChartSerializer(serializers.ModelSerializer):
+    """购物车"""
+
+    class Meta:
+        model = ShoppingChart
+        fields = ['id', 'project', 'course_num', 'course_fee', 'create_time', 'stu_score_detail']
+        read_only_fields = ['course_fee']
+
+    def validate(self, attrs):
+        project = attrs['project']
+        project_course_fee = ProjectCourseFee.objects.filter(project=project, project__is_active=True,
+                                                             course_number=attrs['course_num']).first()
+        if not project_course_fee:
+            raise serializers.ValidationError('项目课程数量错误，请重新选择')
+        attrs['course_fee'] = project_course_fee.course_fee
+        attrs['user'] = self.context['request'].user
+        return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['project'] = ProjectSerializer(instance.project).data
+        data['stu_score_detail'] = StudentScoreDetailSerializer(instance.stu_score_detail).data
         return data

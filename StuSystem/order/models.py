@@ -10,7 +10,6 @@ class ShoppingChart(models.Model):
     STATUS = (
         ('NEW', '新添加'),
         ('ORDERED', '已下单'),
-        ('CANCELED', '已取消'),
         ('DELETED', '已删除')
     )
     project = models.ForeignKey(Project)

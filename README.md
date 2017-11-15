@@ -65,6 +65,13 @@
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 - [微信中分配销售顾问](docs/authentication/assign_sales_man.md)
 
+**购物车**:
+- [购物车项目创建](docs/shopping_chart/shopping_chart_create.md)
+- [购物车项目列表](docs/shopping_chart/shopping_chart_list.md)
+- [购物车项目详情](docs/shopping_chart/shopping_chart_detail.md)
+- [购物车项目更新](docs/shopping_chart/shopping_chart_update.md)
+- [购物车项目删除](docs/shopping_chart/shopping_chart_delete.md)
+
 **管理后台接口**：
 - [学生信息列表](docs/admin/user_info_list.md)
 - [学生信息详情](docs/admin/user_info_detail.md)
