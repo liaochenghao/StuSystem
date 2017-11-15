@@ -2,7 +2,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from source.models import Project, ProjectCourseFee, Campus, Course
+from source.models import Project, ProjectCourseFee, Campus, Course, CourseProject
 from order.models import Order, UserCourse, CourseCreditSwitch
 from utils.serializer_fields import VerboseChoiceField
 
@@ -96,6 +96,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['campus'] = CampusSerializer(instance=instance.campus).data
+        if self.context.get('api_key') == 'related_courses':
+            data['related_courses'] = CourseProjectSerializer(CourseProject.objects.filter(project=instance),
+                                                              context={'api_key': 'related_courses'}, many=True).data
         return data
 
 
@@ -158,7 +161,7 @@ class GetCourseCreditSwitchSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         user = self.context['user']
         if CourseCreditSwitch.objects.filter(user=user, status__isnull=False).exists():
-            project_result = CourseCreditSwitchSerializer(CourseCreditSwitch.objects.get(user=user)).data
+            project_result = CourseProjectSerializer(CourseCreditSwitch.objects.get(user=user)).data
         else:
             project_result = None
         data['project_result'] = project_result
@@ -171,10 +174,14 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time']
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
-    #     return data
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # data['current_course_num'] = UserCourse.objects.filter(course=instance).count()
+        if self.context.get('api_key') == 'related_projects':
+            data['related_projects'] = CourseProjectSerializer(CourseProject.objects.filter(course=instance),
+                                                               context={'api_key': 'related_projects'},
+                                                               many=True).data
+        return data
 
 
 class CurrentCourseProjectSerializer(serializers.Serializer):
@@ -302,4 +309,19 @@ class CourseFilterElementsSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project_set'] = Project.objects.filter(campus=instance).values('id', 'name')
+        return data
+
+
+class CourseProjectSerializer(serializers.ModelSerializer):
+    """课程项目关联"""
+    class Meta:
+        model = CourseProject
+        fields = ['id', 'course', 'project', 'create_time', 'professor', 'start_time', 'end_time', 'address']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if self.context.get('api_key') == 'related_projects':
+            data['project'] = ProjectSerializer(instance.project).data
+        elif self.context.get('api_key') == 'related_courses':
+            data['course'] = CourseSerializer(instance.course).data
         return data

@@ -3,11 +3,11 @@ from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from source.models import Project, Campus, Course
+from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
     CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
     MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, CourseProjectSerializer
 from order.models import UserCourse, CourseCreditSwitch
 
 
@@ -41,6 +41,12 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    @detail_route()
+    def related_courses(self, request, pk):
+        """获取关联的课程"""
+        serializer = self.serializer_class(instance=self.get_object(), context={'api_key': 'related_courses'})
+        return Response(serializer.data)
 
     @list_route(serializer_class=MyProjectsSerializer)
     def my_project(self, request):
@@ -91,6 +97,12 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    @detail_route()
+    def related_projects(self, request, pk):
+        """获取关联的项目"""
+        serializer = self.serializer_class(instance=self.get_object(), context={'api_key': 'related_projects'})
+        return Response(serializer.data)
 
     @list_route(serializer_class=CurrentCourseProjectSerializer)
     def current_courses_info(self, request):
@@ -158,3 +170,9 @@ class CourseViewSet(BaseViewSet):
     def filter_elements(self, request):
         campus = Campus.objects.all()
         return Response(CourseFilterElementsSerializer(campus, many=True).data)
+
+
+class CourseProjectViewSet(mixins.CreateModelMixin,
+                           viewsets.GenericViewSet):
+    queryset = CourseProject.objects.all()
+    serializer_class = CourseProjectSerializer

@@ -91,3 +91,4 @@ class CourseProject(models.Model):
 
     class Meta:
         db_table = 'course_project'
+        unique_together = ['project', 'course']
