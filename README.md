@@ -146,7 +146,7 @@
 - [课程列表--不分页接口(***)](docs/course/course_list_none_pagination.md)
 - [课程详情(***)](docs/course/course_detail.md)
 - [课程更新(***)](docs/course/course_update.md)
-- [课程关联项目(***)(docs/course/course_related_projects.md)]
+- [课程关联项目(***)](docs/course/course_related_projects.md)
 
 **学生选课**:
 - [获取当前已选课数量和, 课程总数及课程信息(***)](docs/course/current_courses_info.md)
