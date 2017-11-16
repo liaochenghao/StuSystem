@@ -185,6 +185,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         validated_data['order'].status = 'TO_CONFIRM'
         validated_data['order'].save()
         instance = super().create(validated_data)
+        OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'UPDATE',
+                                              'source': instance.order, 'remark': '上传了订单支付信息'})
         return instance
 
     def to_representation(self, instance):

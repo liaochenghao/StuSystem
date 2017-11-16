@@ -112,7 +112,6 @@ class OrderViewSet(mixins.CreateModelMixin,
 
 class OrderPaymentViewSet(mixins.CreateModelMixin,
                           mixins.RetrieveModelMixin,
-                          mixins.ListModelMixin,
                           viewsets.GenericViewSet):
     queryset = OrderPayment.objects.all()
     serializer_class = OrderPaymentSerializer

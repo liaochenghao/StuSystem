@@ -18,6 +18,7 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
 from order.models import UserCourse, Order, CourseCreditSwitch
+from operate_history.models import OrderOperateHistory
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -245,14 +246,20 @@ class AdminOrderViewSet(mixins.ListModelMixin,
         instance = self.get_object()
         if request.data.get('status') == 'CONFIRMED':
             status = 'CONFIRMED'
+            remark = '订单支付成功，已确认'
         elif request.data.get('status') == 'CONFIRMED_FAILED':
             status = 'CONFIRMED_FAILED'
+            remark = '订单支付失败，验证失败'
         else:
             raise exceptions.ValidationError('请传入正确的参数')
+        if instance.status != 'TO_CONFIRM':
+            raise exceptions.ValidationError('仅能操作待确认状态下的订单')
         if request.user.role != 'ADMIN':
             raise exceptions.ValidationError('仅管理员有权限确认订单')
         if instance.status != 'TO_CONFIRM':
             raise exceptions.ValidationError('仅能操作待确认下的订单')
         instance.status = status
         instance.save()
+        OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,
+                                              'remark': remark})
         return Response(self.serializer_class(instance).data)
