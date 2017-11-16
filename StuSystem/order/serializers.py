@@ -175,7 +175,7 @@ class UserOrderCourseSerializer(serializers.ModelSerializer):
 
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
-    # img = Base64ImageField()
+    img = Base64ImageField()
 
     class Meta:
         model = OrderPayment
