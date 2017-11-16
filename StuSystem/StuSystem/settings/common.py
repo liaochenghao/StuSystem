@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     'coupon',
     'market',
     'order',
-    'gunicorn'
+    'gunicorn',
+    'operate_history'
 ]
 
 
@@ -118,6 +119,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'utils.Auth.SessionCsrfExemptAuthentication',
     ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'EXCEPTION_HANDLER': 'utils.handlers.exception_handler'
 }

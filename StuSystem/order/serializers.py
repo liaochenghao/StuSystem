@@ -11,9 +11,19 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from authentication.serializers import StudentScoreDetailSerializer
 from source.serializers import ProjectSerializer
-from admin.serializers import PaymentAccountInfoSerializer
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart
+from operate_history.models import OrderOperateHistory
 from utils.serializer_fields import VerboseChoiceField
+
+
+class PaymentAccountInfoSerializer(serializers.ModelSerializer):
+    """支付账号serializer"""
+    payment = VerboseChoiceField(PaymentAccountInfo.PAYMENT)
+    currency = VerboseChoiceField(PaymentAccountInfo.CURRENCY)
+
+    class Meta:
+        model = PaymentAccountInfo
+        fields = ['id', 'account_number', 'account_name', 'opening_bank', 'payment', 'currency', 'swift_code']
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -79,9 +89,13 @@ class OrderSerializer(serializers.ModelSerializer):
                 (validated_data['standard_fee'] - coupon_list_fee) >= 0 else 0
         order = super().create(validated_data)
         if coupon_list:
+            # 更新优惠券状态
             for coupon_id in coupon_list:
                 if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
                     UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
+        # 操作记录
+        OrderOperateHistory.objects.create({'user': self.context['request'].user, 'key': 'CREATE', 'source': order,
+                                            'remark': '创建了订单'})
         return order
 
     def update(self, instance, validated_data):

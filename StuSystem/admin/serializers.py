@@ -14,10 +14,11 @@ from utils.functions import get_long_qr_code
 
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
 from order.models import UserCourse, Order, CourseCreditSwitch
+from order.serializers import OrderSerializer
 from utils.serializer_fields import VerboseChoiceField
 
 
-class PaymentAccountInfoSerializer(serializers.ModelSerializer):
+class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
     payment = VerboseChoiceField(PaymentAccountInfo.PAYMENT)
     currency = VerboseChoiceField(PaymentAccountInfo.CURRENCY)
 
@@ -297,3 +298,7 @@ class ChildUserSerializer(serializers.ModelSerializer):
         instance.qr_code = qr_code
         instance.save()
         return instance
+
+
+class AdminOrderSerializer(OrderSerializer):
+    pass

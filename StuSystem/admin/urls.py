@@ -3,7 +3,7 @@ from rest_framework.routers import SimpleRouter
 
 from admin.views import AccountInfoViewSet, UserInfoViewSet, StudentScoreDetailViewSet, AdminProjectViewSet, \
     StatisticsViewSet, SalesManViewSet, AdminUserOrderViewSet, AdminUserCourseCreditSwitchViewSet, ChildUserViewSet, \
-    AdminCourseViewSet
+    AdminCourseViewSet, AdminOrderViewSet
 
 router = SimpleRouter()
 
@@ -17,5 +17,6 @@ router.register('user_course', AdminUserOrderViewSet)
 router.register('project_result', AdminUserCourseCreditSwitchViewSet)
 router.register('child_user', ChildUserViewSet)
 router.register('course', AdminCourseViewSet)
+router.register('order', AdminOrderViewSet)
 
 urlpatterns = router.urls

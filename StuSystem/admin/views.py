@@ -12,11 +12,11 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from admin.serializers import PaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
+from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
-    AdminCourseSerializer, AdminCreateUserCourseSerializer
+    AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
 from order.models import UserCourse, Order, CourseCreditSwitch
 
 
@@ -27,7 +27,7 @@ class AccountInfoViewSet(mixins.CreateModelMixin,
                          mixins.DestroyModelMixin,
                          viewsets.GenericViewSet):
     queryset = PaymentAccountInfo.objects.all()
-    serializer_class = PaymentAccountInfoSerializer
+    serializer_class = AdminPaymentAccountInfoSerializer
 
 
 class UserInfoViewSet(mixins.ListModelMixin,
@@ -37,7 +37,6 @@ class UserInfoViewSet(mixins.ListModelMixin,
     queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
-    permission_classes = [AdminOperatePermission]
 
     def get_serializer(self, *args, **kwargs):
         if kwargs.get('many'):
@@ -231,3 +230,11 @@ class AdminCourseViewSet(mixins.ListModelMixin,
         count = UserCourse.objects.filter(status='TO_CONFIRM').count()
         return Response({'course_to_confirm_count': count})
 
+
+class AdminOrderViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
+                        viewsets.GenericViewSet):
+    """管理员订单管理"""
+    queryset = Order.objects.all()
+    serializer_class = AdminOrderSerializer
+    permission_classes = [AdminOperatePermission]

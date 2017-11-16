@@ -72,6 +72,11 @@
 - [购物车项目更新(***)](docs/shopping_chart/shopping_chart_update.md)
 - [购物车项目删除(***)](docs/shopping_chart/shopping_chart_delete.md)
 
+**管理员订单管理**:
+- [订单列表](docs/admin/order/admin_order_list.md)
+- [订单详情](docs/admin/order/admin_order_detail.md)
+- [订单更新](docs/admin/order/admin_order_update.md)
+
 **管理后台接口**：
 - [学生信息列表](docs/admin/user_info_list.md)
 - [学生信息详情](docs/admin/user_info_detail.md)
