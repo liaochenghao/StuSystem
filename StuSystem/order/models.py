@@ -92,7 +92,7 @@ class CourseCreditSwitch(models.Model):
         ('SUCCESS', '学分转换成功'),
         ('FAILURE', '学分转换失败')
     )
-    user = models.OneToOneField(User)
+    user = models.ForeignKey(User)
     user_course = models.OneToOneField(UserCourse)
     create_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)

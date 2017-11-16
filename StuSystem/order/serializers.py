@@ -93,6 +93,8 @@ class OrderSerializer(serializers.ModelSerializer):
             for coupon_id in coupon_list:
                 if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
                     UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
+        # 更新购物车
+        ShoppingChart.objects.filter(id__in=validated_data['chart_ids']).update(status='ORDERED')
         # 操作记录
         OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'CREATE', 'source': order,
                                            'remark': '创建了订单'})

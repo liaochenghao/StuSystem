@@ -77,6 +77,27 @@
 - [订单详情](docs/admin/order/admin_order_detail.md)
 - [订单更新](docs/admin/order/admin_order_update.md)
 
+**管理员支付账号设置**：
+- [管理员账户设置/账户列表](docs/admin/account_info/account_info_list.md)
+- [管理员账户设置/账户创建](docs/admin/account_info/account_info_create.md)
+- [管理员账户设置/账户详情](docs/admin/account_info/account_info_detail.md)
+- [管理员账户设置/更新账户](docs/admin/account_info/account_info_update.md)
+- [管理员账户设置/删除账户](docs/admin/account_info/account_info_delete.md)
+
+**管理员销售顾问**：
+- [销售顾问/销售顾问列表](docs/sales_man/sales_man_list.md)
+- [销售顾问/创建销售顾问](docs/sales_man/sales_man_create.md)
+- [销售顾问/获取销售顾问详情](docs/sales_man/sales_man_detail.md)
+- [销售顾问/更新销售顾问](docs/sales_man/sales_man_update.md)
+- [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
+
+**管理员优惠券**：
+- [优惠券/创建优惠券](docs/coupon/coupon_create.md)
+- [优惠券/优惠券列表](docs/coupon/coupon_list.md)
+- [优惠券／优惠券详情](docs/coupon/coupon_detail.md)
+- [优惠券/更新优惠券](docs/coupon/coupon_update.md)
+- [优惠券/给学生分配优惠券](docs/coupon/add_coupon.md)
+
 **管理后台接口**：
 - [学生信息列表](docs/admin/user_info_list.md)
 - [学生信息详情](docs/admin/user_info_detail.md)
@@ -88,27 +109,12 @@
 - [项目管理项目列表(分页接口)](docs/admin/project_list.md)
 - [项目管理项目列表(不分页接口)](docs/admin/project_list_none_pagination.md)
 - [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
-- [销售顾问/销售顾问列表](docs/sales_man/sales_man_list.md)
-- [销售顾问/创建销售顾问](docs/sales_man/sales_man_create.md)
-- [销售顾问/获取销售顾问详情](docs/sales_man/sales_man_detail.md)
-- [销售顾问/更新销售顾问](docs/sales_man/sales_man_update.md)
-- [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
-- [优惠券/创建优惠券](docs/coupon/coupon_create.md)
-- [优惠券/优惠券列表](docs/coupon/coupon_list.md)
-- [优惠券／优惠券详情](docs/coupon/coupon_detail.md)
-- [优惠券/更新优惠券](docs/coupon/coupon_update.md)
-- [优惠券/给学生分配优惠券](docs/coupon/add_coupon.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
 - [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
 - [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
-- [管理员账户设置/账户列表](docs/admin/account_info_list.md)
-- [管理员账户设置/账户创建](docs/admin/account_info_create.md)
-- [管理员账户设置/账户详情](docs/admin/account_info_detail.md)
-- [管理员账户设置/更新账户](docs/admin/account_info_update.md)
-- [管理员账户设置/删除账户](docs/admin/account_info_delete.md)
 - [管理员为学生分配课程](docs/admin/create_user_course.md)
 - [用户上传凭证待审核数量](docs/admin/course_to_confirm_count.md)
 
@@ -141,11 +147,13 @@
 - [课程详情(***)](docs/course/course_detail.md)
 - [课程更新(***)](docs/course/course_update.md)
 - [课程关联项目(***)(docs/course/course_related_projects.md)]
-- [获取当前已选课数量和, 课程总数及课程信息](docs/course/current_courses_info.md)
-- [学生选课](docs/course/create_user_courses.md)
-- [我的课程表](docs/course/my_courses.md)
-- [我的成绩](docs/course/my_scores.md)
-- [审课图片上传](docs/course/upload_confirm.md)
+
+**学生选课**:
+- [获取当前已选课数量和, 课程总数及课程信息(***)](docs/course/current_courses_info.md)
+- [学生选课(***)](docs/user_course/create_user_courses.md)
+- [我的课程表](docs/user_course/my_courses.md)
+- [我的成绩](docs/user_course/my_scores.md)
+- [审课图片上传](docs/user_course/upload_confirm.md)
 
 
 **订单模块**:

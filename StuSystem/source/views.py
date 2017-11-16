@@ -1,14 +1,15 @@
 # coding: utf-8
+import json
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
-    CourseSerializer, CurrentCourseProjectSerializer, CreateUserCourseSerializer, \
-    MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, UpdateImgSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, CourseProjectSerializer
-from order.models import UserCourse, CourseCreditSwitch
+    CourseSerializer, MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, \
+    UpdateImgSerializer, ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
+    CourseProjectSerializer, UserCourseSerializer
+from order.models import Order, UserCourse, CourseCreditSwitch, ShoppingChart
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -114,27 +115,70 @@ class CourseViewSet(BaseViewSet):
         serializer = self.serializer_class(instance=self.get_object(), context={'api_key': 'related_projects'})
         return Response(serializer.data)
 
-    @list_route(serializer_class=CurrentCourseProjectSerializer)
+    @list_route()
+    def filter_elements(self, request):
+        campus = Campus.objects.all()
+        return Response(CourseFilterElementsSerializer(campus, many=True).data)
+
+
+class CourseProjectViewSet(mixins.CreateModelMixin,
+                           viewsets.GenericViewSet):
+    """课程与项目关联"""
+    queryset = CourseProject.objects.all()
+    serializer_class = CourseProjectSerializer
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'msg': '关联成功'})
+
+
+class UserCourseViewSet(mixins.CreateModelMixin,
+                        viewsets.GenericViewSet):
+    """学生选课"""
+    queryset = UserCourse.objects.all()
+    serializer_class = UserCourseSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'msg': '选课成功'})
+
+    @list_route()
     def current_courses_info(self, request):
-        """获取当前已选课数量和, 课程总数及课程信息"""
-        user = request.user
-        data = self.request.query_params.dict()
-        data['user'] = user.id
-        serializer = self.serializer_class(data=data)
-        serializer.is_valid(raise_exception=True)
-        project = serializer.validated_data['project']
-        current_course_num = UserCourse.objects.filter(user=user, project_id=project).count()
-        course_num = Project.objects.get(id=project).course_num
-        courses = self.queryset.filter(project_id=project)
-        data = CourseSerializer(courses, many=True).data
-        res = {
-            'course_num': course_num,
-            'current_course_num': current_course_num,
-            'course_info': data
-        }
+        """获取当前已购买项目，选课数量,课程总数及课程信息"""
+        res = []
+        payed_orders = Order.objects.filter(user=request.user, status='CONFIRMED')
+        for order in payed_orders:
+            charts = ShoppingChart.objects.filter(id__in=json.loads(order.chart_ids))
+            for chart in charts:
+                current_courses = UserCourse.objects.filter(user=request.user, order=order, project=chart.project).\
+                    values('course__id', 'course__course_code', 'course__name')
+                current_courses = [{
+                    'id': item.get('course__id'),
+                    'course_code': item.get('course__course_code'),
+                    'name': item.get('course__name')
+                } for item in current_courses]
+                current_course_num = len(current_courses)
+                res.append({
+                    'course_num': chart.course_num,
+                    'current_course_num': current_course_num,
+                    'project': {
+                        'id': chart.project.id,
+                        'name': chart.project.name
+                    },
+                    'order': {
+                        'id': order.id
+                    },
+                    'chart_id': chart.id,
+                    'current_courses': current_courses
+                })
+
         return Response(res)
 
-    @list_route(['POST'], serializer_class=CreateUserCourseSerializer)
+    @list_route(['POST'])
     def create_user_courses(self, request):
         """
         学生选课
@@ -175,18 +219,3 @@ class CourseViewSet(BaseViewSet):
         UserCourse.objects.filter(user=request.user, course=self.get_object()).update(
             confirm_photo=serializer.validated_data['confirm_photo'], status='TO_CONFIRM')
         return Response({'msg': '操作成功'})
-
-    @list_route()
-    def filter_elements(self, request):
-        campus = Campus.objects.all()
-        return Response(CourseFilterElementsSerializer(campus, many=True).data)
-
-
-class CourseProjectViewSet(mixins.CreateModelMixin,
-                           viewsets.GenericViewSet):
-    queryset = CourseProject.objects.all()
-    serializer_class = CourseProjectSerializer
-
-    def create(self, request, *args, **kwargs):
-        super().create(request, *args, **kwargs)
-        return Response({'msg': '关联成功'})

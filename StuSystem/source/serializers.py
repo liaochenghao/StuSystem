@@ -3,7 +3,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from source.models import Project, ProjectCourseFee, Campus, Course, CourseProject
-from order.models import Order, UserCourse, CourseCreditSwitch
+from order.models import Order, UserCourse, CourseCreditSwitch, ShoppingChart
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -187,52 +187,67 @@ class CourseSerializer(serializers.ModelSerializer):
         return data
 
 
-class CurrentCourseProjectSerializer(serializers.Serializer):
-    project = serializers.IntegerField()
-    user = serializers.IntegerField()
+class UserCourseSerializer(serializers.ModelSerializer):
 
-    def validate(self, attrs):
-        if not Project.objects.filter(id=attrs['project']).exists():
-            raise serializers.ValidationError('项目不存在')
-
-        if not Order.objects.filter(user_id=attrs['user'], project_id=attrs['project'],
-                                    ).exists():
-            raise serializers.ValidationError('订单不存在')
-
-        if not Order.objects.filter(user_id=attrs['user'], project_id=attrs['project'],
-                                    status='TO_PAY').exists():
-            raise serializers.ValidationError('订单未支付')
-        return attrs
-
-
-class CreateUserCourseSerializer(serializers.ModelSerializer):
+    chart_id = serializers.IntegerField(write_only=True)
+    course_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course', 'order', 'user']
+        fields = ['id', 'order', 'chart_id', 'course_ids']
 
     def validate(self, attrs):
-        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
-                                    ).exists():
-            raise serializers.ValidationError('订单不存在')
 
-        if attrs['order'] == 'TO_CONFIRM':
+        if attrs['order'].status == 'TO_CONFIRM':
             raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
 
-        if attrs['order'] == 'TO_PAY':
+        if attrs['order'].status == 'TO_PAY':
             raise serializers.ValidationError('订单尚未支付')
 
-        if UserCourse.objects.filter(order=attrs['order']).count() >= int(attrs['order'].course_num):
-            raise serializers.ValidationError('订单已达到最大选课数，不能再继续选课')
+        for course_id in attrs['course_ids']:
+            if not Course.objects.filter(id=course_id).exists():
+                raise serializers.ValidationError('课程id：%s 传入有误' % course_id)
 
-        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
-                                     course=attrs['course']).exists():
-            raise serializers.ValidationError('已选该课程，不能重复选择')
+        if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():
+            raise serializers.ValidationError('chart_id：%s 传入有误' % attrs['chart_id'])
+
+        chart = ShoppingChart.objects.get(id=attrs['chart_id'])
+
+        current_course_num = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
+                                                       order=attrs['order']).count()
+
+        if len(attrs['course_ids']) > (chart.course_num - current_course_num):
+            raise serializers.ValidationError('当前剩余可选课程为：%d门，传入了%d门课程' %
+                                              ((chart.course_num - current_course_num), len(attrs['course_ids']))
+                                              )
+
+        if len(attrs['course_ids']) > chart.course_num:
+            raise serializers.ValidationError('该项目最大选课书为：%d门, 传入了%d门课程' %
+                                              (chart.course_num, len(attrs['course_ids']))
+                                              )
+
+        if UserCourse.objects.filter(user=self.context['request'].user, project=chart.project, order=attrs['order'],
+                                     course_id__in=attrs['course_ids']).exists():
+            raise serializers.ValidationError('该项目已选有当前课程，请重新选择')
+        attrs['project'] = chart.project
         return attrs
 
     def create(self, validated_data):
-        CourseCreditSwitch.objects.get_or_create(user=validated_data['user'])
-        return super().create(validated_data)
+        user_course = []
+        course_switch = []
+        for course_id in validated_data['course_ids']:
+            user_course.append(UserCourse(user=self.context['request'].user,
+                                          order=validated_data['order'],
+                                          project=validated_data['project'],
+                                          course_id=course_id
+                                          )
+                               )
+        user_courses = UserCourse.objects.bulk_create(user_course)
+        for item in user_courses:
+            course_switch.append(CourseCreditSwitch(user=self.context['request'].user,
+                                                    user_course=item))
+        CourseCreditSwitch.objects.bulk_create(course_switch)
+        return user_courses[0]
 
 
 class MyCourseSerializer(serializers.ModelSerializer):
@@ -273,7 +288,7 @@ class UpdateImgSerializer(serializers.Serializer):
         return
 
 
-class UserCourseSerializer(serializers.ModelSerializer):
+class ProjectUserCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
         fields = ['score', 'score_grade', 'reporting_time']
@@ -287,7 +302,7 @@ class ProjectCourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         my_course = UserCourse.objects.filter(user=self.context['user'], course=instance).first()
-        data['course_score'] = UserCourseSerializer(my_course).data if my_course else None
+        data['course_score'] = ProjectUserCourseSerializer(my_course).data if my_course else None
         return data
 
 
