@@ -238,3 +238,21 @@ class AdminOrderViewSet(mixins.ListModelMixin,
     queryset = Order.objects.all()
     serializer_class = AdminOrderSerializer
     permission_classes = [AdminOperatePermission]
+
+    @detail_route(['put'])
+    def confirm(self, request, pk):
+        """订单支付成功与否确认"""
+        instance = self.get_object()
+        if request.data.get('status') == 'CONFIRMED':
+            status = 'CONFIRMED'
+        elif request.data.get('status') == 'CONFIRMED_FAILED':
+            status = 'CONFIRMED_FAILED'
+        else:
+            raise exceptions.ValidationError('请传入正确的参数')
+        if request.user.role != 'ADMIN':
+            raise exceptions.ValidationError('仅管理员有权限确认订单')
+        if instance.status != 'TO_CONFIRM':
+            raise exceptions.ValidationError('仅能操作待确认下的订单')
+        instance.status = status
+        instance.save()
+        return Response(self.serializer_class(instance).data)

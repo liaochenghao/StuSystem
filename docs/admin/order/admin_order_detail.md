@@ -115,7 +115,23 @@
             "img": "http://apply.chinasummer.org/media/order/order_payment/test1.png",
             "amount": 40000
         },
-        "sales_man": null
+        "sales_man": null,
+        "operation_history": [      操作记录
+            {
+                "id": 1,
+                "operator": {
+                    "id": 2,
+                    "name": "yirantai",
+                    "role": {
+                        "key": "STUDENT",
+                        "verbose": "学生"
+                    }
+                },
+                "create_time": "2017-11-16T07:23:42Z",
+                "source": 123,
+                "remark": "创建了订单"
+            },
+        ]
     },
     "field_name": ""
 }

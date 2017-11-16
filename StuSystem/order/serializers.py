@@ -94,8 +94,8 @@ class OrderSerializer(serializers.ModelSerializer):
                 if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
                     UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
         # 操作记录
-        OrderOperateHistory.objects.create({'user': self.context['request'].user, 'key': 'CREATE', 'source': order,
-                                            'remark': '创建了订单'})
+        OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'CREATE', 'source': order,
+                                           'remark': '创建了订单'})
         return order
 
     def update(self, instance, validated_data):

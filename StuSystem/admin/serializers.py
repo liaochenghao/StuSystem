@@ -10,12 +10,13 @@ from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from utils.functions import get_long_qr_code
 
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
 from order.models import UserCourse, Order, CourseCreditSwitch
 from order.serializers import OrderSerializer
+from operate_history.serializers import OrderOperateHistorySerializer
 from utils.serializer_fields import VerboseChoiceField
+from utils.functions import get_long_qr_code
 
 
 class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
@@ -301,4 +302,8 @@ class ChildUserSerializer(serializers.ModelSerializer):
 
 
 class AdminOrderSerializer(OrderSerializer):
-    pass
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['operation_history'] = OrderOperateHistorySerializer(instance.orderoperatehistory_set.all(), many=True).data
+        return data
