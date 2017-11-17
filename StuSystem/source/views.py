@@ -3,10 +3,10 @@ import json
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-
+from StuSystem.settings import DOMAIN, MEDIA_URL
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
-    CourseSerializer, MyCourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, \
+    CourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, \
     UpdateImgSerializer, ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
     CourseProjectSerializer, UserCourseSerializer
 from order.models import Order, UserCourse, CourseCreditSwitch, ShoppingChart
@@ -133,6 +133,7 @@ class CourseProjectViewSet(mixins.CreateModelMixin,
 
 
 class UserCourseViewSet(mixins.CreateModelMixin,
+                        mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     """学生选课"""
     queryset = UserCourse.objects.all()
@@ -149,17 +150,60 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     @list_route()
     def current_courses_info(self, request):
         """获取当前已购买项目，选课数量,课程总数及课程信息"""
+        res = self.course_info()
+        return Response(res)
+
+    @list_route(serializer_class=MyScoreSerializer)
+    def my_scores(self, request):
+        """我的成绩"""
+        user = request.user
+        user_courses = UserCourse.objects.filter(user=user)
+        data = self.serializer_class(user_courses, many=True).data
+        return Response(data)
+
+    @list_route(['PUT', 'GET'], serializer_class=ConfirmPhotoSerializer)
+    def student_confirm_course(self, request):
+        """学生审课"""
+        if request.method == 'GET':
+            res = self.course_info()
+            return Response(res)
+        else:
+            # 上传审课图片
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user_course = UserCourse.objects.filter(user=request.user,
+                                                    course=serializer.validated_data['course'],
+                                                    order=serializer.validated_data['order'],
+                                                    project=serializer.validated_data['project']).first()
+            if user_course:
+                user_course.confirm_photo = serializer.validated_data['confirm_photo']
+                user_course.status = 'TO_CONFIRM'
+                user_course.save()
+            return Response({'msg': '操作成功'})
+
+    def course_info(self):
+        """
+        已购买项目，选课数量,课程总数, 课程信息
+        :return:
+        """
         res = []
-        payed_orders = Order.objects.filter(user=request.user, status='CONFIRMED')
+        payed_orders = Order.objects.filter(user=self.request.user, status='CONFIRMED')
         for order in payed_orders:
             charts = ShoppingChart.objects.filter(id__in=json.loads(order.chart_ids))
             for chart in charts:
-                current_courses = UserCourse.objects.filter(user=request.user, order=order, project=chart.project).\
-                    values('course__id', 'course__course_code', 'course__name')
+                current_courses = UserCourse.objects.filter(user=self.request.user, order=order, project=chart.project,
+                                                            course__courseproject__project=chart.project). \
+                    values('course__id', 'course__course_code', 'course__name', 'course__courseproject__address',
+                           'course__courseproject__start_time', 'course__courseproject__end_time',
+                           'course__courseproject__professor')
                 current_courses = [{
                     'id': item.get('course__id'),
                     'course_code': item.get('course__course_code'),
-                    'name': item.get('course__name')
+                    'name': item.get('course__name'),
+                    'professor': item.get('course__courseproject__professor'),
+                    'start_time': item.get('course__courseproject__start_time'),
+                    'end_time': item.get('course__courseproject__end_time'),
+                    'address': item.get('course__courseproject__address')
                 } for item in current_courses]
                 current_course_num = len(current_courses)
                 res.append({
@@ -175,47 +219,4 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     'chart_id': chart.id,
                     'current_courses': current_courses
                 })
-
-        return Response(res)
-
-    @list_route(['POST'])
-    def create_user_courses(self, request):
-        """
-        学生选课
-        """
-        data = request.data
-        data['user'] = request.user.id
-        serializer = self.serializer_class(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'msg': '操作成功'})
-
-    @list_route(serializer_class=MyCourseSerializer)
-    def my_courses(self, request):
-        """我的课程表"""
-        user = request.user
-        data = self.serializer_class(Project.objects.filter(order__user=user, order__status='PAYED'), many=True,
-                                     context={'user': user}).data
-        return Response(data)
-
-    @list_route(serializer_class=MyScoreSerializer)
-    def my_scores(self, request):
-        """我的成绩"""
-        user = request.user
-        user_courses = UserCourse.objects.filter(user=user)
-        data = self.serializer_class(user_courses, many=True).data
-        return Response(data)
-
-    @detail_route(['PUT'], serializer_class=ConfirmPhotoSerializer)
-    def upload_confirm_photo(self, request, pk):
-        """
-        上传审课照片
-        :param request:
-        :param pk:
-        :return:
-        """
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        UserCourse.objects.filter(user=request.user, course=self.get_object()).update(
-            confirm_photo=serializer.validated_data['confirm_photo'], status='TO_CONFIRM')
-        return Response({'msg': '操作成功'})
+        return res

@@ -1,4 +1,5 @@
 # coding: utf-8
+import json
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
@@ -194,7 +195,7 @@ class UserCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'order', 'chart_id', 'course_ids']
+        fields = ['id', 'order', 'chart_id', 'course_ids', 'course', 'confirm_photo']
 
     def validate(self, attrs):
 
@@ -250,23 +251,6 @@ class UserCourseSerializer(serializers.ModelSerializer):
         return user_courses[0]
 
 
-class MyCourseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Project
-        fields = ['id', 'name']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        courses = Course.objects.filter(usercourse__order__project=instance)
-        current_course_num = UserCourse.objects.filter(user=self.context['user'], order__project=instance).count()
-        my_courses = CourseSerializer(courses, many=True).data
-        data['course_num'] = instance.course_num
-        data['current_course_num'] = current_course_num
-        data['my_courses'] = my_courses
-        return data
-
-
 class MyScoreSerializer(serializers.ModelSerializer):
     course = CourseSerializer()
 
@@ -275,8 +259,26 @@ class MyScoreSerializer(serializers.ModelSerializer):
         fields = ['id', 'course', 'score', 'score_grade', 'reporting_time']
 
 
-class ConfirmPhotoSerializer(serializers.Serializer):
-    confirm_photo = Base64ImageField()
+class ConfirmPhotoSerializer(serializers.ModelSerializer):
+    chart_id = serializers.IntegerField()
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
+    # confirm_photo = Base64ImageField()
+    confirm_photo = serializers.ImageField()
+    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course', 'order', 'confirm_photo', 'chart_id']
+
+    def validate(self, attrs):
+        order = attrs['order']
+        if not attrs['chart_id'] in json.loads(order.chart_ids):
+            raise serializers.ValidationError('chart_id: %s 不属于该订单' % attrs['chart_id'])
+        if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():
+            raise serializers.ValidationError('无效的chart_id')
+        chart = ShoppingChart.objects.get(id=attrs['chart_id'])
+        attrs['project'] = chart.project
+        return attrs
 
 
 class UpdateImgSerializer(serializers.Serializer):

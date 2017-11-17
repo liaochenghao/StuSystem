@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    GET     /course/current_courses_info/
+    GET     /source/user_course/current_courses_info/
 ```
 
 **请求参数**:
@@ -33,7 +33,11 @@
                 {
                     "id": 15,
                     "course_code": "ART 12",
-                    "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今"
+                    "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
+                    "professor": "Iron Musk",
+                    "start_time": "2017-11-15",
+                    "end_time": "2017-11-29",
+                    "address": "武汉大学地质楼"
                 }
             ]
         },

@@ -149,11 +149,10 @@
 - [课程关联项目(***)](docs/course/course_related_projects.md)
 
 **学生选课**:
-- [获取当前已选课数量和, 课程总数及课程信息(***)](docs/course/current_courses_info.md)
 - [学生选课(***)](docs/user_course/create_user_courses.md)
-- [我的课程表](docs/user_course/my_courses.md)
+- [当前选课详情(***)](docs/course/current_courses_info.md)
 - [我的成绩](docs/user_course/my_scores.md)
-- [审课图片上传](docs/user_course/upload_confirm.md)
+- [学生审课](docs/user_course/student_course_confirm.md)
 
 
 **订单模块**:
