@@ -151,8 +151,8 @@
 **学生选课**:
 - [学生选课(***)](docs/user_course/create_user_courses.md)
 - [当前选课详情(***)](docs/course/current_courses_info.md)
-- [我的成绩](docs/user_course/my_scores.md)
-- [学生审课](docs/user_course/student_course_confirm.md)
+- [我的成绩(***)](docs/user_course/my_scores.md)
+- [学生审课(***)](docs/user_course/student_course_confirm.md)
 
 
 **订单模块**:
@@ -161,7 +161,7 @@
 - [订单列表(***)](docs/order/order_list.md)
 - [上传订单支付信息(***)](docs/order/order_payment.md)
 - [检查是否可以创建订单(***)](docs/order/check_order.md)
-- [取消订单，确认订单](docs/order/update_order.md)
+- [取消订单](docs/order/update_order.md)
 - [获取当前用户所有订单](docs/order/user_order_list.md)
 - [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)
 - [订单币种及支付方式](docs/order/order_currency_payment.md)
