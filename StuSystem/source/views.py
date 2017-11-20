@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
-    CourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, \
-    UpdateImgSerializer, ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
+    CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, GetCourseCreditSwitchSerializer, \
+    ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
     CourseProjectSerializer, UserCourseSerializer
-from order.models import Order, UserCourse, CourseCreditSwitch, ShoppingChart
+from order.models import Order, UserCourse, ShoppingChart
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -74,17 +74,6 @@ class ProjectViewSet(BaseViewSet):
         serializer = self.serializer_class(projects, many=True, context={'user': user})
         return Response(serializer.data)
 
-    @detail_route(methods=['PUT'], serializer_class=UpdateImgSerializer)
-    def upload_img(self, request, pk):
-        instance = self.get_object()
-        if instance.img:
-            raise exceptions.ValidationError('学分转换结果证明已经上传了')
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.validate_project_result(instance, request.user)
-        CourseCreditSwitch.objects.filter(project=instance, user=request.user).update(img=serializer.validated_data['img'])
-        return Response({'msg': '图片上传成功'})
-
     @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
     def project_course_fee(self, request, pk):
         instance = self.get_object()
@@ -145,7 +134,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     @list_route()
     def current_courses_info(self, request):
         """获取当前已购买项目，选课数量,课程总数及课程信息"""
-        res = self.course_info()
+        res = self.course_info('current_courses_info')
         return Response(res)
 
     @list_route(serializer_class=MyScoreSerializer)
@@ -156,27 +145,42 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         data = self.serializer_class(user_courses, many=True).data
         return Response(data)
 
-    @list_route(['PUT', 'GET'], serializer_class=ConfirmPhotoSerializer)
+    @list_route(['PUT', 'GET'], serializer_class=CommonImgUploadSerializer)
     def student_confirm_course(self, request):
         """学生审课"""
+        res = self.common_handle(request, 'student_confirm_course')
+        return Response(res)
+
+    @list_route(methods=['PUT', 'GET'], serializer_class=CommonImgUploadSerializer)
+    def course_credit_switch(self, request):
+        """学分转换证明"""
+        res = self.common_handle(request, 'course_credit_switch')
+        return Response(res)
+
+    def common_handle(self, request, api_key):
+        """学生审课，学分转换通用处理"""
         if request.method == 'GET':
-            res = self.course_info()
-            return Response(res)
+            res = self.course_info(api_key)
         else:
-            # 上传审课图片
-            serializer = self.serializer_class(data=request.data)
+            serializer = self.serializer_class(data=request.data, context={'api_key': api_key})
             serializer.is_valid(raise_exception=True)
             user_course = UserCourse.objects.filter(user=request.user,
                                                     course=serializer.validated_data['course'],
                                                     order=serializer.validated_data['order'],
                                                     project=serializer.validated_data['project']).first()
-            if user_course:
-                user_course.confirm_photo = serializer.validated_data['confirm_photo']
+            if not user_course:
+                raise exceptions.ValidationError('出入参数有无')
+            if user_course and api_key == 'course_credit_switch':
+                user_course.switch_img = serializer.validated_data['switch_img']
+                user_course.credit_switch_status = 'SUCCESS'
+            elif user_course and api_key == 'student_confirm_course':
+                user_course.confirm_img = serializer.validated_data['confirm_img']
                 user_course.status = 'TO_CONFIRM'
-                user_course.save()
-            return Response({'msg': '操作成功'})
+            user_course.save()
+            res = {'msg': '图片上传成功'}
+        return res
 
-    def course_info(self):
+    def course_info(self, key=None):
         """
         已购买项目，选课数量,课程总数, 课程信息
         :return:
@@ -190,20 +194,41 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                                                             course__courseproject__project=chart.project). \
                     values('course__id', 'course__course_code', 'course__name', 'course__courseproject__address',
                            'course__courseproject__start_time', 'course__courseproject__end_time',
-                           'course__courseproject__professor')
-                current_courses = [{
-                    'id': item.get('course__id'),
-                    'course_code': item.get('course__course_code'),
-                    'name': item.get('course__name'),
-                    'professor': item.get('course__courseproject__professor'),
-                    'start_time': item.get('course__courseproject__start_time'),
-                    'end_time': item.get('course__courseproject__end_time'),
-                    'address': item.get('course__courseproject__address')
-                } for item in current_courses]
+                           'course__courseproject__professor', 'status', 'credit_switch_status', 'confirm_img',
+                           'switch_img')
+
+                current_courses_list = []
+                for item in current_courses:
+                    current_course_item = {}
+                    current_course_item.update(
+                        {
+                            'id': item.get('course__id'),
+                            'course_code': item.get('course__course_code'),
+                            'name': item.get('course__name'),
+                            'professor': item.get('course__courseproject__professor'),
+                            'start_time': item.get('course__courseproject__start_time'),
+                            'end_time': item.get('course__courseproject__end_time'),
+                            'address': item.get('course__courseproject__address')
+                        }
+                    )
+                    if key == 'student_confirm_course':
+                        current_course_item.update({'status': {'key': item.get('status'),
+                                                               'verbose': dict(UserCourse.STATUS).get(
+                                                                   item.get('status'))},
+                                                    'confirm_img': '%s%s%s' % (DOMAIN, MEDIA_URL, item.get('confirm_img'))
+                                                    if item.get('confirm_img') else None})
+                    elif key == 'course_credit_switch':
+                        current_course_item.update({'credit_switch_status': {'key': item.get('credit_switch_status'),
+                                                                             'verbose': dict(
+                                                                                 UserCourse.CREDIT_SWITCH_STATUS).get(
+                                                                                 item.get('credit_switch_status'))
+                                                                             },
+                                                    'switch_img': '%s%s%s' % (DOMAIN, MEDIA_URL, item.get('switch_img'))
+                                                    if item.get('switch_img') else None})
+                    current_courses_list.append(current_course_item)
+
                 current_course_num = len(current_courses)
-                res.append({
-                    'course_num': chart.course_num,
-                    'current_course_num': current_course_num,
+                res_item = {
                     'project': {
                         'id': chart.project.id,
                         'name': chart.project.name
@@ -212,6 +237,12 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                         'id': order.id
                     },
                     'chart_id': chart.id,
-                    'current_courses': current_courses
-                })
+                    'current_courses': current_courses_list
+                }
+                if key == 'current_courses_info':
+                    res_item.update({
+                        'course_num': chart.course_num,
+                        'current_course_num': current_course_num
+                    })
+                res.append(res_item)
         return res

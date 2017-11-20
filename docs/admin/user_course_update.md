@@ -33,7 +33,7 @@
         "score": 88,
         "score_grade": "A",
         "reporting_time": "2017-07-25T16:01:03Z",
-        "confirm_photo": null,
+        "confirm_img": null,
         "status": {
             "key": "TO_UPLOAD",
             "verbose": "待上传"

@@ -1,8 +1,8 @@
-###  获取审课信息
+### 学分转换结果
 
 **请求地址**:
 ```
-    GET     /source/user_course/student_confirm_course/
+    GET     /source/user_course/course_credit_switch/
 ```
 
 **请求参数**:
@@ -30,18 +30,20 @@
                     "id": 15,
                     "course_code": "ART 12",
                     "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
-                    "confirm_img": "http://42.51.8.152/media/course/confirm_img/test2.png",
-                    "status": {
-                        "key": "TO_CONFIRM",
-                        "verbose": "待审核"
+                    "professor": "Steven Curry",
+                    "start_time": "2017-11-16",
+                    "end_time": "2017-11-16",
+                    "address": "???????",
+                    "credit_switch_status": {
+                        "key": "PRE_POSTED",
+                        "verbose": "成绩待寄出"
                     }
-                }
+                },
             ]
-        }
+        },
     ],
     "field_name": ""
 }
-
 ```
 
 **失败返回**：
@@ -49,11 +51,11 @@
 
 ```
 
-###  上传审课图片
+### 上传学分转换结果证明
 
 **请求地址**:
 ```
-    PUT     /course/[course_id]/upload_confirm_img/
+    PUT     /source/project/[project_id]/upload_img/
 ```
 
 **请求参数**:
@@ -62,17 +64,16 @@
     "chart_id": int 必填  chart_id
     "order": int    必填  订单id
     "course": int   必填  课程id
-    "confirm_img": base64位字符串  必填 审课图片
+    "switch_img": base64位字符串  必填 审课图片
 }
 ```
 
 **成功返回**：
 ```
 {
-  "code": 0,
-  "msg": "操作成功",
-  "data": {},
-  "field_name": ""
+    "code": 0,
+    "msg": "图片上传成功"，
+    "data": {}
 }
 ```
 

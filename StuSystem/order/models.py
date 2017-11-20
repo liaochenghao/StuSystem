@@ -77,33 +77,46 @@ class UserCourse(models.Model):
     score = models.IntegerField('课程成绩分数', default=0)
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
-    confirm_photo = models.ImageField('审课照片', upload_to='course/confirm_photo', null=True)
+    confirm_img = models.ImageField('审课照片', upload_to='course/confirm_img', null=True)
     status = models.CharField('学生审课状态', choices=STATUS, default='TO_UPLOAD', max_length=30)
-
-    class Meta:
-        db_table = 'user_course'
-
-
-class CourseCreditSwitch(models.Model):
-    """用户学分转换"""
-    STATUS = (
+    post_datetime = models.DateTimeField('快递时间', null=True)
+    post_channel = models.CharField('快递方式', max_length=30, null=True)
+    post_number = models.CharField('快递单号', max_length=30, null=True)
+    CREDIT_SWITCH_STATUS = (
+        ('PRE_POSTED', '成绩待寄出'),
         ('POSTED', '成绩单已寄出'),
         ('RECEIVED', '学校已收到'),
         ('SUCCESS', '学分转换成功'),
         ('FAILURE', '学分转换失败')
     )
-    user = models.ForeignKey(User)
-    user_course = models.OneToOneField(UserCourse)
-    create_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-    post_datetime = models.DateTimeField('快递时间', null=True)
-    post_channel = models.CharField('快递方式', max_length=30, null=True)
-    post_number = models.CharField('快递单号', max_length=30, null=True)
-    status = models.CharField(max_length=30, choices=STATUS, null=True)
-    img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
+    credit_switch_status = models.CharField(max_length=30, choices=STATUS, default='PRE_POSTED')
+    switch_img = models.ImageField('学分转换结果证明', upload_to='project/result/photo/', null=True)
 
     class Meta:
-        db_table = 'course_credit_switch'
+        db_table = 'user_course'
+
+
+# class CourseCreditSwitch(models.Model):
+#     """用户学分转换"""
+#     STATUS = (
+#         ('PRE_SCORED', '成绩待'),
+#         ('POSTED', '成绩单已寄出'),
+#         ('RECEIVED', '学校已收到'),
+#         ('SUCCESS', '学分转换成功'),
+#         ('FAILURE', '学分转换失败')
+#     )
+#     user = models.ForeignKey(User)
+#     user_course = models.OneToOneField(UserCourse)
+#     create_time = models.DateTimeField(auto_now_add=True)
+#     modified_time = models.DateTimeField(auto_now=True)
+#     post_datetime = models.DateTimeField('快递时间', null=True)
+#     post_channel = models.CharField('快递方式', max_length=30, null=True)
+#     post_number = models.CharField('快递单号', max_length=30, null=True)
+#     status = models.CharField(max_length=30, choices=STATUS, null=True)
+#     img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
+#
+#     class Meta:
+#         db_table = 'course_credit_switch'
 
 
 class OrderPayment(models.Model):

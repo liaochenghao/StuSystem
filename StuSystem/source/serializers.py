@@ -4,7 +4,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from source.models import Project, ProjectCourseFee, Campus, Course, CourseProject
-from order.models import Order, UserCourse, CourseCreditSwitch, ShoppingChart
+from order.models import Order, UserCourse, ShoppingChart
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -133,10 +133,10 @@ class UpdateProjectCourseFeeSerializer(serializers.Serializer):
 
 
 class CourseCreditSwitchSerializer(serializers.ModelSerializer):
-    status = VerboseChoiceField(choices=CourseCreditSwitch.STATUS)
+    status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS)
 
     class Meta:
-        model = CourseCreditSwitch
+        model = UserCourse
         fields = ['id', 'status', 'post_datetime', 'post_channel', 'post_number', 'img']
 
 
@@ -149,8 +149,8 @@ class GetCourseCreditSwitchSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user = self.context['user']
-        if CourseCreditSwitch.objects.filter(user=user, status__isnull=False).exists():
-            project_result = CourseProjectSerializer(CourseCreditSwitch.objects.get(user=user)).data
+        if UserCourse.objects.filter(user=user, status__isnull=False).exists():
+            project_result = CourseProjectSerializer(UserCourse.objects.get(user=user)).data
         else:
             project_result = None
         data['project_result'] = project_result
@@ -181,7 +181,7 @@ class UserCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'order', 'chart_id', 'course_ids', 'course', 'confirm_photo']
+        fields = ['id', 'order', 'chart_id', 'course_ids']
 
     def validate(self, attrs):
 
@@ -230,10 +230,6 @@ class UserCourseSerializer(serializers.ModelSerializer):
                                           )
                                )
         user_courses = UserCourse.objects.bulk_create(user_course)
-        for item in user_courses:
-            course_switch.append(CourseCreditSwitch(user=self.context['request'].user,
-                                                    user_course=item))
-        CourseCreditSwitch.objects.bulk_create(course_switch)
         return user_courses[0]
 
 
@@ -245,18 +241,29 @@ class MyScoreSerializer(serializers.ModelSerializer):
         fields = ['id', 'course', 'score', 'score_grade', 'reporting_time']
 
 
-class ConfirmPhotoSerializer(serializers.ModelSerializer):
+class CommonImgUploadSerializer(serializers.ModelSerializer):
+    """学生审课"""
     chart_id = serializers.IntegerField()
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
-    # confirm_photo = Base64ImageField()
-    confirm_photo = serializers.ImageField()
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+    # todo
+    # confirm_img = Base64ImageField()
+    # switch_img = Base64ImageField()
+    confirm_img = serializers.ImageField(required=False)
+    switch_img = serializers.ImageField(required=False)
+    credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS, required=False)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course', 'order', 'confirm_photo', 'chart_id']
+        fields = ['id', 'chart_id', 'course', 'order', 'confirm_img', 'switch_img', 'credit_switch_status']
 
     def validate(self, attrs):
+        if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
+            raise serializers.ValidationError('审课图片为必传参数')
+        if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('switch_img'):
+            raise serializers.ValidationError('学分转换证明图片为必传参数')
+        if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('credit_switch_status'):
+            raise serializers.ValidationError('学分转换状态为必填参数')
         order = attrs['order']
         if not attrs['chart_id'] in json.loads(order.chart_ids):
             raise serializers.ValidationError('chart_id: %s 不属于该订单' % attrs['chart_id'])
@@ -265,15 +272,6 @@ class ConfirmPhotoSerializer(serializers.ModelSerializer):
         chart = ShoppingChart.objects.get(id=attrs['chart_id'])
         attrs['project'] = chart.project
         return attrs
-
-
-class UpdateImgSerializer(serializers.Serializer):
-    img = Base64ImageField()
-
-    def validate_project_result(self, project, user):
-        if not CourseCreditSwitch.objects.filter(user=user, status='SUCCESS').exists():
-            raise serializers.ValidationError('学分转换未完成，不能上传图片')
-        return
 
 
 class ProjectUserCourseSerializer(serializers.ModelSerializer):

@@ -136,7 +136,6 @@
 - [设置项目课程数量及相应费用(***)](docs/project/project_course_fee.md)
 - [根据项目该获取所有课程信息(***)](docs/project/my_course.md)
 - [项目学分转换结果](docs/project/project_result.md)
-- [上传学分转换结果图片](docs/project/upload_img.md)
 - [根据项目获取课程信息,成绩信息](docs/project/my_score.md)
 
 **课程模块**:
@@ -147,11 +146,12 @@
 - [课程更新(***)](docs/course/course_update.md)
 - [课程关联项目(***)](docs/course/course_related_projects.md)
 
-**学生选课**:
+**学生课程**:
 - [学生选课(***)](docs/user_course/create_user_courses.md)
 - [当前选课详情(***)](docs/course/current_courses_info.md)
 - [我的成绩(***)](docs/user_course/my_scores.md)
 - [学生审课(***)](docs/user_course/student_course_confirm.md)
+- [学分转换](docs/user_course/course_credit_switch.md)
 
 
 **订单模块**:
@@ -160,10 +160,10 @@
 - [订单列表(***)](docs/order/order_list.md)
 - [上传订单支付信息(***)](docs/order/order_payment.md)
 - [检查是否可以创建订单(***)](docs/order/check_order.md)
-- [取消订单](docs/order/update_order.md)
-- [获取当前用户所有订单](docs/order/user_order_list.md)
-- [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)
-- [订单币种及支付方式](docs/order/order_currency_payment.md)
+- [取消订单(***)](docs/order/update_order.md)
+- [获取当前用户所有订单(***)](docs/order/user_order_list.md)
+- [获取当前用户所有订单，选课信息，审课(***)](docs/order/user_order_course.md)
+- [订单币种及支付方式(***)](docs/order/order_currency_payment.md)
 
 
 **渠道模块**：

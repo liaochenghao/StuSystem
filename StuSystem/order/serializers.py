@@ -150,7 +150,7 @@ class OrderCourseSerializer(serializers.ModelSerializer):
             'score': user_course.score,
             'score_grade': user_course.score_grade,
             'reporting_time': user_course.reporting_time,
-            'confirm_photo': user_course.confirm_photo.path if user_course.confirm_photo else None,
+            'confirm_img': user_course.confirm_img.path if user_course.confirm_img else None,
             'status': {
                 'key': user_course.status,
                 'verbose': dict(UserCourse.STATUS).get(user_course.status)

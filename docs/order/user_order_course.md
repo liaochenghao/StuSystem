@@ -86,7 +86,7 @@
                         "score": 0,
                         "score_grade": null,
                         "reporting_time": null,
-                        "confirm_photo": null,
+                        "confirm_img": null,
                         "status": {
                             "key": "TO_UPLOAD",
                             "verbose": "待上传"
@@ -109,7 +109,7 @@
                         "score": 0,
                         "score_grade": null,
                         "reporting_time": null,
-                        "confirm_photo": null,
+                        "confirm_img": null,
                         "status": {
                             "key": "TO_UPLOAD",
                             "verbose": "待上传"

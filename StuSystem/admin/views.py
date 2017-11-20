@@ -17,7 +17,7 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
-from order.models import UserCourse, Order, CourseCreditSwitch
+from order.models import UserCourse, Order
 from operate_history.models import OrderOperateHistory
 
 
@@ -176,7 +176,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.RetrieveModelMixin,
                                     mixins.UpdateModelMixin,
                                     viewsets.GenericViewSet):
     """学生学分转换视图"""
-    queryset = CourseCreditSwitch.objects.all()
+    queryset = UserCourse.objects.all()
     serializer_class = AdminCourseCreditSwitchSerializer
 
     def get_object(self):

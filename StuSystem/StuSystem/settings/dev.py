@@ -17,7 +17,7 @@ DATABASES = {
     }
 }
 
-DOMAIN = 'http://42.51.8.152'
+DOMAIN = 'http://42.51.8.152:8002'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',

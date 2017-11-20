@@ -18,7 +18,7 @@
     "data": [
         {
             "syllabus": "",
-            "confirm_photo": null,
+            "confirm_img": null,
             "status": {
                 "key": "TO_UPLOAD",
                 "verbose": "待上传"

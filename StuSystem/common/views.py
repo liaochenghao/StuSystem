@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from authentication.models import User
 from authentication.models import UserInfo
-from order.models import Order, UserCourse, CourseCreditSwitch
+from order.models import Order, UserCourse
 from utils.functions import get_key_verbose_data
 
 
@@ -29,7 +29,7 @@ class GlobalEnumsViewSet(APIView):
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),
             'order_status': get_key_verbose_data(dict(Order.STATUS)),
             'user_status': get_key_verbose_data(dict(SalesManUser.STATUS)),
-            'course_credit_switch': get_key_verbose_data(dict(CourseCreditSwitch.STATUS)),
+            'course_credit_switch': get_key_verbose_data(dict(UserCourse.CREDIT_SWITCH_STATUS)),
             'user_course_status': get_key_verbose_data(dict(UserCourse.STATUS)),
             'coupon_status': get_key_verbose_data(dict(UserCoupon.STATUS)),
             'user_role': get_key_verbose_data(dict(User.ROLE)),

@@ -12,7 +12,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
-from order.models import UserCourse, Order, CourseCreditSwitch
+from order.models import UserCourse, Order
 from order.serializers import OrderSerializer
 from operate_history.serializers import OrderOperateHistorySerializer
 from utils.serializer_fields import VerboseChoiceField
@@ -97,7 +97,7 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['syllabus', 'confirm_photo', 'status', 'user']
+        fields = ['syllabus', 'confirm_img', 'status', 'user']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -199,8 +199,8 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'order', 'course', 'score', 'score_grade', 'reporting_time', 'confirm_photo', 'status']
-        read_only_fields = ['order', 'confirm_photo']
+        fields = ['id', 'order', 'course', 'score', 'score_grade', 'reporting_time', 'confirm_img', 'status']
+        read_only_fields = ['order', 'confirm_img']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -234,10 +234,6 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
 
-    def create(self, validated_data):
-        CourseCreditSwitch.objects.get_or_create(user=validated_data['user'])
-        return super().create(validated_data)
-
 
 class AddUserCourseScoreSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -263,10 +259,10 @@ class CustomAdminProjectSerializer(serializers.ModelSerializer):
 
 
 class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
-    status = VerboseChoiceField(choices=CourseCreditSwitch.STATUS)
+    status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS)
 
     class Meta:
-        model = CourseCreditSwitch
+        model = UserCourse
         fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'status', 'img']
         read_only_fields = ['img']
 
