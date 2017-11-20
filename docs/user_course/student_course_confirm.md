@@ -59,7 +59,10 @@
 **请求参数**:
 ```
 {
-    "confirm_photo": ""    base64位字符串
+    "chart_id": int 必填  chart_id
+    "order": int    必填  订单id
+    "course": int   必填  课程id
+    "confirm_photo": base64位字符串  必填 审课图片
 }
 ```
 
