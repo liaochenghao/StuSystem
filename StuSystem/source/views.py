@@ -5,7 +5,7 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from source.models import Project, Campus, Course, CourseProject
-from source.serializers import ProjectSerializer, MyProjectsSerializer, CampusSerializer, \
+from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, MyScoreSerializer, ConfirmPhotoSerializer, GetCourseCreditSwitchSerializer, \
     UpdateImgSerializer, ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
     CourseProjectSerializer, UserCourseSerializer
@@ -50,18 +50,13 @@ class ProjectViewSet(BaseViewSet):
 
     @detail_route()
     def related_courses(self, request, pk):
-        """获取关联的课程"""
+        """所有项目关联的课程"""
         serializer = self.serializer_class(instance=self.get_object(), context={'api_key': 'related_courses'})
         return Response(serializer.data)
 
-    @list_route(serializer_class=MyProjectsSerializer)
-    def my_project(self, request):
-        projects = self.queryset.filter(order__user=request.user).distinct()
-        data = self.serializer_class(projects, many=True, context={'user': request.user}).data
-        return Response(data)
-
     @detail_route()
     def my_course(self, request, pk):
+        """单个项目关联课程"""
         my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
         res = CourseSerializer(my_course, many=True).data
         return Response(res)

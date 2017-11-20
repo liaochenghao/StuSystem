@@ -133,12 +133,11 @@
 - [项目更新(***)](docs/project/project_update.md)
 - [项目关联课程(***)](docs/project/project_related_courses.md)
 - [创建项目与课程的关联(***)](docs/project/create_course_project.md)
-- [我的项目(***)](docs/project/my_project.md)
+- [设置项目课程数量及相应费用(***)](docs/project/project_course_fee.md)
+- [根据项目该获取所有课程信息(***)](docs/project/my_course.md)
 - [项目学分转换结果](docs/project/project_result.md)
 - [上传学分转换结果图片](docs/project/upload_img.md)
-- [根据项目该获取所有课程信息](docs/project/my_course.md)
 - [根据项目获取课程信息,成绩信息](docs/project/my_score.md)
-- [设置项目课程数量及相应费用(***)](docs/project/project_course_fee.md)
 
 **课程模块**:
 - [创建课程(***)](docs/course/course_create.md)
