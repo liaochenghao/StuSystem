@@ -1,9 +1,12 @@
 # coding: utf-8
+import json
+
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from authentication.models import User
+from coupon.models import UserCoupon
 from operate_history.models import OrderOperateHistory
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart
 from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, ShoppingChartSerializer
@@ -87,6 +90,10 @@ class OrderViewSet(mixins.CreateModelMixin,
             raise exceptions.ValidationError('无法取消该订单')
         instance.status = 'CANCELED'
         instance.save()
+        if instance.coupon_list:
+            # 如果使用了优惠券，将优惠券置为可用
+            coupon_list = json.loads(instance.coupon_list)
+            UserCoupon.objects.filter(user=request.user, coupon__id__in=coupon_list).update(status='TO_USE')
         OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,
                                               'remark': '取消了订单'})
         return Response(self.serializer_class(instance).data)

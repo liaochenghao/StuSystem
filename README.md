@@ -85,11 +85,10 @@
 - [管理员账户设置/删除账户(***)](docs/admin/account_info/account_info_delete.md)
 
 **管理员销售顾问**：
-- [销售顾问/销售顾问列表](docs/sales_man/sales_man_list.md)
-- [销售顾问/创建销售顾问](docs/sales_man/sales_man_create.md)
-- [销售顾问/获取销售顾问详情](docs/sales_man/sales_man_detail.md)
-- [销售顾问/更新销售顾问](docs/sales_man/sales_man_update.md)
-- [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
+- [销售顾问/销售顾问列表(***)](docs/sales_man/sales_man_list.md)
+- [销售顾问/创建销售顾问(***)](docs/sales_man/sales_man_create.md)
+- [销售顾问/获取销售顾问详情(***)](docs/sales_man/sales_man_detail.md)
+- [销售顾问/更新销售顾问(***)](docs/sales_man/sales_man_update.md)
 
 **管理员优惠券**：
 - [优惠券/创建优惠券(***)](docs/coupon/coupon_create.md)
