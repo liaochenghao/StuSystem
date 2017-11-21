@@ -10,7 +10,7 @@ from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer
-from order.models import Order, UserCourse, ShoppingChart
+from order.models import Order, UserCourse, ShoppingChart, OrderChartRelation
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -177,9 +177,11 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         :return:
         """
         res = []
+        chart_ids = OrderChartRelation.objects.filter(order__user=self.request.user, order__status='CONFIRMED').\
+            values_list('chart', flat=True)
         payed_orders = Order.objects.filter(user=self.request.user, status='CONFIRMED')
         for order in payed_orders:
-            charts = ShoppingChart.objects.filter(id__in=json.loads(order.chart_ids))
+            charts = ShoppingChart.objects.filter(id__in=chart_ids)
             for chart in charts:
                 current_courses = UserCourse.objects.filter(user=self.request.user, order=order, project=chart.project,
                                                             course__courseproject__project=chart.project). \

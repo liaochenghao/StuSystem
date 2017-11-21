@@ -10,6 +10,7 @@ class ShoppingChart(models.Model):
     STATUS = (
         ('NEW', '新添加'),
         ('ORDERED', '已下单'),
+        ('PAYED', '已支付'),
         ('DELETED', '已删除')
     )
     project = models.ForeignKey(Project)
@@ -45,7 +46,7 @@ class Order(models.Model):
         ('CONFIRM_FAILED', '验证失败')
     )
     user = models.ForeignKey(User)
-    chart_ids = models.CharField('商品ids', max_length=255)
+    # chart_ids = models.CharField('商品ids', max_length=255)
     currency = models.CharField('币种', choices=CURRENCY, max_length=30)
     payment = models.CharField('支付方式', choices=PAYMENT, max_length=30)
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')
@@ -58,6 +59,16 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'order'
+
+
+class OrderChartRelation(models.Model):
+    """订单与商品关系"""
+    chart = models.ForeignKey(ShoppingChart)
+    order = models.ForeignKey(Order)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'order_chart_relation'
 
 
 class UserCourse(models.Model):

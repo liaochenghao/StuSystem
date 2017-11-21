@@ -40,7 +40,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
-
         data['channel'] = get_channel_info(instance)
         return data
 
@@ -132,22 +131,6 @@ class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
         fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
-
-
-class AdminProjectSerializer(serializers.ModelSerializer):
-    campus_name = serializers.CharField(source='campus.name')
-
-    class Meta:
-        model = Project
-        fields = ['id', 'campus_name', 'name']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['applyed_num'] = instance.order_set.all().count()
-        data['payed_num'] = instance.order_set.filter(status__in=['PAYED', 'CONFIRMED']).count()
-        data['name'] = '%s(%s)' % (
-            instance.name, instance.campus_country.name) if instance.campus_country else instance.name
-        return data
 
 
 class ProjectOverViewSerializer(serializers.ModelSerializer):
@@ -249,14 +232,6 @@ class ConfirmUserCourseSerializer(serializers.Serializer):
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     status = VerboseChoiceField(choices=UserCourse.STATUS)
-
-
-class CustomAdminProjectSerializer(serializers.ModelSerializer):
-    campus_name = serializers.CharField(source='campus.name')
-
-    class Meta:
-        model = Project
-        fields = ['id', 'campus_name', 'name']
 
 
 class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):

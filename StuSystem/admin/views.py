@@ -17,7 +17,7 @@ from rest_framework.response import Response
 
 from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
-    AdminProjectSerializer, CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
+    CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
 from order.models import UserCourse, Order
@@ -94,20 +94,6 @@ class StudentScoreDetailViewSet(mixins.RetrieveModelMixin,
         user_id = self.kwargs.get('pk')
         user_score_detail, created = self.queryset.get_or_create(user_id=int(user_id))
         return user_score_detail
-
-
-class AdminProjectViewSet(mixins.ListModelMixin,
-                          mixins.RetrieveModelMixin,
-                          mixins.UpdateModelMixin,
-                          viewsets.GenericViewSet):
-    queryset = Project.objects.all()
-    serializer_class = AdminProjectSerializer
-
-    def list(self, request, *args, **kwargs):
-        pagination = self.request.query_params.get('pagination')
-        if pagination and pagination.upper() == "FALSE":
-            self.pagination_class = None
-        return super().list(request, *args, **kwargs)
 
 
 class StatisticsViewSet(mixins.ListModelMixin,

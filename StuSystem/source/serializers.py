@@ -102,7 +102,11 @@ class ProjectSerializer(serializers.ModelSerializer):
                                                                                            course__is_active=True,
                                                                                            project__is_active=True),
                                                               context={'api_key': 'related_courses'}, many=True).data
-
+        # applyed_num = Order.objects.filter(chart_ids__in=chart_ids, status='CONFIRMED').count()
+        # payed_num = Order.objects.filter(chart_ids__in=chart_ids, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED',
+        #                                                                       'CONFIRM_FAILED']).count()
+        # data['applyed_num'] = applyed_num
+        # data['payed_num'] = payed_num
         return data
 
 
@@ -250,7 +254,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('学分转换状态为必填参数')
 
         order = attrs['order']
-        if not attrs['chart_id'] in json.loads(order.chart_ids):
+        if not attrs['chart_id'] in order.orderchartrelation_set.all().values_list('chart', flat=True):
             raise serializers.ValidationError('chart_id: %s 不属于该订单' % attrs['chart_id'])
 
         if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():

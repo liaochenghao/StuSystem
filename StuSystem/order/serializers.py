@@ -11,7 +11,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from authentication.serializers import StudentScoreDetailSerializer
 from source.serializers import ProjectSerializer
-from order.models import Order, OrderPayment, UserCourse, ShoppingChart
+from order.models import Order, OrderPayment, UserCourse, ShoppingChart, OrderChartRelation
 from operate_history.models import OrderOperateHistory
 from utils.serializer_fields import VerboseChoiceField
 
@@ -71,10 +71,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         coupon_list = validated_data.pop('coupon_list', None)
+        chart_ids = validated_data.pop('chart_ids')
         user = self.context['request'].user
         standard_fee = sum([item.project.apply_fee + item.course_fee for item in ShoppingChart.objects.filter(
-            id__in=validated_data['chart_ids'], status='NEW')])
-        validated_data['chart_ids'] = json.dumps(validated_data['chart_ids'])
+            id__in=chart_ids, status='NEW')])
         validated_data['standard_fee'] = standard_fee
         validated_data['pay_fee'] = standard_fee
         validated_data['user'] = user
@@ -93,8 +93,14 @@ class OrderSerializer(serializers.ModelSerializer):
             for coupon_id in coupon_list:
                 if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
                     UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
+        # 创建订单与商品关系
+        order_chart = []
+        for chart_id in chart_ids:
+            order_chart.append(OrderChartRelation(order=order, chart_id=chart_id))
+        OrderChartRelation.objects.bulk_create(order_chart)
+
         # 更新购物车
-        ShoppingChart.objects.filter(id__in=json.loads(validated_data['chart_ids'])).update(status='ORDERED')
+        ShoppingChart.objects.filter(id__in=chart_ids).update(status='ORDERED')
         # 操作记录
         OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'CREATE', 'source': order,
                                            'remark': '创建了订单'})
@@ -114,25 +120,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['charts'] = ShoppingChartSerializer(ShoppingChart.objects.filter(id__in=json.loads(instance.chart_ids)),
-                                                 many=True).data
+        charts = ShoppingChartSerializer(ShoppingChart.objects.filter(orderchartrelation__order=instance),
+                                         many=True).data
+        data['charts'] = charts
         payment_info = PaymentAccountInfo.objects.filter(payment=instance.payment).first()
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         order_payment = OrderPayment.objects.filter(order=instance).first()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
-        # data['user_course'] = Course.objects.filter(
-        #     usercourse__order=instance, usercourse__user=self.context['request'].user).\
-        #     values('id', 'name', 'course_code', 'start_time', 'end_time', 'syllabus')
-        data['user'] = UserInfo.objects.get(user=instance.user).name
-        sales_man = SalesMan.objects.filter(salesmanuser__user=instance.user).first()
-        if sales_man:
-            data['sales_man'] = {
-                'id': sales_man.id,
-                'name': sales_man.name
-            }
-        else:
-            data['sales_man'] = None
-
         return data
 
 
