@@ -91,7 +91,7 @@ class OrderViewSet(mixins.CreateModelMixin,
         instance.status = 'CANCELED'
         instance.save()
         if instance.coupon_list:
-            # 如果使用了优惠券，将优惠券置为可用
+            # 如果使用了优惠券，将优惠券置为可用状态
             coupon_list = json.loads(instance.coupon_list)
             UserCoupon.objects.filter(user=request.user, coupon__id__in=coupon_list).update(status='TO_USE')
         OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,

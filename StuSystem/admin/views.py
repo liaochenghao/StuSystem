@@ -1,9 +1,11 @@
 # coding: utf-8
 import datetime
+import json
 
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
+from coupon.models import UserCoupon
 from permissions.backend_permissions import OrderOperatePermission, PaymentAccountInfoOperatePermission, \
     ChildUserOperatePermission, UserInfoOperatePermission, SalesManOperatePermission
 from common.models import SalesMan
@@ -260,7 +262,7 @@ class AdminOrderViewSet(mixins.ListModelMixin,
             status = 'CONFIRMED_FAILED'
             remark = '订单支付失败，验证失败'
         else:
-            raise exceptions.ValidationError('请传入正确的参数')
+            raise exceptions.ValidationError('请传入正确的status参数')
         if instance.status != 'TO_CONFIRM':
             raise exceptions.ValidationError('仅能操作待确认状态下的订单')
         if request.user.role != 'ADMIN':
@@ -269,6 +271,12 @@ class AdminOrderViewSet(mixins.ListModelMixin,
             raise exceptions.ValidationError('仅能操作待确认下的订单')
         instance.status = status
         instance.save()
+        if instance.coupon_list:
+            # 如果使用了优惠券，更新优惠券的状态
+            coupon_list = json.loads(instance.coupon_list)
+            UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
+                status='USED' if status == 'CONFIRMED' else 'TO_USE')
+
         OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,
                                               'remark': remark})
         return Response(self.serializer_class(instance).data)
