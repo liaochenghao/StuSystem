@@ -15,7 +15,7 @@ from rest_framework.response import Response
 
 from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
-    AdminProjectSerializer, CampusOverViewSerializer, SalsesManSerializer, AdminUserCourseSerializer, \
+    AdminProjectSerializer, CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
 from order.models import UserCourse, Order
@@ -145,7 +145,7 @@ class SalesManViewSet(mixins.ListModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
     queryset = SalesMan.objects.all()
-    serializer_class = SalsesManSerializer
+    serializer_class = SalesManSerializer
     permission_classes = [SalesManOperatePermission]
 
 

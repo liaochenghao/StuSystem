@@ -170,8 +170,9 @@ class CampusOverViewSerializer(serializers.ModelSerializer):
         return data
 
 
-class SalsesManSerializer(serializers.ModelSerializer):
+class SalesManSerializer(serializers.ModelSerializer):
     qr_code = Base64ImageField()
+    # qr_code = serializers.ImageField()
 
     class Meta:
         model = SalesMan
