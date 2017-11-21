@@ -30,12 +30,16 @@
                     "id": 15,
                     "course_code": "ART 12",
                     "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
-                    "confirm_img": "http://42.51.8.152/media/course/confirm_img/test2.png",
+                    "professor": "Steven Curry",
+                    "start_time": "2017-11-16",
+                    "end_time": "2017-11-16",
+                    "address": "???????",
                     "status": {
-                        "key": "TO_CONFIRM",
-                        "verbose": "待审核"
-                    }
-                }
+                        "key": "TO_UPLOAD",
+                        "verbose": "待上传"
+                    },
+                    "confirm_img": null
+                },
             ]
         }
     ],

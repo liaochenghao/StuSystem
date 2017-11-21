@@ -34,6 +34,7 @@
                     "start_time": "2017-11-16",
                     "end_time": "2017-11-16",
                     "address": "???????",
+                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/test2_TdFjewg.png"
                     "credit_switch_status": {
                         "key": "PRE_POSTED",
                         "verbose": "成绩待寄出"
