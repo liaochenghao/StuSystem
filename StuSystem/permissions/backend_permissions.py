@@ -39,3 +39,8 @@ class ChildUserOperatePermission(BaseOperatePermission):
 class SalesManOperatePermission(BaseOperatePermission):
     """销售人员操作权限"""
     pass
+
+
+class ProjectOperatePermission(BaseOperatePermission):
+    """项目管理操作权限"""
+    pass

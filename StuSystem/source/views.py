@@ -5,11 +5,11 @@ from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
+from permissions.backend_permissions import ProjectOperatePermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
-    CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, GetCourseCreditSwitchSerializer, \
-    ProjectMyScoreSerializer, CourseFilterElementsSerializer, UpdateProjectCourseFeeSerializer, \
-    CourseProjectSerializer, UserCourseSerializer
+    CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
+    UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer
 from order.models import Order, UserCourse, ShoppingChart
 
 
@@ -43,6 +43,7 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
+    permission_classes = [ProjectOperatePermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
@@ -56,27 +57,15 @@ class ProjectViewSet(BaseViewSet):
         return Response(serializer.data)
 
     @detail_route()
-    def my_course(self, request, pk):
+    def related_courses(self, request, pk):
         """单个项目关联课程"""
         my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
         res = CourseSerializer(my_course, many=True).data
         return Response(res)
 
-    @list_route(serializer_class=GetCourseCreditSwitchSerializer)
-    def project_result(self, request):
-        projects = self.queryset.filter(order__user=request.user, order__status='CONFIRMED')
-        data = self.serializer_class(projects, many=True, context={'user': request.user}).data
-        return Response(data)
-
-    @list_route(serializer_class=ProjectMyScoreSerializer)
-    def my_scores(self, request):
-        user = request.user
-        projects = self.queryset.filter(usercourse__user=user).distinct()
-        serializer = self.serializer_class(projects, many=True, context={'user': user})
-        return Response(serializer.data)
-
     @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
     def project_course_fee(self, request, pk):
+        """项目课程费用"""
         instance = self.get_object()
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
