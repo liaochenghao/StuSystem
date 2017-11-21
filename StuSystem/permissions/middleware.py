@@ -47,3 +47,12 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
             return HttpResponse(content=json.dumps(dict(code=401, msg='未登陆')),
                                 content_type='application/json')
         request.user = user
+
+
+class BackendAPIRequestMiddleWare(MiddlewareMixin):
+    """管理后台接口访问限制"""
+    def process_request(self, request):
+        path = request.path_info.lstrip('')
+        if path.split('/')[1] == 'admin' and request.user.role == 'STUDENT':
+            return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限.')),
+                                content_type='application/json')

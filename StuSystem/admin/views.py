@@ -4,7 +4,7 @@ import datetime
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
-from authentication.permissions import AdminOperatePermission
+from permissions.base_permissions import OrderOperatePermission
 from common.models import SalesMan
 from source.models import Project, Campus, Course
 from rest_framework import exceptions
@@ -238,7 +238,7 @@ class AdminOrderViewSet(mixins.ListModelMixin,
     """管理员订单管理"""
     queryset = Order.objects.all()
     serializer_class = AdminOrderSerializer
-    permission_classes = [AdminOperatePermission]
+    permission_classes = [OrderOperatePermission]
 
     @detail_route(['put'])
     def confirm(self, request, pk):

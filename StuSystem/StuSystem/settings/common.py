@@ -91,7 +91,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'utils.middleware.AuthorizeRequiredMiddleWare',
+    'permissions.middleware.AuthorizeRequiredMiddleWare',
+    'permissions.middleware.BackendAPIRequestMiddleWare'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

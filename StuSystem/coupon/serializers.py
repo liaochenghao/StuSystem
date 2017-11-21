@@ -18,14 +18,16 @@ class CouponSerializer(serializers.ModelSerializer):
 
 class UserCouponSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = UserCoupon
+        fields = ['id', 'user', 'coupon']
+
     def validate(self, attrs):
+        if attrs['user'].role != 'STUDENT':
+            raise serializers.ValidationError('仅能为学生用户分配优惠券')
         if UserCoupon.objects.filter(coupon=attrs['coupon'], user=attrs['user']).exists():
             raise serializers.ValidationError('已经为该用户分配过该优惠券，不能重复分配')
         if UserCoupon.objects.filter(coupon=attrs['coupon']).count() >= attrs['coupon'].max_num:
             raise serializers.ValidationError('优惠券已超过最大数量，不能为该用户新增优惠券')
         return attrs
-
-    class Meta:
-        model = UserCoupon
-        fields = ['id', 'user', 'coupon']
 
