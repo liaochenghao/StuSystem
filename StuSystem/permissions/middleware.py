@@ -29,6 +29,7 @@ class MiddlewareMixin(object):
 
 
 class AuthorizeRequiredMiddleWare(MiddlewareMixin):
+    """用户认证中间件"""
     def process_request(self, request):
         path = request.path_info.lstrip('/')
         for m in EXEMPT_URLS:
@@ -50,7 +51,7 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
 
 
 class BackendAPIRequestMiddleWare(MiddlewareMixin):
-    """管理后台接口访问限制"""
+    """管理后台接口访问限制中间件"""
     def process_request(self, request):
         path = request.path_info.lstrip('')
         if path.split('/')[1] == 'admin' and request.user.role == 'STUDENT':

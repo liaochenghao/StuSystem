@@ -4,7 +4,8 @@ import datetime
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
-from permissions.base_permissions import OrderOperatePermission
+from permissions.backend_permissions import OrderOperatePermission, PaymentAccountInfoOperatePermission, \
+    ChildUserOperatePermission, UserInfoOperatePermission
 from common.models import SalesMan
 from source.models import Project, Campus, Course
 from rest_framework import exceptions
@@ -27,17 +28,21 @@ class AccountInfoViewSet(mixins.CreateModelMixin,
                          mixins.UpdateModelMixin,
                          mixins.DestroyModelMixin,
                          viewsets.GenericViewSet):
+    """付款账号设置ViewSet"""
     queryset = PaymentAccountInfo.objects.all()
     serializer_class = AdminPaymentAccountInfoSerializer
+    permission_classes = [PaymentAccountInfoOperatePermission]
 
 
 class UserInfoViewSet(mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
+    """用户信息ViewSet"""
     queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
+    permission_classes = [UserInfoOperatePermission]
 
     def get_serializer(self, *args, **kwargs):
         if kwargs.get('many'):
@@ -76,8 +81,9 @@ class UserInfoViewSet(mixins.ListModelMixin,
 
 
 class StudentScoreDetailViewSet(mixins.RetrieveModelMixin,
-                             mixins.UpdateModelMixin,
-                             viewsets.GenericViewSet):
+                                mixins.UpdateModelMixin,
+                                viewsets.GenericViewSet):
+    """用户成绩邮寄视图"""
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
 
@@ -173,8 +179,8 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
 
 
 class AdminUserCourseCreditSwitchViewSet(mixins.RetrieveModelMixin,
-                                    mixins.UpdateModelMixin,
-                                    viewsets.GenericViewSet):
+                                         mixins.UpdateModelMixin,
+                                         viewsets.GenericViewSet):
     """学生学分转换视图"""
     queryset = UserCourse.objects.all()
     serializer_class = AdminCourseCreditSwitchSerializer
@@ -194,8 +200,10 @@ class ChildUserViewSet(mixins.CreateModelMixin,
                        mixins.RetrieveModelMixin,
                        mixins.UpdateModelMixin,
                        viewsets.GenericViewSet):
+    """子账号管理"""
     queryset = User.objects.exclude(role='STUDENT')
     serializer_class = ChildUserSerializer
+    permission_classes = [ChildUserOperatePermission]
 
     @detail_route(['PUT'])
     def update_password(self, request, pk):
