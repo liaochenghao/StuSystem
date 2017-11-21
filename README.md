@@ -78,11 +78,11 @@
 - [订单更新](docs/admin/order/admin_order_update.md)
 
 **管理员支付账号设置**：
-- [管理员账户设置/账户列表](docs/admin/account_info/account_info_list.md)
-- [管理员账户设置/账户创建](docs/admin/account_info/account_info_create.md)
-- [管理员账户设置/账户详情](docs/admin/account_info/account_info_detail.md)
-- [管理员账户设置/更新账户](docs/admin/account_info/account_info_update.md)
-- [管理员账户设置/删除账户](docs/admin/account_info/account_info_delete.md)
+- [管理员账户设置/账户列表(***)](docs/admin/account_info/account_info_list.md)
+- [管理员账户设置/账户创建(***)](docs/admin/account_info/account_info_create.md)
+- [管理员账户设置/账户详情(***)](docs/admin/account_info/account_info_detail.md)
+- [管理员账户设置/更新账户(***)](docs/admin/account_info/account_info_update.md)
+- [管理员账户设置/删除账户(***)](docs/admin/account_info/account_info_delete.md)
 
 **管理员销售顾问**：
 - [销售顾问/销售顾问列表](docs/sales_man/sales_man_list.md)
@@ -92,11 +92,11 @@
 - [销售顾问/获取销售顾问永久推广二维码](docs/sales_man/sales_man_qr_code.md)
 
 **管理员优惠券**：
-- [优惠券/创建优惠券](docs/coupon/coupon_create.md)
-- [优惠券/优惠券列表](docs/coupon/coupon_list.md)
-- [优惠券／优惠券详情](docs/coupon/coupon_detail.md)
-- [优惠券/更新优惠券](docs/coupon/coupon_update.md)
-- [优惠券/给学生分配优惠券](docs/coupon/add_coupon.md)
+- [优惠券/创建优惠券(***)](docs/coupon/coupon_create.md)
+- [优惠券/优惠券列表(***)](docs/coupon/coupon_list.md)
+- [优惠券／优惠券详情(***)](docs/coupon/coupon_detail.md)
+- [优惠券/更新优惠券(***)](docs/coupon/coupon_update.md)
+- [优惠券/给学生分配优惠券(***)](docs/coupon/add_coupon.md)
 
 **管理后台接口**：
 - [学生信息列表](docs/admin/user_info_list.md)

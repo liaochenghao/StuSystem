@@ -34,7 +34,9 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def check_order(self, request):
         if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
-            return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
+            order_to = self.get_queryset().filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).first()
+            return Response(self.serializer_class(order_to).data)
+        return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
     def order_currency_payment(self, request):

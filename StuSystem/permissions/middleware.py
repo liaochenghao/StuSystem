@@ -55,5 +55,5 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
     def process_request(self, request):
         path = request.path_info.lstrip('')
         if path.split('/')[1] == 'admin' and request.user.role == 'STUDENT':
-            return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限.')),
+            return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限')),
                                 content_type='application/json')

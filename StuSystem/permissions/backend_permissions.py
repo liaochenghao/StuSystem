@@ -34,3 +34,8 @@ class PaymentAccountInfoOperatePermission(BaseOperatePermission):
 class ChildUserOperatePermission(BaseOperatePermission):
     """子账号操作权限"""
     pass
+
+
+class SalesManOperatePermission(BaseOperatePermission):
+    """销售人员操作权限"""
+    pass

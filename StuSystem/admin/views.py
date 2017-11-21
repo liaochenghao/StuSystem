@@ -5,7 +5,7 @@ from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
 from permissions.backend_permissions import OrderOperatePermission, PaymentAccountInfoOperatePermission, \
-    ChildUserOperatePermission, UserInfoOperatePermission
+    ChildUserOperatePermission, UserInfoOperatePermission, SalesManOperatePermission
 from common.models import SalesMan
 from source.models import Project, Campus, Course
 from rest_framework import exceptions
@@ -146,6 +146,7 @@ class SalesManViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = SalesMan.objects.all()
     serializer_class = SalsesManSerializer
+    permission_classes = [SalesManOperatePermission]
 
 
 class AdminUserOrderViewSet(mixins.ListModelMixin,
