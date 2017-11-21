@@ -96,29 +96,6 @@ class UserCourse(models.Model):
         db_table = 'user_course'
 
 
-# class CourseCreditSwitch(models.Model):
-#     """用户学分转换"""
-#     STATUS = (
-#         ('PRE_SCORED', '成绩待'),
-#         ('POSTED', '成绩单已寄出'),
-#         ('RECEIVED', '学校已收到'),
-#         ('SUCCESS', '学分转换成功'),
-#         ('FAILURE', '学分转换失败')
-#     )
-#     user = models.ForeignKey(User)
-#     user_course = models.OneToOneField(UserCourse)
-#     create_time = models.DateTimeField(auto_now_add=True)
-#     modified_time = models.DateTimeField(auto_now=True)
-#     post_datetime = models.DateTimeField('快递时间', null=True)
-#     post_channel = models.CharField('快递方式', max_length=30, null=True)
-#     post_number = models.CharField('快递单号', max_length=30, null=True)
-#     status = models.CharField(max_length=30, choices=STATUS, null=True)
-#     img = models.ImageField('学分转换结果证明', upload_to='project/result/img/', null=True)
-#
-#     class Meta:
-#         db_table = 'course_credit_switch'
-
-
 class OrderPayment(models.Model):
     """订单支付信息"""
     order = models.ForeignKey(Order)

@@ -163,7 +163,8 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         if request.method == 'GET':
             res = self.course_info(api_key)
         else:
-            serializer = self.serializer_class(data=request.data, context={'api_key': api_key})
+            context = {'api_key': api_key, 'request': request}
+            serializer = self.serializer_class(data=request.data, context=context)
             serializer.is_valid(raise_exception=True)
             user_course = UserCourse.objects.filter(user=request.user,
                                                     course=serializer.validated_data['course'],
