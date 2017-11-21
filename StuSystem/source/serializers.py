@@ -260,17 +260,41 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
             raise serializers.ValidationError('审课图片为必传参数')
+
         if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('switch_img'):
             raise serializers.ValidationError('学分转换证明图片为必传参数')
+
         if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('credit_switch_status'):
             raise serializers.ValidationError('学分转换状态为必填参数')
+
         order = attrs['order']
         if not attrs['chart_id'] in json.loads(order.chart_ids):
             raise serializers.ValidationError('chart_id: %s 不属于该订单' % attrs['chart_id'])
+
         if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():
             raise serializers.ValidationError('无效的chart_id')
+
         chart = ShoppingChart.objects.get(id=attrs['chart_id'])
         attrs['project'] = chart.project
+        user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
+                                                order=attrs['order']).first()
+        if not user_course:
+            raise serializers.ValidationError('未找到用户所选课程，请检查传入参数')
+
+        if self.context.get('api_key') == 'student_confirm_course':
+            if user_course.status != 'TO_UPLOAD':
+                raise serializers.ValidationError('已上传审课图片')
+
+        if self.context.get('api_key') == 'course_credit_switch':
+            if user_course.status != 'PASS':
+                raise serializers.ValidationError('审课尚未完成, 不能上传学分转换图片')
+
+            if user_course.credit_switch_status in ['SUCCESS', 'FAILURE']:
+                raise serializers.ValidationError('已上传学分转换图片，状态为: %s' %
+                                                  dict(UserCourse.CREDIT_SWITCH_STATUS).get(user_course.credit_switch_status))
+
+            if user_course.credit_switch_status == 'PRE_POSTED':
+                raise serializers.ValidationError('成绩单尚未寄出')
         return attrs
 
 
