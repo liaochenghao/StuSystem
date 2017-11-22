@@ -62,7 +62,7 @@
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 - [微信中分配销售顾问](docs/authentication/assign_sales_man.md)
 
-** 成绩单寄送信息**
+**成绩单寄送信息**
 - [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
 - [获取用户成绩邮寄信息列表(***)](docs/authentication/get_score_list.md)
 - [获取用户成绩邮寄信息详情](docs/authentication/get_score_detail.md)
