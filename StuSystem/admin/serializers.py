@@ -239,17 +239,20 @@ class ConfirmUserCourseSerializer(serializers.Serializer):
 
 
 class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
-    status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS)
+    """学分转换"""
+    credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'status', 'img']
-        read_only_fields = ['img']
+        fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'credit_switch_status', 'switch_img']
+        read_only_fields = ['switch_img']
 
     def validate(self, attrs):
         if self.instance:
-            if not self.instance.img and (attrs.get('status')) in ['SUCCESS', 'FAILURE']:
-                raise serializers.ValidationError('用户还未上传学分转换证明，不能更改学分转换状态为成功或失败')
+            if not (self.instance.confirm_img and (attrs.get('status') == 'PASS')):
+                raise serializers.ValidationError('审课证明未确认，不能更改学分转换状态')
+            if not self.instance.switch_img:
+                raise serializers.ValidationError('学分转换证明图片未上传，不能更改学分转换状态')
         return attrs
 
     def to_representation(self, instance):

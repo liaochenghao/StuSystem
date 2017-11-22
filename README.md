@@ -103,7 +103,6 @@
 - [添加学生备注](docs/admin/user_info/add_remark.md)
 
 **管理员学分转换**：
-- [学分转换管理/学生学分转换列表](docs/admin/course_credit_switch/course_credit_switch_list.md)
 - [学分转换管理/某一学生学分转换详情](docs/admin/course_credit_switch/course_credit_switch_detail.md)
 - [学分转换管理/更新学分转换](docs/admin/course_credit_switch/course_credit_switch_update.md)
 

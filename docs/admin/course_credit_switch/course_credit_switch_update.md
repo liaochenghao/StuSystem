@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PUT/PATCH     /admin/project_result/[user_id]/
+    PUT/PATCH     /admin/course_credit_switch/[id]/
 ```
 
 **请求参数**:
@@ -11,7 +11,7 @@
         "post_datetime":    str     快递时间
         "post_channel": str     快递方式
         "post_number":  str     快递单号
-        "status":       str     状态值(响应状态值在/common/global_enums/接口中获取)
+        "credit_switch_status":       str     状态值(响应状态值在/common/global_enums/接口中获取)
     }
 ```
 
@@ -30,7 +30,7 @@
         "post_datetime": "2017-07-25",
         "post_channel": "DHL",
         "post_number": "56468987243131",
-        "status": {
+        "credit_switch_status": {
             "key": "POSTED",
             "verbose": "成绩单已寄出"
         },

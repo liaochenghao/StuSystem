@@ -167,21 +167,21 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
         return Response(self.get_serializer(instance).data)
 
 
-class AdminUserCourseCreditSwitchViewSet(mixins.RetrieveModelMixin,
+class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
+                                         mixins.RetrieveModelMixin,
                                          mixins.UpdateModelMixin,
                                          viewsets.GenericViewSet):
     """学生学分转换视图"""
-    queryset = UserCourse.objects.all()
+    queryset = UserCourse.objects.filter(user__role='STUDENT')
     serializer_class = AdminCourseCreditSwitchSerializer
 
-    def get_object(self):
-        pk = self.kwargs.get('pk')
+    def list(self, request, *args, **kwargs):
+        user_id = self.request.query_params.get('user_id')
         try:
-            user = User.objects.get(id=pk)
-        except User.DoesNotExist:
-            raise exceptions.NotFound('未找到用户信息')
-        project_result, created = self.queryset.get_or_create(user=user)
-        return project_result
+            user_id = int(user_id)
+        except:
+            raise exceptions.ValidationError('请传入正确的user_id')
+        return Response(self.serializer_class(self.queryset.filter(user_id=user_id), many=True).data)
 
 
 class ChildUserViewSet(mixins.CreateModelMixin,
