@@ -29,6 +29,7 @@ class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    """UserInfo列表Serializer"""
     last_login = serializers.DateTimeField(source='user.last_login')
 
     class Meta:
@@ -37,7 +38,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
+        personal_file = all([instance.first_name, instance.last_name, instance.gender, instance.id_number,
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
         data['channel'] = get_channel_info(instance)
@@ -45,6 +46,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserInfoRemarkSerializer(serializers.ModelSerializer):
+    """添加用户信息备注Serializer"""
     user_info = serializers.PrimaryKeyRelatedField(queryset=UserInfo.objects.all(), write_only=True)
 
     class Meta:
@@ -53,13 +55,14 @@ class UserInfoRemarkSerializer(serializers.ModelSerializer):
 
 
 class RetrieveUserInfoSerializer(serializers.ModelSerializer):
+    """用户信息详情Serializer"""
     user_info_remark = UserInfoRemarkSerializer(many=True)
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
 
     class Meta:
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
-                  'cschool', 'wcountry', 'wcampus', 'major', 'graduate_year', 'gpa', 'user_info_remark']
+                  'cschool', 'wcampus', 'major', 'graduate_year', 'gpa', 'user_info_remark']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -74,6 +77,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
                 item['amount'] = item.pop('coupon__amount')
+
         data['user_coupon'] = user_coupon
         data['channel'] = get_channel_info(instance)
         try:

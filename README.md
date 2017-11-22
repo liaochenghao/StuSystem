@@ -47,15 +47,13 @@
 - [获取全局的enums](docs/common/global_enums.md)
 - [管理后台导航菜单栏](docs/common/desktop_navigation.md)
 
-
-
 **用户模块**：
 - [登录接口](docs/authentication/user_login.md)
 - [检查用户账户信息](docs/authentication/check_account.md)
 - [获取用户信息](docs/authentication/user_info.md)
-- [更新用户信息](docs/authentication/update_user_info.md)
+- [更新用户信息](docs/authentication/user_info_update.md)
 - [获取用户档案信息](docs/authentication/user_personal_file.md)
-- [更新用户档案信息](docs/authentication/update_personal_file.md)
+- [更新用户档案信息](docs/authentication/personal_file_update.md)
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 - [已发送好友申请](docs/authentication/post_sales_man.md)
@@ -117,7 +115,7 @@
 **管理后台接口**：
 - [学生成绩列表](docs/admin/scores_list.md)
 - [成绩单寄送地址](docs/admin/student_score_info.md)
-- [更新成绩单寄送信息](docs/admin/update_student_score_info.md)
+- [更新成绩单寄送信息](docs/admin/student_score_info_update.md)
 - [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
