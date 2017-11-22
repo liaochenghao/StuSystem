@@ -56,14 +56,16 @@
 - [更新用户信息(***)](docs/authentication/update_user_info.md)
 - [获取用户档案信息](docs/authentication/user_personal_file.md)
 - [更新用户档案信息](docs/authentication/update_personal_file.md)
-- [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
-- [获取用户成绩邮寄信息列表(***)](docs/authentication/get_score_list.md)
-- [获取用户成绩邮寄信息详情](docs/authentication/get_score_detail.md)
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
 - [已发送好友申请](docs/authentication/post_sales_man.md)
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 - [微信中分配销售顾问](docs/authentication/assign_sales_man.md)
+
+** 成绩单寄送信息**
+- [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
+- [获取用户成绩邮寄信息列表(***)](docs/authentication/get_score_list.md)
+- [获取用户成绩邮寄信息详情](docs/authentication/get_score_detail.md)
 
 **购物车**:
 - [购物车项目创建(***)](docs/shopping_chart/shopping_chart_create.md)
