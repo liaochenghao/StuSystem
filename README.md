@@ -99,25 +99,31 @@
 - [优惠券/更新优惠券(***)](docs/coupon/coupon_update.md)
 - [优惠券/给学生分配优惠券(***)](docs/coupon/add_coupon.md)
 
+**管理员用户信息**：
+- [学生信息列表](docs/admin/user_info/user_info_list.md)
+- [学生信息详情](docs/admin/user_info/user_info_detail.md)
+- [添加学生备注](docs/admin/user_info/add_remark.md)
+
+**管理员学分转换**：
+- [学分转换管理/学生学分转换列表](docs/admin/course_credit_switch/course_credit_switch_list.md)
+- [学分转换管理/某一学生学分转换详情](docs/admin/course_credit_switch/course_credit_switch_detail.md)
+- [学分转换管理/更新学分转换](docs/admin/course_credit_switch/course_credit_switch_update.md)
+
+**管理员学生审课**：
+- [学生审课记录列表](docs/admin/confirm_course/confirm_course.md)
+- [用户上传凭证待审核数量](docs/admin/confirm_course/course_to_confirm_count.md)
+- [成绩管理/更改审课状态](docs/admin/confirm_course/confirm_user_course.md)
+
 **管理后台接口**：
-- [学生信息列表](docs/admin/user_info_list.md)
-- [学生信息详情](docs/admin/user_info_detail.md)
-- [添加学生备注](docs/admin/add_remark.md)
-- [学生审课记录列表](docs/admin/confirm_course.md)
 - [学生成绩列表](docs/admin/scores_list.md)
 - [成绩单寄送地址](docs/admin/student_score_info.md)
 - [更新成绩单寄送信息](docs/admin/update_student_score_info.md)
-- [项目管理项目列表(分页接口)](docs/admin/project_list.md)
-- [项目管理项目列表(不分页接口)](docs/admin/project_list_none_pagination.md)
 - [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
-- [成绩管理/更改审课状态](docs/admin/confirm_user_course.md)
-- [学分转换管理/某一学生学分转换详情](docs/admin/project_result_detail.md)
-- [学分转换管理/更新学分转换](docs/admin/project_result_update.md)
 - [管理员为学生分配课程](docs/admin/create_user_course.md)
-- [用户上传凭证待审核数量](docs/admin/course_to_confirm_count.md)
+
 
 **校区模块**:
 - [创建校区(***)](docs/campus/campus_create.md)
