@@ -19,6 +19,8 @@
     "course_num": int      课程数量
     "apply_fee": 2000.0,        float  申请奋勇
     "course_num": 3             int    课程数量
+    "applyed_num": 0,    申请人数
+    "payed_num": 0,  支付人数
     "project_fees": [
         {
             "course_number": 1,

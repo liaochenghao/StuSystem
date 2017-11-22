@@ -32,6 +32,8 @@
         "create_time": "2017-11-14T10:06:32Z",
         "apply_fee": 2000,
         "course_num": 4,
+        "applyed_num": 0,    申请人数
+        "payed_num": 0,  支付人数
         "project_course_fee": [
             {
                 "id": 61,
