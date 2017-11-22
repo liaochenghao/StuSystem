@@ -9,7 +9,7 @@
 ```
 {
 	"order": int 订单id 必填,
-	"chart_id": int  必填,
+	"chart": int  必填,
 	"course_ids": list 课程id列表
 }
 ```

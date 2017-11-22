@@ -46,7 +46,6 @@ class Order(models.Model):
         ('CONFIRM_FAILED', '验证失败')
     )
     user = models.ForeignKey(User)
-    # chart_ids = models.CharField('商品ids', max_length=255)
     currency = models.CharField('币种', choices=CURRENCY, max_length=30)
     payment = models.CharField('支付方式', choices=PAYMENT, max_length=30)
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')

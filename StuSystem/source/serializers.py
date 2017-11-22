@@ -102,11 +102,6 @@ class ProjectSerializer(serializers.ModelSerializer):
                                                                                            course__is_active=True,
                                                                                            project__is_active=True),
                                                               context={'api_key': 'related_courses'}, many=True).data
-        # applyed_num = Order.objects.filter(chart_ids__in=chart_ids, status='CONFIRMED').count()
-        # payed_num = Order.objects.filter(chart_ids__in=chart_ids, status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED',
-        #                                                                       'CONFIRM_FAILED']).count()
-        # data['applyed_num'] = applyed_num
-        # data['payed_num'] = payed_num
         return data
 
 
@@ -164,12 +159,12 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class UserCourseSerializer(serializers.ModelSerializer):
 
-    chart_id = serializers.IntegerField(write_only=True)
+    chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all(), write_only=True)
     course_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'order', 'chart_id', 'course_ids']
+        fields = ['id', 'order', 'chart', 'course_ids']
 
     def validate(self, attrs):
 
@@ -183,10 +178,7 @@ class UserCourseSerializer(serializers.ModelSerializer):
             if not Course.objects.filter(id=course_id).exists():
                 raise serializers.ValidationError('课程id：%s 传入有误' % course_id)
 
-        if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():
-            raise serializers.ValidationError('chart_id：%s 传入有误' % attrs['chart_id'])
-
-        chart = ShoppingChart.objects.get(id=attrs['chart_id'])
+        chart = attrs['chart']
 
         current_course_num = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
                                                        order=attrs['order']).count()

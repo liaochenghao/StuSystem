@@ -25,7 +25,7 @@
             "order": {                  # 订单信息
                 "id": 118
             },
-            "chart_id": 2,              # chart_id
+            "chart": 2,              # 商品id
             "current_courses": [        # 已选课程信息
                 {
                     "id": 15,
