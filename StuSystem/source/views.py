@@ -229,7 +229,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     'order': {
                         'id': order.id
                     },
-                    'chart_id': chart.id,
+                    'chart': chart.id,
                     'current_courses': current_courses_list
                 }
                 if key == 'current_courses_info':

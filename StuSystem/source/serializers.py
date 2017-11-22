@@ -230,7 +230,7 @@ class MyScoreSerializer(serializers.ModelSerializer):
 
 class CommonImgUploadSerializer(serializers.ModelSerializer):
     """学生审课"""
-    chart_id = serializers.IntegerField()
+    chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     # confirm_img = Base64ImageField()
@@ -241,7 +241,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'chart_id', 'course', 'order', 'confirm_img', 'switch_img', 'credit_switch_status']
+        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'switch_img', 'credit_switch_status']
 
     def validate(self, attrs):
         if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
@@ -253,14 +253,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
         if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('credit_switch_status'):
             raise serializers.ValidationError('学分转换状态为必填参数')
 
-        order = attrs['order']
-        if not attrs['chart_id'] in order.orderchartrelation_set.all().values_list('chart', flat=True):
-            raise serializers.ValidationError('chart_id: %s 不属于该订单' % attrs['chart_id'])
-
-        if not ShoppingChart.objects.filter(id=attrs['chart_id']).exists():
-            raise serializers.ValidationError('无效的chart_id')
-
-        chart = ShoppingChart.objects.get(id=attrs['chart_id'])
+        chart = attrs['chart']
         attrs['project'] = chart.project
         user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
                                                 order=attrs['order']).first()

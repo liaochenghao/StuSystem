@@ -24,7 +24,7 @@
             "order": {
                 "id": 118
             },
-            "chart_id": 3,
+            "chart": 3,
             "current_courses": [
                 {
                     "id": 15,
@@ -62,7 +62,7 @@
 **请求参数**:
 ```
 {
-    "chart_id": int 必填  chart_id
+    "chart": int 必填  商品id
     "order": int    必填  订单id
     "course": int   必填  课程id
     "switch_img": base64位字符串  必填 审课图片
