@@ -17,7 +17,6 @@
     "msg": "请求成功",
     "data": [
         {
-            "syllabus": "",
             "confirm_img": null,
             "status": {
                 "key": "TO_UPLOAD",

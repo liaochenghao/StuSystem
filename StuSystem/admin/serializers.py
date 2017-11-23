@@ -95,16 +95,15 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
 
 
 class ConfirmCourseSerializer(serializers.ModelSerializer):
-    syllabus = serializers.CharField(source='course.syllabus')
     status = VerboseChoiceField(choices=UserCourse.STATUS)
 
     class Meta:
         model = UserCourse
-        fields = ['syllabus', 'confirm_img', 'status', 'user']
+        fields = ['confirm_img', 'status', 'user']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        project = Project.objects.filter(id=instance.course.project_id).first()
+        project = Project.objects.filter(id=instance.project_id).first()
         course = Course.objects.filter(id=instance.course_id).first()
         data['project'] = {
             'id': project.id,
