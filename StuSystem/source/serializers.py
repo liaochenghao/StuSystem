@@ -99,9 +99,6 @@ class ProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['campus'] = CampusSerializer(instance=instance.campus).data
-        # data['applyed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance,
-        #                                            status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).count()
-        # data['payed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance, status='CONFIRMED').count()
         if self.context.get('api_key') == 'related_courses':
             data['related_courses'] = CourseProjectSerializer(CourseProject.objects.filter(project=instance,
                                                                                            course__is_active=True,
@@ -232,8 +229,6 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     confirm_img = Base64ImageField()
     switch_img = Base64ImageField()
-    # confirm_img = serializers.ImageField(required=False)
-    # switch_img = serializers.ImageField(required=False)
     credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS, required=False)
 
     class Meta:
