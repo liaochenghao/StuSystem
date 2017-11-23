@@ -45,11 +45,13 @@ class ProjectCourseFeeSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     project_course_fee = ProjectCourseFeeSerializer(many=True, read_only=True)
     project_fees = serializers.ListField(write_only=True)
+    applyed_number = serializers.IntegerField(source='current_applyed_number', read_only=True)
+    payed_number = serializers.IntegerField(source='current_payed_number', read_only=True)
 
     class Meta:
         model = Project
         fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
-                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees']
+                  'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'applyed_number', 'payed_number']
 
     def validate(self, attrs):
         if not self.instance:
@@ -97,9 +99,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['campus'] = CampusSerializer(instance=instance.campus).data
-        data['applyed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance,
-                                                   status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).count()
-        data['payed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance, status='CONFIRMED').count()
+        # data['applyed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance,
+        #                                            status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).count()
+        # data['payed_num'] = Order.objects.filter(orderchartrelation__chart__project=instance, status='CONFIRMED').count()
         if self.context.get('api_key') == 'related_courses':
             data['related_courses'] = CourseProjectSerializer(CourseProject.objects.filter(project=instance,
                                                                                            course__is_active=True,
