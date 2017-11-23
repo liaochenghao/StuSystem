@@ -99,7 +99,7 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['confirm_img', 'status', 'user']
+        fields = ['confirm_img', 'status', 'user', 'order']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -233,8 +233,23 @@ class AddUserCourseScoreSerializer(serializers.Serializer):
 class ConfirmUserCourseSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     status = VerboseChoiceField(choices=UserCourse.STATUS)
+
+    def validate(self, attrs):
+        user_course = UserCourse.objects.filter(user=attrs['user'], course=attrs['course'],
+                                                project=attrs['project'], order=attrs['order']).first()
+        if not user_course:
+            raise serializers.ValidationError('参数传入有误, 请检查传入参数')
+
+        if user_course.status == 'PASS':
+            raise serializers.ValidationError('审课已经通过')
+
+        if user_course.status == 'TO_UPLOAD':
+            raise serializers.ValidationError('该用户还未上传审课图片，不能更改审课状态')
+
+        return attrs
 
 
 class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):

@@ -70,12 +70,6 @@ class UserInfoViewSet(mixins.ListModelMixin,
         return Response(UserInfoRemarkSerializer(instance).data)
 
     @detail_route()
-    def confirm_course(self, request, pk):
-        user = self.get_object().user
-        user_course = UserCourse.objects.filter(user=user)
-        return Response(ConfirmCourseSerializer(user_course, many=True).data)
-
-    @detail_route()
     def scores(self, request, pk):
         user = self.get_object().user
         user_course = UserCourse.objects.filter(user=user)
@@ -156,15 +150,24 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
         instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
         return Response(self.get_serializer(instance).data)
 
-    @list_route(['PUT'])
+    @list_route(['GET', 'PUT'])
     def confirm_course(self, request):
-        serializer = ConfirmUserCourseSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        self.queryset.filter(user=data['user'], course=data['course'], order=data['order']) \
-            .update(status=data['status'])
-        instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
-        return Response(self.get_serializer(instance).data)
+        if request.method == 'GET':
+            user_id = self.request.query_params.get('user')
+            try:
+                user = User.objects.get(id=user_id)
+            except:
+                raise exceptions.ValidationError('无效的user')
+            user_course = UserCourse.objects.filter(user=user)
+            return Response(ConfirmCourseSerializer(user_course, many=True).data)
+        else:
+            serializer = ConfirmUserCourseSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            self.queryset.filter(user=data['user'], course=data['course'],
+                                 project=data['project'], order=data['order']).update(status=data['status'])
+            instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
+            return Response(self.get_serializer(instance).data)
 
 
 class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,

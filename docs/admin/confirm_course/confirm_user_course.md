@@ -9,6 +9,7 @@
 ```
     {
         "user": int      用户id,
+        "project": int   项目id
         "course": int    课程id
         "order": int     订单id
         "status": varchar  PASS--审核通过, NOPASS--审核不通过

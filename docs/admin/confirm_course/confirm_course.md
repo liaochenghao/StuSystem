@@ -2,12 +2,14 @@
 
 **请求地址**:
 ```
-    GET     /admin/user_info/[user_id]/confirm_course/
+    GET     /admin/user_course/confirm_course/
 ```
 
 **请求参数**:
 ```
-    无
+{
+    "user": int  必填
+}
 ```
 
 **成功返回**：
@@ -23,6 +25,7 @@
                 "verbose": "待上传"
             }
             "user": 6,
+            "order": int
             "project": {
                 "id": int,
                 "name": str
