@@ -19,8 +19,6 @@
         {
             "project_name": "北京校区二期项目",       项目名称
             "course_code": "46QARX80KM",            课程代码
-            "start_time": "2017-06-27T00:00:00Z",
-            "end_time": "2017-07-19T00:00:00Z",
             "score": 0,                             成绩
             "score_grade": "",                      课程等级
             "user": 6                               用户id
