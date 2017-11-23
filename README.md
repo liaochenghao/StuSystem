@@ -115,7 +115,7 @@
 - [学生成绩列表](docs/admin/scores_list.md)
 - [成绩单寄送地址](docs/admin/student_score_info.md)
 - [更新成绩单寄送信息](docs/admin/student_score_info_update.md)
-- [课程管理筛选条件获取](docs/admin/user_filter_elements.md)
+- [课程管理筛选条件获取(XXX)](docs/admin/user_filter_elements.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
 - [成绩管理/更新课程成绩](docs/admin/user_course_update.md)
