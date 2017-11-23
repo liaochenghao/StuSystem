@@ -6,10 +6,9 @@ from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
 from coupon.models import UserCoupon
-from permissions.backend_permissions import OrderOperatePermission, PaymentAccountInfoOperatePermission, \
-    ChildUserOperatePermission, UserInfoOperatePermission, SalesManOperatePermission
-from common.models import SalesMan
-from source.models import Project, Campus, Course
+from permissions.backend_permissions import BaseOperatePermission
+from common.models import SalesMan, FirstLevel
+from source.models import Campus, Course
 from rest_framework import exceptions
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -19,7 +18,7 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
     CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
-    AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer
+    AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer, FirstLevelSerializer
 from order.models import UserCourse, Order
 from operate_history.models import OrderOperateHistory
 
@@ -33,7 +32,7 @@ class AccountInfoViewSet(mixins.CreateModelMixin,
     """付款账号设置ViewSet"""
     queryset = PaymentAccountInfo.objects.all()
     serializer_class = AdminPaymentAccountInfoSerializer
-    permission_classes = [PaymentAccountInfoOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
 
 class UserInfoViewSet(mixins.ListModelMixin,
@@ -44,7 +43,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
     queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
-    permission_classes = [UserInfoOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
     def get_serializer(self, *args, **kwargs):
         if kwargs.get('many'):
@@ -83,6 +82,7 @@ class StudentScoreDetailViewSet(mixins.ListModelMixin,
     """用户成绩邮寄视图"""
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
+    permission_classes = [BaseOperatePermission]
     pagination_class = None
 
     def list(self, request, *args, **kwargs):
@@ -98,6 +98,7 @@ class StatisticsViewSet(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
+    permission_classes = [BaseOperatePermission]
 
     @list_route()
     def students_overview(self, request):
@@ -132,7 +133,7 @@ class SalesManViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     queryset = SalesMan.objects.all()
     serializer_class = SalesManSerializer
-    permission_classes = [SalesManOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
 
 class AdminUserOrderViewSet(mixins.ListModelMixin,
@@ -143,6 +144,7 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     queryset = UserCourse.objects.all()
     serializer_class = AdminUserCourseSerializer
     filter_class = UserCourseFilterSet
+    permission_classes = [BaseOperatePermission]
 
     @list_route(['PUT'])
     def add_score(self, request):
@@ -181,6 +183,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
     """学生学分转换视图"""
     queryset = UserCourse.objects.filter(user__role='STUDENT')
     serializer_class = AdminCourseCreditSwitchSerializer
+    permission_classes = [BaseOperatePermission]
 
     def list(self, request, *args, **kwargs):
         user_id = self.request.query_params.get('user_id')
@@ -199,7 +202,7 @@ class ChildUserViewSet(mixins.CreateModelMixin,
     """子账号管理"""
     queryset = User.objects.exclude(role='STUDENT')
     serializer_class = ChildUserSerializer
-    permission_classes = [ChildUserOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
     @detail_route(['PUT'])
     def update_password(self, request, pk):
@@ -221,6 +224,7 @@ class AdminCourseViewSet(mixins.ListModelMixin,
     """管理员选课"""
     queryset = Course.objects.all()
     serializer_class = AdminCourseSerializer
+    permission_classes = [BaseOperatePermission]
 
     @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
     def create_user_course(self, request):
@@ -242,7 +246,7 @@ class AdminOrderViewSet(mixins.ListModelMixin,
     """管理员订单管理"""
     queryset = Order.objects.all()
     serializer_class = AdminOrderSerializer
-    permission_classes = [OrderOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
     @detail_route(['put'])
     def confirm(self, request, pk):
@@ -273,3 +277,22 @@ class AdminOrderViewSet(mixins.ListModelMixin,
         OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,
                                               'remark': remark})
         return Response(self.serializer_class(instance).data)
+
+
+class NavigationViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        viewsets.GenericViewSet):
+    queryset = FirstLevel.objects.all()
+    serializer_class = FirstLevelSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        menus = {
+            'ADMIN': ['CONSULTATON_CENTER', 'FINANCIAL_CENTER', 'PRODUCT_CENTER', 'MARKET_CENTER', 'SYSTEM_CENTER'],
+            'FINANCE': ['CONSULTATON_CENTER', 'FINANCIAL_CENTER'],
+            'PRODUCT': ['PRODUCT_CENTER'],
+            'MARKET': ['MARKET_CENTER']
+        }
+        queryset = self.queryset.filter(key__in=menus.get(self.request.user.role))
+        return queryset

@@ -1,6 +1,6 @@
 # coding: utf-8
 from coupon.serializers import CouponSerializer, UserCouponSerializer
-from permissions.backend_permissions import CouponOperatePermission
+from permissions.backend_permissions import AdminOperatePermission
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 
@@ -14,14 +14,14 @@ class CouponViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
-    permission_classes = [CouponOperatePermission]
+    permission_classes = [AdminOperatePermission]
 
 
 class UserCouponViewSet(mixins.CreateModelMixin,
                         viewsets.GenericViewSet):
     queryset = UserCoupon.objects.all()
     serializer_class = UserCouponSerializer
-    permission_classes = [CouponOperatePermission]
+    permission_classes = [AdminOperatePermission]
 
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)

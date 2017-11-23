@@ -57,3 +57,6 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
         if path.split('/')[1] == 'admin' and request.user.role == 'STUDENT':
             return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限')),
                                 content_type='application/json')
+        if path.split('/')[1] == 'order' and request.user.role != 'STUDENT':
+            return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限')),
+                                content_type='application/json')

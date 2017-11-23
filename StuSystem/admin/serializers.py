@@ -4,7 +4,7 @@ import json
 from admin.functions import get_channel_info
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
-from common.models import SalesMan
+from common.models import SalesMan, FirstLevel, SecondLevel
 from coupon.models import UserCoupon
 from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
@@ -301,4 +301,24 @@ class AdminOrderSerializer(OrderSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['operation_history'] = OrderOperateHistorySerializer(instance.orderoperatehistory_set.all(), many=True).data
+        return data
+
+
+class SecondLevelSerializer(serializers.ModelSerializer):
+    """二级菜单Serializer"""
+    class Meta:
+        model = SecondLevel
+        fields = ['id', 'name', 'key']
+
+
+class FirstLevelSerializer(serializers.ModelSerializer):
+    """一级菜单serializer"""
+    second_levels = SecondLevelSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = FirstLevel
+        fields = ['id', 'name', 'key', 'second_levels']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
         return data

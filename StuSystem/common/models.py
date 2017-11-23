@@ -46,6 +46,7 @@ class FirstLevel(models.Model):
 
     class Meta:
         db_table = 'common_first_level'
+        unique_together = ['key']
 
 
 class SecondLevel(models.Model):
@@ -57,3 +58,4 @@ class SecondLevel(models.Model):
 
     class Meta:
         db_table = 'common_second_level'
+        unique_together = ['pre', 'key']

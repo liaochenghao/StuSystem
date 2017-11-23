@@ -1,46 +1,65 @@
 # coding: utf-8
 """管理后台操作权限"""
+from authentication.models import User
 from rest_framework import permissions
 
 
 class BaseOperatePermission(permissions.BasePermission):
     """基础操作权限"""
+    roles = User.ROLE
+
+    def operate_permission(self, request, view):
+        if request.user.role in ['ADMIN', 'MARKET', 'PRODUCT', 'FINANCE']:
+            return True
+        else:
+            return False
+
     def has_permission(self, request, view):
-        user = request.user
-        if user.role == 'ADMIN':
+        if self.operate_permission(request, view):
             return True
         return False
 
 
-class UserInfoOperatePermission(BaseOperatePermission):
-    """用户信息操作权限"""
+class AdminOperatePermission(BaseOperatePermission):
+    """管理员操作权限"""
+    def operate_permission(self, request, view):
+        if request.user.role == 'ADMIN':
+            return True
+        else:
+            return False
 
 
-class OrderOperatePermission(BaseOperatePermission):
-    """管理员订单操作权限"""
-    pass
+class StudentOperatePermission(BaseOperatePermission):
+    """学生操作权限"""
+
+    def operate_permission(self, request, view):
+        return False
 
 
-class CouponOperatePermission(BaseOperatePermission):
-    """优惠券操作权限"""
-    pass
+class MarketOperatePermission(BaseOperatePermission):
+    """市场部操作权限"""
+
+    def operate_permission(self, request, view):
+        if request.user.role == 'MARKET':
+            return True
+        else:
+            return False
 
 
-class PaymentAccountInfoOperatePermission(BaseOperatePermission):
-    """付款账号操作权限"""
-    pass
+class ProductOperatePermission(BaseOperatePermission):
+    """产品部操作权限"""
+    def operate_permission(self, request, view):
+        if request.user.role == 'PRODUCT':
+            return True
+        else:
+            return False
 
 
-class ChildUserOperatePermission(BaseOperatePermission):
-    """子账号操作权限"""
-    pass
+class FinanceOperatePermission(BaseOperatePermission):
+    """财务部操作权限"""
 
-
-class SalesManOperatePermission(BaseOperatePermission):
-    """销售人员操作权限"""
-    pass
-
-
-class ProjectOperatePermission(BaseOperatePermission):
-    """项目管理操作权限"""
-    pass
+    def operate_permission(self, request, view):
+        if request.user.role == 'FINANCE':
+            return True
+        else:
+            return False

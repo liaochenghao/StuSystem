@@ -5,7 +5,7 @@ from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
-from permissions.backend_permissions import ProjectOperatePermission
+from permissions.backend_permissions import BaseOperatePermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
@@ -43,7 +43,7 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
-    permission_classes = [ProjectOperatePermission]
+    permission_classes = [BaseOperatePermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
