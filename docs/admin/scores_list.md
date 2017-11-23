@@ -17,13 +17,19 @@
     "msg": "请求成功",
     "data": [
         {
-            "project_name": "北京校区二期项目",       项目名称
-            "course_code": "46QARX80KM",            课程代码
-            "score": 0,                             成绩
-            "score_grade": "",                      课程等级
-            "user": 6                               用户id
-            "order": 77,                            订单id
-            "course": 1                             课程id
+            "score": 0,
+            "score_grade": null,
+            "user": 2,
+            "order": 118,
+            "course": {
+                "id": 16,
+                "course_code": "BIL 101",
+                "name": "Introduction to Biological Science 生物学概论"
+            },
+            "project": {
+                "id": 11,
+                "name": "暑期课程第一期"
+            }
         }
     ],
     "field_name": ""

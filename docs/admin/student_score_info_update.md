@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PATCH／PUT    /admin/student/score_info/[user_id]/
+    PATCH／PUT    /admin/student/score_info/[id]/
 ```
 
 **请求参数**:

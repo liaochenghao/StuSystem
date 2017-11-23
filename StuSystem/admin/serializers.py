@@ -119,21 +119,23 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
 
 class CourseScoreSerializer(serializers.ModelSerializer):
-    project_name = serializers.CharField(source='project.name')
-    course_code = serializers.CharField(source='course.course_code')
-    # start_time = serializers.DateTimeField(source='course.start_time')
-    # end_time = serializers.DateTimeField(source='course.end_time')
 
     class Meta:
         model = UserCourse
-        fields = ['project_name', 'course_code', 'score', 'score_grade', 'user', 'order',
-                  'course']
+        fields = ['score', 'score_grade', 'user', 'order', 'course']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['course'] = {'id': instance.course.id, 'course_code': instance.course.course_code,
+                          'name': instance.course.name}
+        data['project'] = {'id': instance.project.id, 'name': instance.project.name}
+        return data
 
 
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['user', 'department', 'phone', 'country', 'post_code', 'address']
+        fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
 
 
 class ProjectOverViewSerializer(serializers.ModelSerializer):

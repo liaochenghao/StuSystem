@@ -76,18 +76,22 @@ class UserInfoViewSet(mixins.ListModelMixin,
         return Response(CourseScoreSerializer(user_course, many=True).data)
 
 
-class StudentScoreDetailViewSet(mixins.RetrieveModelMixin,
+class StudentScoreDetailViewSet(mixins.ListModelMixin,
+                                mixins.RetrieveModelMixin,
                                 mixins.UpdateModelMixin,
                                 viewsets.GenericViewSet):
     """用户成绩邮寄视图"""
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
+    pagination_class = None
 
-    def get_object(self):
-        # pk 传过来的是user_id，需要转换为user_score_detail
-        user_id = self.kwargs.get('pk')
-        user_score_detail, created = self.queryset.get_or_create(user_id=int(user_id))
-        return user_score_detail
+    def list(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(id=self.request.query_params.get('user'))
+        except:
+            raise exceptions.ValidationError('无效的user')
+        self.queryset = self.queryset.filter(user=user)
+        return super().list(request, *args, **kwargs)
 
 
 class StatisticsViewSet(mixins.ListModelMixin,
