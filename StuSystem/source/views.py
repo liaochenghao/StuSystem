@@ -43,7 +43,7 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
-    permission_classes = [BaseOperatePermission]
+    # permission_classes = [BaseOperatePermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
