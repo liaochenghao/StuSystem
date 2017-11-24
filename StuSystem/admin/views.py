@@ -6,6 +6,7 @@ from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
 from coupon.models import UserCoupon
+from operate_history.functions import HistoryFactory
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
 from source.models import Campus, Course
@@ -20,7 +21,6 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
     AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer, FirstLevelSerializer
 from order.models import UserCourse, Order
-from operate_history.models import OrderOperateHistory
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -273,9 +273,8 @@ class AdminOrderViewSet(mixins.ListModelMixin,
             coupon_list = json.loads(instance.coupon_list)
             UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
                 status='USED' if status == 'CONFIRMED' else 'TO_USE')
-
-        OrderOperateHistory.objects.create(**{'operator': request.user, 'key': 'UPDATE', 'source': instance,
-                                              'remark': remark})
+        HistoryFactory.create_record(operator=request.user, source=instance, key='UPDATE', remark=remark,
+                                     source_type='ORDER')
         return Response(self.serializer_class(instance).data)
 
 

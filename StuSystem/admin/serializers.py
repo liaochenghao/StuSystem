@@ -6,7 +6,7 @@ from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan, FirstLevel, SecondLevel
 from coupon.models import UserCoupon
-from operate_history.operate import OperateHistoryHandle
+from operate_history.functions import HistoryFactory
 from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
@@ -15,7 +15,6 @@ from rest_framework import serializers
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
 from order.models import UserCourse, Order
 from order.serializers import OrderSerializer
-from operate_history.serializers import OrderOperateHistorySerializer
 from utils.serializer_fields import VerboseChoiceField
 from utils.functions import get_long_qr_code
 
@@ -301,7 +300,7 @@ class AdminOrderSerializer(OrderSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['operation_history'] = OperateHistoryHandle(**{'source': instance, 'source_type': 'ORDER'}).read_records()
+        data['operation_history'] = HistoryFactory.read_records(source=instance, source_type='ORDER')
         return data
 
 

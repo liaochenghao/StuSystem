@@ -3,16 +3,14 @@ import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo
-from common.models import SalesMan
-from coupon.models import Coupon, UserCoupon
+from coupon.models import UserCoupon
+from operate_history.functions import HistoryFactory
 from source.models import ProjectCourseFee, Course
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from authentication.serializers import StudentScoreDetailSerializer
 from source.serializers import ProjectSerializer
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart, OrderChartRelation
-from operate_history.models import OrderOperateHistory
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -102,8 +100,8 @@ class OrderSerializer(serializers.ModelSerializer):
         # 更新购物车
         ShoppingChart.objects.filter(id__in=chart_ids).update(status='ORDERED')
         # 操作记录
-        OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'CREATE', 'source': order,
-                                           'remark': '创建了订单'})
+        HistoryFactory.create_record(operator=self.context['request'].user, source=order, key='CREATE', remark='创建了订单',
+                                     source_type='ORDER')
         return order
 
     def update(self, instance, validated_data):
@@ -181,8 +179,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         validated_data['order'].status = 'TO_CONFIRM'
         validated_data['order'].save()
         instance = super().create(validated_data)
-        OrderOperateHistory.objects.create(**{'operator': self.context['request'].user, 'key': 'UPDATE',
-                                              'source': instance.order, 'remark': '上传了订单支付信息'})
+        HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE', remark='上传了订单支付信息',
+                                     source_type='ORDER')
         return instance
 
     def to_representation(self, instance):

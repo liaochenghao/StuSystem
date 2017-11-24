@@ -10,18 +10,22 @@ operate_method = dict(OperateHistory.OPERATE_KEY)
 class BaseOperateHistoryHandle:
     """基础日志操作类"""
 
-    def __init__(self, source, source_type, operator=None, remark=None,  key='CREATE'):
-        self.source = source
-        self.operator = operator
-        self.key = key
-        self.remark = remark
-        self.source_type = source_type
+    def __init__(self, **kwargs):
+        self.source = kwargs.get('source')
+        self.operator = kwargs.get('operator')
+        self.key = kwargs.get('key', 'CREATE')
+        self.remark = kwargs.get('remark')
+        self.source_type = kwargs.get('source_type')
+
+    def __validate(self):
+        if self.operator or self.remark is None:
+            raise BaseException('operator, remark不能为空')
 
     def create_record(self):
         """创建日志记录"""
         pass
 
-    def read_record(self):
+    def read_records(self):
         """读取日志记录"""
         pass
 
