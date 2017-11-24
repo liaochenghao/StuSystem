@@ -150,7 +150,7 @@
 
 **学生课程**:
 - [学生选课](docs/user_course/create_user_courses.md)
-- [当前选课详情](docs/course/current_courses_info.md)
+- [当前选课详情](docs/user_course/current_courses_info.md)
 - [我的成绩](docs/user_course/my_scores.md)
 - [学生审课](docs/user_course/student_course_confirm.md)
 - [学分转换](docs/user_course/course_credit_switch.md)
