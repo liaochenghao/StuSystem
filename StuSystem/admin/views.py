@@ -6,7 +6,7 @@ from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
 from coupon.models import UserCoupon
-from permissions.backend_permissions import BaseOperatePermission
+from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
 from source.models import Campus, Course
 from rest_framework import exceptions
@@ -280,19 +280,23 @@ class AdminOrderViewSet(mixins.ListModelMixin,
 
 
 class NavigationViewSet(mixins.ListModelMixin,
+                        mixins.CreateModelMixin,
                         mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin,
                         viewsets.GenericViewSet):
-    queryset = FirstLevel.objects.all()
+    queryset = FirstLevel.objects.order_by('rank')
     serializer_class = FirstLevelSerializer
     pagination_class = None
+    permission_classes = [BaseOperatePermission]
 
     def get_queryset(self):
         menus = {
-            'ADMIN': ['CONSULTATON_CENTER', 'FINANCIAL_CENTER', 'PRODUCT_CENTER', 'MARKET_CENTER', 'SYSTEM_CENTER'],
-            'FINANCE': ['CONSULTATON_CENTER', 'FINANCIAL_CENTER'],
+            'ADMIN': ['CONSULTATION_CENTER', 'FINANCIAL_CENTER', 'PRODUCT_CENTER', 'MARKET_CENTER', 'SALES_CENTER',
+                      'SYSTEM_CENTER'],
+            'FINANCE': ['CONSULTATION_CENTER', 'FINANCIAL_CENTER'],
             'PRODUCT': ['PRODUCT_CENTER'],
-            'MARKET': ['MARKET_CENTER']
+            'MARKET': ['MARKET_CENTER'],
+            'SALES': ['SALES_CENTER']
         }
         queryset = self.queryset.filter(key__in=menus.get(self.request.user.role))
         return queryset

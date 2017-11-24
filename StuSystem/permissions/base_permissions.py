@@ -7,9 +7,10 @@ from rest_framework import permissions
 class BaseOperatePermission(permissions.BasePermission):
     """基础操作权限"""
     roles = User.ROLE
+    SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
 
     def operate_permission(self, request, view):
-        if request.user.role in ['ADMIN', 'MARKET', 'PRODUCT', 'FINANCE']:
+        if request.user.role in ['ADMIN', 'MARKET', 'PRODUCT', 'FINANCE', 'SALES']:
             return True
         else:
             return False
@@ -33,7 +34,23 @@ class StudentOperatePermission(BaseOperatePermission):
     """学生操作权限"""
 
     def operate_permission(self, request, view):
-        return False
+        if request.user.role == 'STUDENT':
+            return True
+        else:
+            return False
+
+
+class StudentReadOnlyPermission(BaseOperatePermission):
+    """学生只读操作权限"""
+
+    def operate_permission(self, request, view):
+        if request.user.role == 'STUDENT':
+            if request.method in self.SAFE_METHODS:
+                return True
+            else:
+                return False
+        else:
+            return True
 
 
 class MarketOperatePermission(BaseOperatePermission):
@@ -60,6 +77,15 @@ class FinanceOperatePermission(BaseOperatePermission):
 
     def operate_permission(self, request, view):
         if request.user.role == 'FINANCE':
+            return True
+        else:
+            return False
+
+
+class SalesOperatePermission(BaseOperatePermission):
+    """销售操作权限"""
+    def operate_permission(self, request, view):
+        if request.user.role == 'SALES':
             return True
         else:
             return False

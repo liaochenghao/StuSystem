@@ -1,11 +1,10 @@
 # coding: utf-8
-import json
 
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
-from permissions.backend_permissions import BaseOperatePermission
+from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
@@ -31,6 +30,7 @@ class CampusViewSet(BaseViewSet):
     """
     queryset = Campus.objects.filter(is_active=True)
     serializer_class = CampusSerializer
+    permission_classes = [StudentReadOnlyPermission]
 
     @detail_route()
     def all_projects(self, request, pk):
@@ -43,7 +43,7 @@ class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.filter(is_active=True)
     serializer_class = ProjectSerializer
-    # permission_classes = [BaseOperatePermission]
+    permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
@@ -77,6 +77,7 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.filter(is_active=True)
     serializer_class = CourseSerializer
+    permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':

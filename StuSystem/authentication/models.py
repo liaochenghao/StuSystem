@@ -16,7 +16,8 @@ class User(AbstractBaseUser):
         ('ADMIN', '管理员'),
         ('MARKET', '市场部'),
         ('PRODUCT', '产品部'),
-        ('FINANCE', '财务部')
+        ('FINANCE', '财务部'),
+        ('SALES', '销售部')
     )
     role = models.CharField(choices=ROLE, max_length=30)
     USERNAME_FIELD = 'username'

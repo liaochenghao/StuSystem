@@ -1,6 +1,6 @@
 # coding: utf-8
 from coupon.serializers import CouponSerializer, UserCouponSerializer
-from permissions.backend_permissions import AdminOperatePermission
+from permissions.base_permissions import AdminOperatePermission
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 
