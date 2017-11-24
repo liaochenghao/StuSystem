@@ -6,6 +6,7 @@ from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan, FirstLevel, SecondLevel
 from coupon.models import UserCoupon
+from operate_history.operate import OperateHistoryHandle
 from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
@@ -300,7 +301,7 @@ class AdminOrderSerializer(OrderSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['operation_history'] = OrderOperateHistorySerializer(instance.orderoperatehistory_set.all(), many=True).data
+        data['operation_history'] = OperateHistoryHandle(**{'source': instance, 'source_type': 'ORDER'}).read_records()
         return data
 
 

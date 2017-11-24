@@ -128,13 +128,11 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         res = self.course_info('current_courses_info')
         return Response(res)
 
-    @list_route(serializer_class=MyScoreSerializer)
+    @list_route()
     def my_scores(self, request):
         """我的成绩"""
-        user = request.user
-        user_courses = UserCourse.objects.filter(user=user)
-        data = self.serializer_class(user_courses, many=True).data
-        return Response(data)
+        res = self.common_handle(request, 'my_scores')
+        return Response(res)
 
     @list_route(['PUT', 'GET'], serializer_class=CommonImgUploadSerializer)
     def student_confirm_course(self, request):
@@ -189,7 +187,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     values('course__id', 'course__course_code', 'course__name', 'course__courseproject__address',
                            'course__courseproject__start_time', 'course__courseproject__end_time',
                            'course__courseproject__professor', 'status', 'credit_switch_status', 'confirm_img',
-                           'switch_img')
+                           'switch_img', 'score', 'score_grade', 'reporting_time')
 
                 current_courses_list = []
                 for item in current_courses:
@@ -219,6 +217,12 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                                                                              },
                                                     'switch_img': '%s%s%s' % (DOMAIN, MEDIA_URL, item.get('switch_img'))
                                                     if item.get('switch_img') else None})
+                    elif key == 'my_scores':
+                        current_course_item.update({
+                            "score": item['score'],
+                            "score_grade": item['score_grade'],
+                            'reporting_time': item['reporting_time']
+                        })
                     current_courses_list.append(current_course_item)
 
                 current_course_num = len(current_courses)
