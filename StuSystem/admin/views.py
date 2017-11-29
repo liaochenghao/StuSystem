@@ -225,6 +225,7 @@ class AdminCourseViewSet(mixins.ListModelMixin,
     queryset = Course.objects.all()
     serializer_class = AdminCourseSerializer
     permission_classes = [BaseOperatePermission]
+    filter_fields = ['user']
 
     @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
     def create_user_course(self, request):
@@ -244,9 +245,11 @@ class AdminOrderViewSet(mixins.ListModelMixin,
                         mixins.RetrieveModelMixin,
                         viewsets.GenericViewSet):
     """管理员订单管理"""
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().select_related('user').prefetch_related('orderchartrelation_set__chart',
+                                                                           'usercourse_set')
     serializer_class = AdminOrderSerializer
     permission_classes = [BaseOperatePermission]
+    filter_fields = ['currency', 'payment', 'status', 'user']
 
     @detail_route(['put'])
     def confirm(self, request, pk):

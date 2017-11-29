@@ -76,7 +76,8 @@
                         }
                     ]
                 },
-                "course_num": 1,
+                "course_num": 1,            课程数量
+                "current_course_num": 0     已选课程数量
                 "course_fee": 23120,
                 "create_time": "2017-11-15T07:06:14Z",
                 "stu_score_detail": {

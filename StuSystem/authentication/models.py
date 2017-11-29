@@ -60,6 +60,36 @@ class UserInfo(models.Model):
     class Meta:
         db_table = 'student_info'
 
+    @property
+    def student_status(self):
+        from order.models import UserCourse, Order
+        STUDENT_STATUS = (
+            ('NEW', '新建用户'),
+            ('PERSONAL_FILE', '已建档'),
+            ('SUPPLY_ORDER', '已提交订单'),
+            ('PAYED_ORDER', '订单已支付'),
+            ('PICKUP_COURSE', '已选课'),
+            ('CONFIRMED_COURSE', '已审课'),
+            ('SWITCHED_COURSE', '已学分转换')
+        )
+        if UserCourse.objects.filter(user=self.user, switch_img__isnull=False).exists():
+            student_status = 'SWITCHED_COURSE'
+        elif UserCourse.objects.filter(user=self.user, confirm_img__isnull=False).exists():
+            student_status = 'CONFIRMED_COURSE'
+        elif UserCourse.objects.filter(user=self.user).exists():
+            student_status = 'PICKUP_COURSE'
+        elif Order.objects.filter(user=self.user, status='CONFIRMED').exists():
+            student_status = 'PAYED_ORDER'
+        elif Order.objects.filter(user=self.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
+            student_status = 'SUPPLY_ORDER'
+        elif all([self.first_name, self.last_name, self.gender, self.id_number, self.major,
+                  self.graduate_year, self.gpa]):
+            student_status = 'PERSONAL_FILED'
+        else:
+            student_status = 'NEW'
+
+        return {'key': student_status, 'verbose': dict(STUDENT_STATUS).get(student_status)}
+
 
 class UserInfoRemark(models.Model):
     """用户信息备注"""

@@ -17,6 +17,7 @@ class CouponSerializer(serializers.ModelSerializer):
 
 
 class UserCouponSerializer(serializers.ModelSerializer):
+    coupon = serializers.PrimaryKeyRelatedField(queryset=Coupon.objects.filter(is_active=True))
 
     class Meta:
         model = UserCoupon

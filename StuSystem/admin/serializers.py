@@ -31,16 +31,14 @@ class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     """UserInfo列表Serializer"""
     last_login = serializers.DateTimeField(source='user.last_login')
+    status = serializers.DictField(source='student_status')
 
     class Meta:
         model = UserInfo
-        fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat']
+        fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat', 'status']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        personal_file = all([instance.first_name, instance.last_name, instance.gender, instance.id_number,
-                             instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
-        data['personal_file'] = '已建档' if personal_file else '未建档'
         data['channel'] = get_channel_info(instance)
         return data
 
@@ -301,6 +299,10 @@ class AdminOrderSerializer(OrderSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['operation_history'] = HistoryFactory.read_records(source=instance, source_type='ORDER')
+        for chart in data['charts']:
+            current_course_num = instance.usercourse_set.all().filter(
+                user=instance.user, project_id=chart['project']['id'], order=instance).count()
+            chart['current_course_num'] = current_course_num
         return data
 
 
