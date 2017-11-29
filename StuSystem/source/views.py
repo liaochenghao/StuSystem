@@ -51,14 +51,14 @@ class ProjectViewSet(BaseViewSet):
         return super().get_queryset()
 
     @detail_route()
-    def related_courses(self, request, pk):
-        """所有项目关联的课程"""
+    def related_courses_detail(self, request, pk):
+        """项目关联课程详情"""
         serializer = self.serializer_class(instance=self.get_object(), context={'api_key': 'related_courses'})
         return Response(serializer.data)
 
     @detail_route()
-    def related_courses(self, request, pk):
-        """单个项目关联课程"""
+    def related_courses_info(self, request, pk):
+        """项目关联课程简介"""
         my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
         res = CourseSerializer(my_course, many=True).data
         return Response(res)
