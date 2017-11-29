@@ -18,6 +18,7 @@ DATABASES = {
 }
 
 DOMAIN = 'http://42.51.8.152:8002'
+MEDIA_ROOT = '/home/qiulei/workplace/StuSystem/media'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
