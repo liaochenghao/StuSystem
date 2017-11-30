@@ -13,7 +13,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
-from order.models import UserCourse, Order
+from order.models import UserCourse, Order, ShoppingChart
 from order.serializers import OrderSerializer
 from utils.serializer_fields import VerboseChoiceField
 from utils.functions import get_long_qr_code
@@ -222,15 +222,6 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class AddUserCourseScoreSerializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
-    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
-    credit_switch_status = VerboseChoiceField(UserCourse.CREDIT_SWITCH_STATUS)
-    score = serializers.IntegerField()
-    score_grade = serializers.CharField()
-
-
 class ConfirmUserCourseSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
@@ -277,6 +268,35 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
         data['project'] = {'id': instance.project.id, 'name': instance.project.name}
+        return data
+
+
+class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
+    """成绩单寄送地址Serializer"""
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'project', 'course']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['project'] = {
+            'id': instance.project.id,
+            'name': instance.project.name
+        }
+        data['course'] = {
+            'id': instance.course.id,
+            'course_code': instance.course.course_code,
+            'name': instance.course.name
+        }
+        chart = ShoppingChart.objects.filter(project=instance.project, orderchartrelation__order=instance.order).first()
+        data['student_score_detail'] = {
+            'id': chart.stu_score_detail.id,
+            'department': chart.stu_score_detail.department,
+            'phone': chart.stu_score_detail.phone,
+            'country': chart.stu_score_detail.country,
+            'post_code': chart.stu_score_detail.post_code,
+            'address': chart.stu_score_detail.address
+        }
         return data
 
 

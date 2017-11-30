@@ -18,8 +18,8 @@ from rest_framework.response import Response
 from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSerializer, RetrieveUserInfoSerializer, \
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
     CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
-    AdminCourseCreditSwitchSerializer, AddUserCourseScoreSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, \
-    AdminCourseSerializer, AdminCreateUserCourseSerializer, AdminOrderSerializer, FirstLevelSerializer
+    AdminCourseCreditSwitchSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, AdminCourseSerializer, \
+    AdminCreateUserCourseSerializer, AdminUserCourseAddressSerializer, AdminOrderSerializer, FirstLevelSerializer
 from order.models import UserCourse, Order
 
 
@@ -146,17 +146,17 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     filter_class = UserCourseFilterSet
     permission_classes = [BaseOperatePermission]
 
-    @list_route(['PUT'])
-    def add_score(self, request):
-        """添加成绩"""
-        serializer = AddUserCourseScoreSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
-            .update(score=data['score'], score_grade=data['score_grade'], reporting_time=datetime.datetime.now(),
-                    credit_switch_status=data['credit_switch_status'])
-        instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
-        return Response(self.get_serializer(instance).data)
+    # @list_route(['PUT'])
+    # def add_score(self, request):
+    #     """添加成绩"""
+    #     serializer = AddUserCourseScoreSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     data = serializer.validated_data
+    #     self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
+    #         .update(score=data['score'], score_grade=data['score_grade'], reporting_time=datetime.datetime.now(),
+    #                 credit_switch_status=data['credit_switch_status'])
+    #     instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
+    #     return Response(self.get_serializer(instance).data)
 
     @list_route(['GET', 'PUT'])
     def confirm_course(self, request):
@@ -177,10 +177,6 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
             instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
             return Response(self.get_serializer(instance).data)
 
-    @list_route()
-    def student_scores_detail(self):
-        return
-
 
 class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
                                          mixins.RetrieveModelMixin,
@@ -196,8 +192,24 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         try:
             user_id = int(user_id)
         except:
-            raise exceptions.ValidationError('请传入正确的user_id')
+            raise exceptions.ValidationError('请传入正确的user参数')
         return Response(self.serializer_class(self.queryset.filter(user_id=user_id), many=True).data)
+
+
+class AdminUserCourseAddressViewSet(mixins.ListModelMixin,
+                                    viewsets.GenericViewSet):
+    """学生成绩单寄送地址"""
+    queryset = UserCourse.objects.filter(user__role='STUDENT')
+    serializer_class = AdminUserCourseAddressSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        try:
+            user_id = self.request.query_params.get('user')
+            queryset = self.queryset.filter(user_id=user_id)
+        except:
+            raise exceptions.ValidationError('请传入正确的user参数')
+        return queryset
 
 
 class ChildUserViewSet(mixins.CreateModelMixin,
