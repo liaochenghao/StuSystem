@@ -186,7 +186,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
     permission_classes = [BaseOperatePermission]
 
     def list(self, request, *args, **kwargs):
-        user_id = self.request.query_params.get('user_id')
+        user_id = self.request.query_params.get('user')
         try:
             user_id = int(user_id)
         except:
