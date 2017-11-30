@@ -8,12 +8,13 @@
 **请求参数**:
 ```
     {
-        "user": int      用户id,
-        "project": int   项目id
-        "course": int    课程id
-        "order": int     订单id
-        "score": int     分数
-        "score_grade":  varchar    课程等级
+        "user": int      用户id   必填,
+        "project": int   项目id   必填
+        "course": int    课程id   必填
+        "order": int     订单id   必填
+        "score": int     分数     必填
+        "score_grade":  varchar   课程等级  必填
+        "credit_switch_status": varchar 学分转换状态  必填  POSTED--成绩单已寄出，  SUCCESS--学分转换成功， FAILURE--学分转换失败
     }
 ```
 
@@ -35,9 +36,9 @@
         "score_grade": "A",
         "reporting_time": "2017-07-25T16:01:03Z",
         "confirm_img": null,
-        "status": {
-            "key": "TO_UPLOAD",
-            "verbose": "待上传"
+        "credit_switch_status": {
+            "key": "POSTED",
+            "verbose": "成绩单已寄出"
         },
         "user_info": {
             "user_id": 1,

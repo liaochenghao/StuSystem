@@ -226,6 +226,7 @@ class AddUserCourseScoreSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    credit_switch_status = VerboseChoiceField(UserCourse.CREDIT_SWITCH_STATUS)
     score = serializers.IntegerField()
     score_grade = serializers.CharField()
 
