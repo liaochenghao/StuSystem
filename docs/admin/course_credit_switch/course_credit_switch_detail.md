@@ -33,6 +33,15 @@
                 "name": "eee",
                 "email": "826839564@qq.com",
                 "wechat": "www"
+            },
+            "course": {
+                "id": 16,
+                "name": "Introduction to Biological Science 生物学概论",
+                "course_code": "BIL 101"
+            },
+            "project": {
+                "id": 11,
+                "name": "暑期课程第一期"
             }
         }
     ],

@@ -273,6 +273,9 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
         data['user_info'] = user_info
+        data['course'] = {'id': instance.course.id, 'name': instance.course.name,
+                          'course_code': instance.course.course_code}
+        data['project'] = {'id': instance.project.id, 'name': instance.project.name}
         return data
 
 
