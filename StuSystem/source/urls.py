@@ -5,9 +5,9 @@ from source.views import ProjectViewSet, CampusViewSet, CourseViewSet, UserCours
 
 router = SimpleRouter()
 
-router.register('project', ProjectViewSet)
-router.register('campus', CampusViewSet)
-router.register('course', CourseViewSet)
-router.register('course_project', CourseProjectViewSet)
-router.register('user_course', UserCourseViewSet)
+router.register('project', ProjectViewSet)              # 项目相关
+router.register('campus', CampusViewSet)                # 校区相关
+router.register('course', CourseViewSet)                # 课程相关
+router.register('course_project', CourseProjectViewSet) # 课程项目关联
+router.register('user_course', UserCourseViewSet)       # 学生选课
 urlpatterns = router.urls

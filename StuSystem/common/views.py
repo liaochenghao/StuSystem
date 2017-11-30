@@ -13,12 +13,6 @@ from order.models import Order, UserCourse
 from utils.functions import get_key_verbose_data
 
 
-class CampusViewSet(mixins.ListModelMixin,
-                    viewsets.GenericViewSet):
-    queryset = Campus.objects.all()
-    serializer_class = CampusSerializer
-
-
 class GlobalEnumsViewSet(APIView):
     def get(self, request):
         res = {

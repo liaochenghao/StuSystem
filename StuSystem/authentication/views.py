@@ -138,6 +138,7 @@ class StudentScoreDetailViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,
                                 mixins.RetrieveModelMixin,
                                 viewsets.GenericViewSet):
+    """成绩单寄送地址视图"""
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
     pagination_class = None

@@ -1,11 +1,10 @@
 # coding: utf-8
 from rest_framework.routers import SimpleRouter
 from django.conf.urls import url
-from .views import CampusViewSet, GlobalEnumsViewSet
+from .views import GlobalEnumsViewSet
 
 router = SimpleRouter()
 
-router.register('campus', CampusViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
