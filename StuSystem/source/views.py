@@ -97,6 +97,7 @@ class CourseViewSet(BaseViewSet):
 
 
 class CourseProjectViewSet(mixins.CreateModelMixin,
+                           mixins.DestroyModelMixin,
                            viewsets.GenericViewSet):
     """课程与项目关联"""
     queryset = CourseProject.objects.all()

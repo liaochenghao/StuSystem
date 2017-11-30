@@ -140,6 +140,7 @@
 - [创建项目与课程的关联](docs/project/create_course_project.md)
 - [设置项目课程数量及相应费用](docs/project/project_course_fee.md)
 
+- [取消项目与课程间的关联关系](docs/project/project_course_cancel.md)
 **课程模块**:
 - [创建课程](docs/course/course_create.md)
 - [课程列表](docs/course/course_list.md)
