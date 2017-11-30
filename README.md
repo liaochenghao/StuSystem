@@ -108,7 +108,7 @@
 
 **管理员学生审课**：
 - [学生审课记录列表](docs/admin/confirm_course/confirm_course.md)
-- [用户上传凭证待审核数量](docs/admin/confirm_course/course_to_confirm_count.md)
+- [审课凭证待审核数量](docs/admin/confirm_course/course_to_confirm_count.md)
 - [成绩管理/更改审课状态](docs/admin/confirm_course/confirm_user_course.md)
 
 **管理后台接口**：
