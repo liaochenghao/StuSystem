@@ -78,6 +78,10 @@
         "course_num": 3,
         "standard_fee": 4700.0,
         "pay_fee": null,
+        "sales_man": {       # 销售人员
+            "id": 14,
+            "name": "anni"
+        },
         "payment_info": {
             "id": 1,
             "account_number": "896275756@qq.com",

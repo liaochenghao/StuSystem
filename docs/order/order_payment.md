@@ -84,6 +84,10 @@
         "course_num": 1,
         "standard_fee": 2200,
         "pay_fee": 1500,
+        "sales_man": {
+            "id": 14,
+            "name": "anni"
+        },
         "payment_info": {
             "id": 1,
             "account_number": "896275756@qq.com",
@@ -102,7 +106,6 @@
             "opening_bank": null,
             "pay_date": "2017-07-06"
         },
-        "user_course": []
     },
     "field_name": ""
 }

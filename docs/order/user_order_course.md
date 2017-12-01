@@ -68,6 +68,10 @@
             "course_num": 3,
             "standard_fee": 3700,
             "pay_fee": 3500,
+            "sales_man": {      销售人员
+                "id": 14,
+                "name": "anni"
+            },
             "remark": null,
             "user_course": [
                 {

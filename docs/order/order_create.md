@@ -40,6 +40,10 @@
         "standard_fee": 50240,
         "pay_fee": 50240,
         "remark": null,
+        "sales_man": {       # 销售人员
+            "id": 14,
+            "name": "anni"
+        },
         "charts": [
             {
                 "id": 2,

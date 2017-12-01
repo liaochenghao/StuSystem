@@ -3,6 +3,8 @@ import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
+from authentication.models import UserInfo
+from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
 from source.models import ProjectCourseFee, Course
@@ -125,6 +127,13 @@ class OrderSerializer(serializers.ModelSerializer):
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
         order_payment = OrderPayment.objects.filter(order=instance).first()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
+        user_info = UserInfo.objects.get(user=instance.user)
+        data['user'] = {
+            'id': instance.user.id,
+            'name': user_info.name
+        }
+        sales_man = SalesMan.objects.filter(salesmanuser__user=instance.user).first()
+        data['sales_man'] = {'id': sales_man.id, 'name': sales_man.name} if sales_man else {}
         return data
 
 

@@ -90,6 +90,10 @@
                 }
             },
         "remark": ""            订单备注
+        "sales_man": {          # 销售人员
+            "id": 14,
+            "name": "anni"
+        },
         "payment_info": {
             "id": 1,
             "account_number": "896275756@qq.com",
