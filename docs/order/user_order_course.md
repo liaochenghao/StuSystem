@@ -18,7 +18,10 @@
     "data": [
         {
             "id": 77,
-            "user": 1,
+            "user": {
+                "id": 2,
+                "name": "Mary"
+            },
             "project": {
                 "id": 2,
                 "campus": {

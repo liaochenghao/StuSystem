@@ -17,7 +17,10 @@
     "msg": "请求成功",
     "data": {
         "id": 118,
-        "user": "yirantai",
+        "user": {
+            "id": 2,
+            "name": "Mary"
+        },
         "currency": {
             "key": "RMB",
             "verbose": "人民币"

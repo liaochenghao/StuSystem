@@ -25,7 +25,10 @@
     "msg": "请求成功",
     "data": {
         "id": 66,
-        "user": 1,
+        "user": {
+            "id": 2,
+            "name": "Mary"
+        },
         "project": {
             "id": 2,
             "campus": {

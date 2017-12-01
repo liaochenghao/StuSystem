@@ -19,7 +19,10 @@
     "msg": "请求成功",
     "data": {
         "id": 33,
-        "user": 1,
+        "user": {
+            "id": 2,
+            "name": "Mary"
+        },
         "project": {
             "id": 1,
             "campus": {
