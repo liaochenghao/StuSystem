@@ -129,7 +129,14 @@
                     "img": "http://apply.chinasummer.org/media/order/order_payment/test1.png",
                     "amount": 40000
                 },
-                "sales_man": null,
+                "coupons_info": [   # 优惠券使用信息
+                    {
+                        "id": 6,
+                        "amount": 3000,
+                        "coupon_code": "1FN760CKIW",
+                        "info": "圣诞节专用优惠券"
+                    }
+                ]
                 "operation_history": [      操作记录
                     {
                         "id": 1,

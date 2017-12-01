@@ -327,6 +327,10 @@ class AdminOrderSerializer(OrderSerializer):
             current_course_num = instance.usercourse_set.all().filter(
                 user=instance.user, project_id=chart['project']['id'], order=instance).count()
             chart['current_course_num'] = current_course_num
+        user_coupons = UserCoupon.objects.filter(coupon_id__in=json.loads(instance.coupon_list), user=instance.user)
+        data['coupons_info'] = [{'id': user_coupon.coupon.id, 'amount': user_coupon.coupon.amount,
+                                 'coupon_code': user_coupon.coupon.coupon_code, 'info': user_coupon.coupon.info}
+                                for user_coupon in user_coupons] if user_coupons else None
         return data
 
 

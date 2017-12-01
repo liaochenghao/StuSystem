@@ -91,7 +91,7 @@
                 }
             },
         ],
-        "payment_info": {
+        "payment_info": {       # 付款账号信息
             "id": 11,
             "account_number": "6228480481253312",
             "account_name": "李令",
@@ -106,7 +106,7 @@
             },
             "swift_code": null
         },
-        "order_payed_info": {
+        "order_payed_info": {       # 订单支付凭证信息
             "id": 32,
             "order": 118,
             "account_number": "6228451238457650123",
@@ -116,7 +116,14 @@
             "img": "http://apply.chinasummer.org/media/order/order_payment/test1.png",
             "amount": 40000
         },
-        "sales_man": null,
+        "coupons_info": [   # 优惠券使用信息
+                    {
+                        "id": 6,
+                        "amount": 3000,
+                        "coupon_code": "1FN760CKIW",
+                        "info": "圣诞节专用优惠券"
+                    }
+                ]
         "operation_history": [      操作记录
             {
                 "id": 1,
