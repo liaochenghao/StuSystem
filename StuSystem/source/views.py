@@ -41,14 +41,24 @@ class CampusViewSet(BaseViewSet):
 
 class ProjectViewSet(BaseViewSet):
     """项目视图"""
-    queryset = Project.objects.filter(is_active=True)
+    queryset = Project.objects.filter(is_active=True).select_related('campus').\
+        prefetch_related('courseproject_set', 'courseproject_set__course')
     serializer_class = ProjectSerializer
+    filter_fields = ['campus']
     permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
             self.pagination_class = None
         return super().get_queryset()
+
+    @detail_route()
+    def available_courses(self, request, pk):
+        """新建课程关联时允许关联的课程列表"""
+        instance = self.get_object()
+        related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
+        courses = Course.objects.exclude(id__in=related_course_ids)
+        return Response(CourseSerializer(courses, many=True).data)
 
     @detail_route()
     def related_courses_detail(self, request, pk):
@@ -75,7 +85,7 @@ class ProjectViewSet(BaseViewSet):
 
 
 class CourseViewSet(BaseViewSet):
-    queryset = Course.objects.filter(is_active=True)
+    queryset = Course.objects.filter(is_active=True).prefetch_related('courseproject_set', 'courseproject_set__project')
     serializer_class = CourseSerializer
     permission_classes = [StudentReadOnlyPermission]
 
@@ -83,6 +93,14 @@ class CourseViewSet(BaseViewSet):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
             self.pagination_class = None
         return super().get_queryset()
+
+    @detail_route()
+    def available_projects(self, request, pk):
+        """新建项目关联时允许操作的项目列表"""
+        instance = self.get_object()
+        available_projects_ids = instance.courseproject_set.filter(course=instance).values_list('project_id', flat=True)
+        projects = Project.objects.exclude(id__in=available_projects_ids)
+        return Response(ProjectSerializer(projects, many=True).data)
 
     @detail_route()
     def related_projects(self, request, pk):

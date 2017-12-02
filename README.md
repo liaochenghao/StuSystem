@@ -137,10 +137,11 @@
 - [项目列表--不分页接口](docs/project/project_list_none_pagination.md)
 - [项目详情](docs/project/project_detail.md)
 - [项目更新](docs/project/project_update.md)
+- [设置项目课程数量及相应费用](docs/project/project_course_fee.md)
 - [项目关联课程简介](docs/project/related_courses_info.md)
 - [项目关联课程详情](docs/project/related_courses_detail.md)
+- [新建课程关联时允许关联的课程列表](docs/project/available_courses.md)
 - [创建项目与课程的关联](docs/project/create_course_project.md)
-- [设置项目课程数量及相应费用](docs/project/project_course_fee.md)
 - [取消项目与课程间的关联关系](docs/project/project_course_cancel.md)
 
 **课程模块**:
@@ -150,6 +151,7 @@
 - [课程详情](docs/course/course_detail.md)
 - [课程更新](docs/course/course_update.md)
 - [课程关联项目](docs/course/course_related_projects.md)
+- [新建项目关联时允许操作的项目列表](docs/course/available_projects.md)
 
 **学生课程**:
 - [学生选课](docs/user_course/create_user_courses.md)
