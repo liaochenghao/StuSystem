@@ -87,12 +87,24 @@ class ProjectViewSet(BaseViewSet):
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.filter(is_active=True).prefetch_related('courseproject_set', 'courseproject_set__project')
     serializer_class = CourseSerializer
+    filter_fields = []
     permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
             self.pagination_class = None
         return super().get_queryset()
+
+    def list(self, request, *args, **kwargs):
+        project = self.request.query_params.get('project')
+        if project:
+            try:
+                project = int(project)
+            except:
+                raise exceptions.ValidationError('请传入正确的project参数')
+            course_ids = CourseProject.objects.filter(project_id=project).values_list('course_id', flat=True)
+            self.queryset = self.queryset.filter(id__in=course_ids)
+        return super().list(request, *args, **kwargs)
 
     @detail_route()
     def available_projects(self, request, pk):
