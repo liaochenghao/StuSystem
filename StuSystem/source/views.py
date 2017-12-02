@@ -42,7 +42,7 @@ class CampusViewSet(BaseViewSet):
 class ProjectViewSet(BaseViewSet):
     """项目视图"""
     queryset = Project.objects.filter(is_active=True).select_related('campus').\
-        prefetch_related('courseproject_set', 'courseproject_set__course')
+        prefetch_related('courseproject_set', 'courseproject_set__course').order_by('-id')
     serializer_class = ProjectSerializer
     filter_fields = ['campus']
     permission_classes = [StudentReadOnlyPermission]
