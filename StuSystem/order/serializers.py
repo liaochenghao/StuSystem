@@ -125,7 +125,7 @@ class OrderSerializer(serializers.ModelSerializer):
         data['charts'] = charts
         payment_info = PaymentAccountInfo.objects.filter(payment=instance.payment).first()
         data['payment_info'] = PaymentAccountInfoSerializer(payment_info).data if payment_info else None
-        order_payment = OrderPayment.objects.filter(order=instance).first()
+        order_payment = OrderPayment.objects.filter(order=instance).last()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
         user_info = UserInfo.objects.get(user=instance.user)
         data['user'] = {
