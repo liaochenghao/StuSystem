@@ -261,6 +261,7 @@ class AdminCourseViewSet(mixins.ListModelMixin,
 
 class AdminOrderViewSet(mixins.ListModelMixin,
                         mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
                         viewsets.GenericViewSet):
     """管理员订单管理"""
     queryset = Order.objects.all().select_related('user').prefetch_related('orderchartrelation_set__chart',
