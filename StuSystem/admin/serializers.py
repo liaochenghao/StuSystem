@@ -342,7 +342,7 @@ class AdminOrderSerializer(OrderSerializer):
                 status='USED' if status == 'CONFIRMED' else 'TO_USE')
         HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE', remark=remark,
                                      source_type='ORDER')
-        return
+        return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
