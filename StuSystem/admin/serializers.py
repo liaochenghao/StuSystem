@@ -324,7 +324,7 @@ class AdminOrderSerializer(OrderSerializer):
         if validated_data.get('status') == 'CONFIRMED':
             status = 'CONFIRMED'
             remark = '订单支付成功，已确认'
-        elif validated_data.get('status') == 'CONFIRMED_FAILED':
+        elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'
             remark = '订单支付失败，验证失败'
         else:
