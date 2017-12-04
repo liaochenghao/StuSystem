@@ -146,18 +146,6 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     filter_class = UserCourseFilterSet
     permission_classes = [BaseOperatePermission]
 
-    # @list_route(['PUT'])
-    # def add_score(self, request):
-    #     """添加成绩"""
-    #     serializer = AddUserCourseScoreSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     data = serializer.validated_data
-    #     self.queryset.filter(user=data['user'], course=data['course'], order=data['order'])\
-    #         .update(score=data['score'], score_grade=data['score_grade'], reporting_time=datetime.datetime.now(),
-    #                 credit_switch_status=data['credit_switch_status'])
-    #     instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
-    #     return Response(self.get_serializer(instance).data)
-
     @list_route(['GET', 'PUT'])
     def confirm_course(self, request):
         if request.method == 'GET':
