@@ -10,7 +10,7 @@ from operate_history.functions import HistoryFactory
 from source.models import Project, Campus, Course
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 
 from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, User
 from order.models import UserCourse, Order, ShoppingChart
@@ -319,6 +319,30 @@ class ChildUserSerializer(serializers.ModelSerializer):
 
 
 class AdminOrderSerializer(OrderSerializer):
+
+    def update(self, instance, validated_data):
+        if validated_data.get('status') == 'CONFIRMED':
+            status = 'CONFIRMED'
+            remark = '订单支付成功，已确认'
+        elif validated_data.get('status') == 'CONFIRMED_FAILED':
+            status = 'CONFIRMED_FAILED'
+            remark = '订单支付失败，验证失败'
+        else:
+            raise exceptions.ValidationError('请传入正确的status参数')
+        if instance.status != 'TO_CONFIRM':
+            raise exceptions.ValidationError('仅能操作待确认状态下的订单')
+        if instance.status != 'TO_CONFIRM':
+            raise exceptions.ValidationError('仅能操作待确认下的订单')
+        instance.status = status
+        instance.save()
+        if instance.coupon_list:
+            # 如果使用了优惠券，更新优惠券的状态
+            coupon_list = json.loads(instance.coupon_list)
+            UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
+                status='USED' if status == 'CONFIRMED' else 'TO_USE')
+        HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE', remark=remark,
+                                     source_type='ORDER')
+        return
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
