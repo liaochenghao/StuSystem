@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -92,7 +93,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'permissions.middleware.AuthorizeRequiredMiddleWare',
-    'permissions.middleware.BackendAPIRequestMiddleWare'
+    'permissions.middleware.BackendAPIRequestMiddleWare',
+    'permissions.middleware.AccessRecordMiddleWare'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -195,7 +197,6 @@ LOGGING = {
         }
     }
 }
-
 
 # 微信服务号配置
 WX_CONFIG = {

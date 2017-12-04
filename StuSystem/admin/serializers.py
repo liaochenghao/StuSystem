@@ -174,7 +174,7 @@ class AdminCourseSerializer(serializers.ModelSerializer):
 
 class AdminUserCourseSerializer(serializers.ModelSerializer):
     course = AdminCourseSerializer(read_only=True)
-    status = VerboseChoiceField(UserCourse.STATUS)
+    status = VerboseChoiceField(UserCourse.STATUS, required=False)
 
     def validate(self, attrs):
         if self.instance:

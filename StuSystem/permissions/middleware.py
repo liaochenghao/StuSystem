@@ -5,6 +5,7 @@ from re import compile
 from django.conf import settings
 from django.http.response import HttpResponse
 
+from StuSystem.settings import mongodb
 from authentication.functions import UserTicket
 
 EXEMPT_URLS = []
@@ -60,3 +61,10 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
         if path.split('/')[1] == 'order' and request.user.role != 'STUDENT':
             return HttpResponse(content=json.dumps(dict(code=403, msg='您没有执行该操作的权限')),
                                 content_type='application/json')
+
+
+class AccessRecordMiddleWare(MiddlewareMixin):
+    def process_request(self, request):
+        stu_system = mongodb['stu_system']
+        url = request.path_info.lstrip('')
+        print(url)

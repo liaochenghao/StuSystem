@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PUT/PATCH  /admin/user_course/
+    PUT/PATCH  /admin/user_course/[user_course_id]/
 ```
 
 **请求参数**:
@@ -23,4 +23,4 @@
 **失败返回**：
 ```
 
-```h
+```
