@@ -117,6 +117,7 @@
 
 **管理后台接口**：
 - [学生成绩列表](docs/admin/scores_list.md)
+- [更新学生成绩](docs/admin/user_course/user_course_add_scores.md)
 - [成绩单寄送地址](docs/admin/student_score_info.md)
 - [更新成绩单寄送信息](docs/admin/student_score_info_update.md)
 - [课程管理筛选条件获取(XXX)](docs/admin/user_filter_elements.md)

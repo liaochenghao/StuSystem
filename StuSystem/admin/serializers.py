@@ -121,7 +121,7 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['score', 'score_grade', 'user', 'order', 'course']
+        fields = ['score', 'score_grade', 'user', 'order', 'course', 'id']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

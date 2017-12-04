@@ -139,6 +139,7 @@ class SalesManViewSet(mixins.ListModelMixin,
 class AdminUserOrderViewSet(mixins.ListModelMixin,
                             mixins.CreateModelMixin,
                             mixins.RetrieveModelMixin,
+                            mixins.UpdateModelMixin,
                             viewsets.GenericViewSet):
     """学生成绩视图"""
     queryset = UserCourse.objects.all()
