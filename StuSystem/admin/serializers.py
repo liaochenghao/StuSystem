@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 
+from StuSystem import settings
 from admin.functions import get_channel_info
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
@@ -251,7 +252,6 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
         fields = ['id', 'post_datetime', 'post_channel', 'post_number', 'credit_switch_status', 'switch_img']
-        read_only_fields = ['switch_img']
 
     def validate(self, attrs):
         if self.instance:
@@ -265,6 +265,7 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
         data['user_info'] = user_info
+        data['switch_img'] = '%s%s%s' % (settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
         data['project'] = {'id': instance.project.id, 'name': instance.project.name}
