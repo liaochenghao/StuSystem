@@ -270,6 +270,11 @@ class AdminOrderViewSet(mixins.ListModelMixin,
     permission_classes = [BaseOperatePermission]
     filter_fields = ['currency', 'payment', 'status', 'user']
 
+    def get_queryset(self):
+        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+            self.pagination_class = None
+        return super().get_queryset()
+
     @detail_route(['put'])
     def confirm(self, request, pk):
         """订单支付成功与否确认"""
