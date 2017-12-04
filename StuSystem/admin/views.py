@@ -275,35 +275,6 @@ class AdminOrderViewSet(mixins.ListModelMixin,
             self.pagination_class = None
         return super().get_queryset()
 
-    @detail_route(['put'])
-    def confirm(self, request, pk):
-        """订单支付成功与否确认"""
-        instance = self.get_object()
-        if request.data.get('status') == 'CONFIRMED':
-            status = 'CONFIRMED'
-            remark = '订单支付成功，已确认'
-        elif request.data.get('status') == 'CONFIRMED_FAILED':
-            status = 'CONFIRMED_FAILED'
-            remark = '订单支付失败，验证失败'
-        else:
-            raise exceptions.ValidationError('请传入正确的status参数')
-        if instance.status != 'TO_CONFIRM':
-            raise exceptions.ValidationError('仅能操作待确认状态下的订单')
-        if request.user.role != 'ADMIN':
-            raise exceptions.ValidationError('仅管理员有权限确认订单')
-        if instance.status != 'TO_CONFIRM':
-            raise exceptions.ValidationError('仅能操作待确认下的订单')
-        instance.status = status
-        instance.save()
-        if instance.coupon_list:
-            # 如果使用了优惠券，更新优惠券的状态
-            coupon_list = json.loads(instance.coupon_list)
-            UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
-                status='USED' if status == 'CONFIRMED' else 'TO_USE')
-        HistoryFactory.create_record(operator=request.user, source=instance, key='UPDATE', remark=remark,
-                                     source_type='ORDER')
-        return Response(self.serializer_class(instance).data)
-
 
 class NavigationViewSet(mixins.ListModelMixin,
                         mixins.CreateModelMixin,
