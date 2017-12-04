@@ -100,6 +100,8 @@ class CourseViewSet(BaseViewSet):
         if project:
             try:
                 project = int(project)
+                if project == 0:
+                    return super().list(request, *args, **kwargs)
             except:
                 raise exceptions.ValidationError('请传入正确的project参数')
             course_ids = CourseProject.objects.filter(project_id=project).values_list('course_id', flat=True)
