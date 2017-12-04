@@ -91,22 +91,20 @@ class CourseViewSet(BaseViewSet):
     permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
+        queryset = self.queryset
         if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
             self.pagination_class = None
-        return super().get_queryset()
-
-    def list(self, request, *args, **kwargs):
         project = self.request.query_params.get('project')
         if project:
             try:
                 project = int(project)
                 if project == 0:
-                    return super().list(request, *args, **kwargs)
+                    return queryset
             except:
                 raise exceptions.ValidationError('请传入正确的project参数')
             course_ids = CourseProject.objects.filter(project_id=project).values_list('course_id', flat=True)
-            self.queryset = self.queryset.filter(id__in=course_ids)
-        return super().list(request, *args, **kwargs)
+            queryset = queryset.filter(id__in=course_ids)
+        return queryset
 
     @detail_route()
     def available_projects(self, request, pk):
