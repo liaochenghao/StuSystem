@@ -12,7 +12,7 @@ class HistoryFactory:
         return operate_handle.create_record()
 
     @staticmethod
-    def read_records(source_type, source,):
+    def read_records(source_type, source):
         """读取记录"""
         operator_handle = OperateHistoryHandle(source=source, source_type=source_type)
         return operator_handle.read_records()

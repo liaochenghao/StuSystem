@@ -34,10 +34,6 @@ class BaseOperateHistoryHandle:
         pass
 
 
-class BaseOperateFunction:
-    """"""
-
-
 class HistoryType:
     """日志类型"""
     @staticmethod
