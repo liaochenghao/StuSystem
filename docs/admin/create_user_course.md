@@ -10,7 +10,8 @@
     {
         "user": int,
         "course": int,
-        "order": int
+        "order": int,
+        "project": int
     }
 ```
 

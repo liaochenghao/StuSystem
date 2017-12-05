@@ -201,7 +201,7 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
-        fields = ['id', 'course', 'order', 'user']
+        fields = ['id', 'course', 'order', 'user', 'project']
 
     def validate(self, attrs):
         if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,

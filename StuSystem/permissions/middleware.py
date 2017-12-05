@@ -67,7 +67,7 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
 class AccessRecordMiddleWare(MiddlewareMixin):
     """接口访问记录"""
     def process_request(self, request):
-        stu_system = mongodb['stu_system']
+
         meta = request.META
         http_method = request.method
         get_data = request.GET
@@ -75,14 +75,23 @@ class AccessRecordMiddleWare(MiddlewareMixin):
         ticket = request.COOKIES.get('ticket')
         request_user_agent = meta.get('HTTP_USER_AGENT')
         url = request.path_info.lstrip('')
-        data = {
+        self.data = {
             'url': url,
             'method': http_method,
             'user_agent': request_user_agent,
-            'data': body_data if body_data else get_data,
+            'request_data': body_data if body_data else get_data,
             'ticket': ticket,
             'time': int(time.time()),
             'remote_addr': meta.get('REMOTE_ADDR'),
             'user_id': request.user.id
         }
+
+    def process_response(self, request, response):
+        stu_system = mongodb['stu_system']
+        data = self.data
+        data.update({
+            'status_code': response.status_code,
+            'response_data': response.data,
+            'process_time': int(time.time()) - data.get('time')})
         stu_system.access_records.insert(data)
+        return response
