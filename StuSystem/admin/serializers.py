@@ -205,10 +205,6 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         fields = ['id', 'course', 'order', 'user', 'project']
 
     def validate(self, attrs):
-        if not Order.objects.filter(user=attrs['user'], project=attrs['order'].project,
-                                    ).exists():
-            raise serializers.ValidationError('订单不存在')
-
         if attrs['order'] == 'TO_CONFIRM':
             raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
 
