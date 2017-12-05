@@ -5,11 +5,9 @@ import json
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail, User
-from coupon.models import UserCoupon
-from operate_history.functions import HistoryFactory
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
-from source.models import Campus, Course
+from source.models import Campus, Course, CourseProject
 from rest_framework import exceptions
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -19,7 +17,8 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     UserInfoRemarkSerializer, ConfirmCourseSerializer, CourseScoreSerializer, StudentScoreDetailSerializer, \
     CampusOverViewSerializer, SalesManSerializer, AdminUserCourseSerializer, \
     AdminCourseCreditSwitchSerializer, ConfirmUserCourseSerializer, ChildUserSerializer, AdminCourseSerializer, \
-    AdminCreateUserCourseSerializer, AdminUserCourseAddressSerializer, AdminOrderSerializer, FirstLevelSerializer
+    AdminCreateUserCourseSerializer, AdminUserCourseAddressSerializer, AdminOrderSerializer, FirstLevelSerializer, \
+    AdminAvailableCoursesSerializer
 from order.models import UserCourse, Order
 
 
@@ -224,22 +223,61 @@ class ChildUserViewSet(mixins.CreateModelMixin,
         return Response({'msg': '密码修改成功'})
 
 
-class AdminCourseViewSet(mixins.ListModelMixin,
-                         mixins.RetrieveModelMixin,
-                         mixins.UpdateModelMixin,
+class AdminCourseViewSet(mixins.DestroyModelMixin,
                          viewsets.GenericViewSet):
     """管理员选课"""
-    queryset = Course.objects.all()
+    queryset = UserCourse.objects.all()
     serializer_class = AdminCourseSerializer
     permission_classes = [BaseOperatePermission]
     filter_fields = ['user']
 
     @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
     def create_user_course(self, request):
+        """管理员为学生选课"""
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'msg': '选课成功'})
+
+    @list_route(['GET'], serializer_class=AdminAvailableCoursesSerializer)
+    def available_courses(self, request):
+        """学生当前订单，当前项目可以选择的课程"""
+        serializer = self.serializer_class(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user = data['user']
+        order = data['order']
+        project = data['project']
+        current_course_ids = UserCourse.objects.filter(user=user, order=order,
+                                                       project=project).values_list('course_id', flat=True)
+        available_courses = [{
+            'id': item.course.id,
+            'name': item.course.name,
+            'course_code': item.course.course_code
+        } for item in CourseProject.objects.filter(project=project).exclude(
+            course_id__in=current_course_ids)]
+        return Response(available_courses)
+
+    @list_route(serializer_class=AdminAvailableCoursesSerializer)
+    def current_courses(self, request):
+        """学生当前订单，当前项目已选课程"""
+        serializer = self.serializer_class(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user = data['user']
+        order = data['order']
+        project = data['project']
+        current_courses = [{
+            'id': item.id,
+            'project': project.id,
+            'order': order.id,
+            'course': {
+                'id': item.course.id,
+                'course_code': item.course.course_code,
+                'name': item.course.name
+            }
+        } for item in self.queryset.filter(user=user, order=order, project=project)]
+        return Response(current_courses)
 
     @list_route()
     def course_to_confirm_count(self, request):

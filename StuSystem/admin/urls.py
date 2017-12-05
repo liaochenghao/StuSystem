@@ -16,7 +16,7 @@ router.register('user_course', AdminUserOrderViewSet)                           
 router.register('user_course_address', AdminUserCourseAddressViewSet)           # 成绩单寄送地址
 router.register('course_credit_switch', AdminUserCourseCreditSwitchViewSet)     # 学分转换
 router.register('child_user', ChildUserViewSet)                                 # 子账号
-router.register('course', AdminCourseViewSet)                                   # 课程相关
+router.register('course', AdminCourseViewSet)                                   # 管理员为学生选课相关
 router.register('order', AdminOrderViewSet)                                     # 订单相关
 router.register('navigation', NavigationViewSet)                                # 导航项目
 

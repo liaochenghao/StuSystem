@@ -199,6 +199,7 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 
 
 class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
+    """管理员为学生选课"""
     class Meta:
         model = UserCourse
         fields = ['id', 'course', 'order', 'user', 'project']
@@ -221,6 +222,13 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
+
+
+class AdminAvailableCoursesSerializer(serializers.Serializer):
+    """管理员为学生选课可以选择的课程"""
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
 
 
 class ConfirmUserCourseSerializer(serializers.Serializer):

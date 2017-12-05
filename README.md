@@ -115,6 +115,12 @@
 **管理员学生成绩单寄送地址**：
 - [学生成绩寄送地址列表](docs/admin/user_course_address/user_course_address_list.md)
 
+**管理员为学生选课**：
+- [管理员为学生分配课程](docs/admin/course/create_user_course.md)
+- [当前订单, 当前项目下可以选择的课程](docs/admin/course/available_courses.md)
+- [当前订单, 当前项目下已经选择的课程](docs/admin/course/current_courses.md)
+- [删除已选的课程](docs/admin/course/user_course_delete.md)
+
 **管理后台接口**：
 - [学生成绩列表](docs/admin/scores_list.md)
 - [更新学生成绩](docs/admin/user_course/user_course_add_scores.md)
@@ -123,7 +129,7 @@
 - [课程管理筛选条件获取(XXX)](docs/admin/user_filter_elements.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
-- [管理员为学生分配课程](docs/admin/create_user_course.md)
+
 
 
 **校区模块**:

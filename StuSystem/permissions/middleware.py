@@ -91,7 +91,8 @@ class AccessRecordMiddleWare(MiddlewareMixin):
         data = self.data
         data.update({
             'status_code': response.status_code,
-            'response_data': response.data,
             'process_time': int(time.time()) - data.get('time')})
+        if response.status_code == 200:
+            data.update({'response_data': response.data})
         stu_system.access_records.insert(data)
         return response
