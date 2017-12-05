@@ -219,7 +219,7 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         if UserCourse.objects.filter(order=attrs['order'], project=attrs['project'], user=attrs['user']).count() >= chart.course_num:
             raise serializers.ValidationError('已达到订单最大选课数，不能再继续选课')
 
-        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
+        if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'], project=attrs['project'],
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
