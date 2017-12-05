@@ -82,6 +82,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             'method': http_method,
             'user_agent': request_user_agent,
             'request_data': body_data if body_data else get_data,
+            'request_module': url.split('/')[1],
             'ticket': ticket,
             'time': int(time.time()),
             'remote_addr': meta.get('REMOTE_ADDR'),

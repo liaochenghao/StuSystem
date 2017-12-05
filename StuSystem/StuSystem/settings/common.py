@@ -108,7 +108,7 @@ CORS_ALLOW_METHODS = (
     'OPTIONS'
 )
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ('Klicen-Agent', 'Content-Type', 'X-Requested-With',)
+CORS_ALLOW_HEADERS = ('Content-Type', 'X-Requested-With',)
 
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databasesREST_FRAMEWORK = {
 REST_FRAMEWORK = {
@@ -202,6 +202,10 @@ LOGGING = {
 WX_CONFIG = {
     'APP_ID': 'wx6cdbbafe0da85703',
     'APP_SECRET': '73c8e307c09027162840705e7496ed32'
+}
+
+MONGODB_CONFIG = {
+
 }
 
 LANGUAGE_CODE = 'zh-cn'
