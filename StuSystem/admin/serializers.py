@@ -231,6 +231,17 @@ class AdminAvailableCoursesSerializer(serializers.Serializer):
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
 
+    def validate(self, attrs):
+        user = attrs['user']
+        order = attrs['order']
+        project = attrs['project']
+        chart = ShoppingChart.objects.filter(orderchartrelation__order=order, project=project).first()
+        if not chart:
+            raise serializers.ValidationError('无效的chart')
+        if UserCourse.objects.filter(user=user, project=project, order=order).count() >= chart.course_num:
+            raise serializers.ValidationError('已打到当前订单, 当前项目选课最大状态, 无法获取可选课程列表')
+        return attrs
+
 
 class ConfirmUserCourseSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
