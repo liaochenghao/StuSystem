@@ -393,7 +393,3 @@ class FirstLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = FirstLevel
         fields = ['id', 'name', 'key', 'second_levels']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        return data
