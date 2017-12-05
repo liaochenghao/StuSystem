@@ -255,7 +255,7 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.instance:
-            if not (self.instance.confirm_img and (attrs.get('status') == 'PASS')):
+            if not (self.instance.confirm_img and (self.instance.status == 'PASS')):
                 raise serializers.ValidationError('审课证明未确认，不能更改学分转换状态')
             if not self.instance.switch_img:
                 raise serializers.ValidationError('学分转换证明图片未上传，不能更改学分转换状态')

@@ -83,7 +83,6 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             'ticket': ticket,
             'time': int(time.time()),
             'remote_addr': meta.get('REMOTE_ADDR'),
-            'remote_host': meta.get('REMOTE_HOST'),
             'user_id': request.user.id
         }
         stu_system.access_records.insert(data)
