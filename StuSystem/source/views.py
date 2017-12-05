@@ -8,7 +8,7 @@ from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
-    UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer
+    UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer
 from order.models import Order, UserCourse, ShoppingChart, OrderChartRelation
 
 
@@ -58,6 +58,19 @@ class ProjectViewSet(BaseViewSet):
         instance = self.get_object()
         related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
         courses = Course.objects.exclude(id__in=related_course_ids)
+        return Response(CourseSerializer(courses, many=True).data)
+
+    @detail_route(serializer_class=StudentAvailableCoursesSerializer)
+    def student_available_courses(self, request, pk):
+        """根据学生订单，项目获取允许选课列表"""
+        serializer = self.serializer_class(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        order = serializer.validated_data['order']
+        instance = self.get_object()
+        current_course_ids = UserCourse.objects.filter(user=request.user, project=instance, order=order
+                                                       ).values_list('course_id', flat=True)
+        related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
+        courses = Course.objects.filter(id__in=related_course_ids).exclude(id__in=current_course_ids)
         return Response(CourseSerializer(courses, many=True).data)
 
     @detail_route()

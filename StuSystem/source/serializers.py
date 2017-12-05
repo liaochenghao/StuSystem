@@ -107,6 +107,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         return data
 
 
+class StudentAvailableCoursesSerializer(serializers.Serializer):
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+
+
 class UpdateProjectCourseFeeSerializer(serializers.Serializer):
     project_fees = serializers.ListField()
 

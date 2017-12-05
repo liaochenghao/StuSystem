@@ -100,6 +100,5 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             })
             collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
             stu_system.get_collection(collection_name).insert(data)
-        except Exception as e:
-            print(e)
-        return response
+        finally:
+            return response
