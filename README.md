@@ -95,7 +95,7 @@
 - [新建课程关联时允许关联的课程列表](docs/project/available_courses.md)
 - [创建项目与课程的关联](docs/project/create_course_project.md)
 - [取消项目与课程间的关联关系](docs/project/project_course_cancel.md)
-- [根据学生订单，项目获取允许选课列表()](docs/project/student_available_courses.md)
+- [根据学生订单，项目获取允许选课列表](docs/project/student_available_courses.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)
