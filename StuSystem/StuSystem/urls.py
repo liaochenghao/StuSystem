@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^source/', include('source.urls')),  # 课程模块
     url(r'^market/', include('market.urls')),  # 市场推广模块
     url(r'^order/', include('order.urls')),  # 订单模块
-    url(r'^', index.view)  # index页面
+    # url(r'^', index.view)  # index页面
 ]
