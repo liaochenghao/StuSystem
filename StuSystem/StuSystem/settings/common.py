@@ -93,8 +93,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'permissions.middleware.AuthorizeRequiredMiddleWare',
-    'permissions.middleware.BackendAPIRequestMiddleWare',
-    'permissions.middleware.AccessRecordMiddleWare'
+    'permissions.middleware.AccessRecordMiddleWare',
+    'permissions.middleware.BackendAPIRequestMiddleWare'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

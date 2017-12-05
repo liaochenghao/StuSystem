@@ -3,6 +3,8 @@ import json
 from re import compile
 
 import time
+
+import datetime
 from django.conf import settings
 from django.http.response import HttpResponse
 
@@ -42,12 +44,12 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
         if not ticket:
             ticket = request.GET.get('ticket')
         if not ticket:
-            return HttpResponse(content=json.dumps(dict(code=401, msg='未登陆')),
+            return HttpResponse(content=json.dumps(dict(code=401, msg='未登录')),
                                 content_type='application/json')
 
         user = UserTicket.check_ticket(ticket)
         if not user:
-            return HttpResponse(content=json.dumps(dict(code=401, msg='未登陆')),
+            return HttpResponse(content=json.dumps(dict(code=401, msg='未登录')),
                                 content_type='application/json')
         request.user = user
 
@@ -92,8 +94,11 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             data = self.data
             data.update({
                 'status_code': response.status_code,
-                'process_time': int(time.time()) - data.get('time')})
-            data.update({'response_data': response.data})
-            stu_system.access_records.insert(data)
-        finally:
-            return response
+                'process_time': int(time.time()) - data.get('time'),
+                'response_content': json.loads(response.content)
+            })
+            collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
+            stu_system.get_collection(collection_name).insert(data)
+        except Exception as e:
+            print(e)
+        return response
