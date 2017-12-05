@@ -87,12 +87,14 @@ class AccessRecordMiddleWare(MiddlewareMixin):
         }
 
     def process_response(self, request, response):
-        stu_system = mongodb['stu_system']
-        data = self.data
-        data.update({
-            'status_code': response.status_code,
-            'process_time': int(time.time()) - data.get('time')})
-        if response.status_code == 200:
-            data.update({'response_data': response.data})
-        stu_system.access_records.insert(data)
-        return response
+        try:
+            stu_system = mongodb['stu_system']
+            data = self.data
+            data.update({
+                'status_code': response.status_code,
+                'process_time': int(time.time()) - data.get('time')})
+            if response.status_code == 200:
+                data.update({'response_data': response.data})
+            stu_system.access_records.insert(data)
+        finally:
+            return response
