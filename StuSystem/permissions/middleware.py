@@ -2,6 +2,7 @@
 import json
 from re import compile
 
+import time
 from django.conf import settings
 from django.http.response import HttpResponse
 
@@ -64,7 +65,25 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
 
 
 class AccessRecordMiddleWare(MiddlewareMixin):
+    """接口访问记录"""
     def process_request(self, request):
         stu_system = mongodb['stu_system']
+        meta = request.META
+        http_method = request.method
+        get_data = request.GET
+        body_data = json.loads(request.body) if request.body else None
+        ticket = request.COOKIES.get('ticket')
+        request_user_agent = meta.get('HTTP_USER_AGENT')
         url = request.path_info.lstrip('')
-        print(url)
+        data = {
+            'url': url,
+            'method': http_method,
+            'user_agent': request_user_agent,
+            'data': body_data if body_data else get_data,
+            'ticket': ticket,
+            'time': int(time.time()),
+            'remote_addr': meta.get('REMOTE_ADDR'),
+            'remote_host': meta.get('REMOTE_HOST'),
+            'user_id': request.user.id
+        }
+        stu_system.access_records.insert(data)
