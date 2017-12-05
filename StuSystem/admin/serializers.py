@@ -211,7 +211,12 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         if attrs['order'] == 'TO_PAY':
             raise serializers.ValidationError('订单尚未支付')
 
-        if UserCourse.objects.filter(order=attrs['order']).count() >= int(attrs['order'].course_num):
+        chart = ShoppingChart.objects.filter(orderchartrelation__order=attrs['order'], project=attrs['project']).first()
+
+        if not chart:
+            raise serializers.ValidationError('未找到有效的chart')
+
+        if UserCourse.objects.filter(order=attrs['order']).count() >= chart.course_num:
             raise serializers.ValidationError('已达到订单最大选课数，不能再继续选课')
 
         if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'],
