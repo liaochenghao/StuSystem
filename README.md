@@ -48,7 +48,7 @@
 - [管理后台导航菜单栏](docs/common/desktop_navigation.md)
 
 **管理后台接口文档**:
-- [管理后台接口文档](docs/admin/admin.md)
+- [管理后台接口文档](docs/admin.md)
 
 **用户模块**：
 - [登录接口](docs/authentication/user_login.md)
@@ -123,18 +123,3 @@
 - [获取当前用户所有订单](docs/order/user_order_list.md)
 - [获取当前用户所有订单，选课信息，审课](docs/order/user_order_course.md)
 - [订单币种及支付方式](docs/order/order_currency_payment.md)
-
-
-**渠道模块**：
-- [创建推广渠道](docs/channel/channel_create.md)
-- [推广渠道列表](docs/channel/channel_list.md)
-- [推广渠道详情](docs/channel/channel_detail.md)
-- [推广渠道更新](docs/channel/channel_update.md)
-
-
-**子账号模块**：
-- [子账号列表](docs/child_user/child_user_list.md)
-- [子账号创建](docs/child_user/child_user_create.md)
-- [子账号详情](docs/child_user/child_user_detail.md)
-- [子账号更新](docs/child_user/child_user_update.md)
-- [修改密码](docs/child_user/password_update.md)

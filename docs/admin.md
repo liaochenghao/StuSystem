@@ -55,3 +55,18 @@
 - [课程管理筛选条件获取(XXX)](docs/admin/user_filter_elements.md)
 - [产品中心/学生情况概览](docs/statistics/students_overview.md)
 - [产品中心/校区情况概览](docs/statistics/campus_overview.md)
+
+
+**渠道模块**：
+- [创建推广渠道](docs/channel/channel_create.md)
+- [推广渠道列表](docs/channel/channel_list.md)
+- [推广渠道详情](docs/channel/channel_detail.md)
+- [推广渠道更新](docs/channel/channel_update.md)
+
+
+**子账号模块**：
+- [子账号列表](docs/child_user/child_user_list.md)
+- [子账号创建](docs/child_user/child_user_create.md)
+- [子账号详情](docs/child_user/child_user_detail.md)
+- [子账号更新](docs/child_user/child_user_update.md)
+- [修改密码](docs/child_user/password_update.md)
