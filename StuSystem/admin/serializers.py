@@ -180,6 +180,8 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
         if self.instance:
             if self.instance.status == 'TO_UPLOAD':
                 raise serializers.ValidationError('用户还未上传审课图片，不能填入成绩')
+            if self.instance.status == 'TO_CONFIRM':
+                raise serializers.ValidationError('未审核学生上传的审课图片，不能填入成绩')
             # if self.instance.status == 'TO_UPLOAD' and (
             #         attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
             #     raise serializers.ValidationError('用户还未上传审课图片，不能更改审课状态为通过或不通过')
