@@ -84,7 +84,7 @@ class UserCourse(models.Model):
     project = models.ForeignKey(Project)
     create_time = models.DateTimeField('创建时间', auto_now=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
-    score = models.IntegerField('课程成绩分数', default=0)
+    score = models.IntegerField('课程成绩分数')
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_img = models.ImageField('审课照片', upload_to='course/confirm_img', null=True)
