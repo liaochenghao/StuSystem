@@ -314,13 +314,5 @@ class NavigationViewSet(mixins.ListModelMixin,
     permission_classes = [BaseOperatePermission]
 
     def get_queryset(self):
-        menus = {
-            'ADMIN': ['CONSULTATION_CENTER', 'FINANCIAL_CENTER', 'PRODUCT_CENTER', 'MARKET_CENTER', 'SALES_CENTER',
-                      'SYSTEM_CENTER'],
-            'FINANCE': ['CONSULTATION_CENTER', 'FINANCIAL_CENTER'],
-            'PRODUCT': ['PRODUCT_CENTER'],
-            'MARKET': ['MARKET_CENTER'],
-            'SALES': ['SALES_CENTER']
-        }
-        queryset = self.queryset.filter(key__in=menus.get(self.request.user.role))
+        queryset = self.queryset.filter(firstlevelrole__role=self.request.user.role)
         return queryset

@@ -62,12 +62,20 @@ class SecondLevel(models.Model):
     """导航栏二级目录"""
     name = models.CharField('二级目录名称', max_length=20)
     key = models.CharField('二级目录key', max_length=30)
-    pre = models.ForeignKey(FirstLevel, related_name='second_levels')
     rank = models.IntegerField('排序', null=True)
+    icon_type = models.CharField('图标类型', max_length=30)
 
     class Meta:
         db_table = 'second_level'
-        unique_together = ['pre', 'key']
+
+
+class FirstSecondRelation(models.Model):
+    """一二级目录关系"""
+    first = models.ForeignKey(FirstLevel)
+    second = models.ForeignKey(SecondLevel)
+
+    class Meta:
+        db_table = 'first_second_relation'
 
 
 class SecondLevelRole(models.Model):

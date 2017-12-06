@@ -383,13 +383,19 @@ class SecondLevelSerializer(serializers.ModelSerializer):
     """二级菜单Serializer"""
     class Meta:
         model = SecondLevel
-        fields = ['id', 'name', 'key']
+        fields = ['id', 'name', 'key', 'icon_type']
 
 
 class FirstLevelSerializer(serializers.ModelSerializer):
     """一级菜单serializer"""
-    second_levels = SecondLevelSerializer(many=True, read_only=True)
 
     class Meta:
         model = FirstLevel
-        fields = ['id', 'name', 'key', 'second_levels']
+        fields = ['id', 'name', 'key']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        second_levels = SecondLevel.objects.filter(secondlevelrole__role=self.context['request'].user.role,
+                                                   firstsecondrelation__first=instance).order_by('id')
+        data['second_levels'] = SecondLevelSerializer(second_levels, many=True).data
+        return data
