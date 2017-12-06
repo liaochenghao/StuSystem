@@ -23,6 +23,11 @@ class BaseViewSet(mixins.CreateModelMixin,
     queryset = None
     serializer_class = None
 
+    def get_queryset(self):
+        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+            self.pagination_class = None
+        return super().get_queryset()
+
 
 class CampusViewSet(BaseViewSet):
     """
@@ -31,11 +36,6 @@ class CampusViewSet(BaseViewSet):
     queryset = Campus.objects.filter(is_active=True)
     serializer_class = CampusSerializer
     permission_classes = [StudentReadOnlyPermission]
-
-    def get_queryset(self):
-        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
-            self.pagination_class = None
-        return super().get_queryset()
 
     @detail_route()
     def all_projects(self, request, pk):
@@ -51,11 +51,6 @@ class ProjectViewSet(BaseViewSet):
     serializer_class = ProjectSerializer
     filter_fields = ['campus']
     permission_classes = [StudentReadOnlyPermission]
-
-    def get_queryset(self):
-        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
-            self.pagination_class = None
-        return super().get_queryset()
 
     @detail_route()
     def available_courses(self, request, pk):
@@ -109,9 +104,7 @@ class CourseViewSet(BaseViewSet):
     permission_classes = [StudentReadOnlyPermission]
 
     def get_queryset(self):
-        queryset = self.queryset
-        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
-            self.pagination_class = None
+        queryset = super().get_queryset()
         project = self.request.query_params.get('project')
         if project:
             try:
