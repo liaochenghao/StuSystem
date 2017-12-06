@@ -45,8 +45,17 @@ class FirstLevel(models.Model):
     rank = models.IntegerField('排序', null=True)
 
     class Meta:
-        db_table = 'common_first_level'
+        db_table = 'first_level'
         unique_together = ['key']
+
+
+class FirstLevelRole(models.Model):
+    """一级目录与角色间关系"""
+    pre = models.ForeignKey(FirstLevel)
+    role = models.CharField('角色名称', choices=User.ROLE, max_length=30)
+
+    class Meta:
+        db_table = 'first_level_role'
 
 
 class SecondLevel(models.Model):
@@ -57,5 +66,14 @@ class SecondLevel(models.Model):
     rank = models.IntegerField('排序', null=True)
 
     class Meta:
-        db_table = 'common_second_level'
+        db_table = 'second_level'
         unique_together = ['pre', 'key']
+
+
+class SecondLevelRole(models.Model):
+    """二级目录与角色间关系"""
+    pre = models.ForeignKey(SecondLevel)
+    role = models.CharField('角色名称', choices=User.ROLE, max_length=30)
+
+    class Meta:
+        db_table = 'second_level_role'
