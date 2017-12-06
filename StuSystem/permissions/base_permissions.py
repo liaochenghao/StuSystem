@@ -35,6 +35,8 @@ class CreateCouponOperatePermission(BaseOperatePermission):
     def operate_permission(self, request, view):
         if request.user.role in ['ADMIN', 'FINANCE']:
             return True
+        elif request.user.role in ['SALES'] and request.method in self.SAFE_METHODS:
+            return True
         else:
             return False
 
