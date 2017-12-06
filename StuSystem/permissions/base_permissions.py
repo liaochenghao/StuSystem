@@ -21,15 +21,6 @@ class BaseOperatePermission(permissions.BasePermission):
         return False
 
 
-class AdminOperatePermission(BaseOperatePermission):
-    """管理员操作权限"""
-    def operate_permission(self, request, view):
-        if request.user.role == 'ADMIN':
-            return True
-        else:
-            return False
-
-
 class CreateCouponOperatePermission(BaseOperatePermission):
     """创建优惠券操作权限"""
     def operate_permission(self, request, view):
@@ -50,16 +41,6 @@ class UserCouponOperatePermission(BaseOperatePermission):
             return False
 
 
-class StudentOperatePermission(BaseOperatePermission):
-    """学生操作权限"""
-
-    def operate_permission(self, request, view):
-        if request.user.role == 'STUDENT':
-            return True
-        else:
-            return False
-
-
 class StudentReadOnlyPermission(BaseOperatePermission):
     """学生只读操作权限"""
 
@@ -71,41 +52,3 @@ class StudentReadOnlyPermission(BaseOperatePermission):
                 return False
         else:
             return True
-
-
-class MarketOperatePermission(BaseOperatePermission):
-    """市场部操作权限"""
-
-    def operate_permission(self, request, view):
-        if request.user.role == 'MARKET':
-            return True
-        else:
-            return False
-
-
-class ProductOperatePermission(BaseOperatePermission):
-    """产品部操作权限"""
-    def operate_permission(self, request, view):
-        if request.user.role == 'PRODUCT':
-            return True
-        else:
-            return False
-
-
-class FinanceOperatePermission(BaseOperatePermission):
-    """财务部操作权限"""
-
-    def operate_permission(self, request, view):
-        if request.user.role == 'FINANCE':
-            return True
-        else:
-            return False
-
-
-class SalesOperatePermission(BaseOperatePermission):
-    """销售操作权限"""
-    def operate_permission(self, request, view):
-        if request.user.role == 'SALES':
-            return True
-        else:
-            return False
