@@ -63,7 +63,7 @@ class SecondLevel(models.Model):
     name = models.CharField('二级目录名称', max_length=20)
     key = models.CharField('二级目录key', max_length=30)
     rank = models.IntegerField('排序', null=True)
-    icon_type = models.CharField('图标类型', max_length=30)
+    icon = models.CharField('图标类型', max_length=30)
 
     class Meta:
         db_table = 'second_level'

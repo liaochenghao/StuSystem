@@ -383,7 +383,7 @@ class SecondLevelSerializer(serializers.ModelSerializer):
     """二级菜单Serializer"""
     class Meta:
         model = SecondLevel
-        fields = ['id', 'name', 'key', 'icon_type']
+        fields = ['id', 'name', 'key', 'icon']
 
 
 class FirstLevelSerializer(serializers.ModelSerializer):
