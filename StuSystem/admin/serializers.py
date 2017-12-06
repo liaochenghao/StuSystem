@@ -238,17 +238,6 @@ class AdminAvailableCoursesSerializer(serializers.Serializer):
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
 
-    # def validate(self, attrs):
-    #     user = attrs['user']
-    #     order = attrs['order']
-    #     project = attrs['project']
-    #     chart = ShoppingChart.objects.filter(orderchartrelation__order=order, project=project).first()
-    #     if not chart:
-    #         raise serializers.ValidationError('无效的chart')
-    #     if UserCourse.objects.filter(user=user, project=project, order=order).count() >= chart.course_num:
-    #         raise serializers.ValidationError('已达到当前订单, 当前项目选课最大状态, 无法获取可选课程列表')
-    #     return attrs
-
 
 class ConfirmUserCourseSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -282,10 +271,12 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.instance:
-            if not (self.instance.confirm_img and (self.instance.status == 'PASS')):
-                raise serializers.ValidationError('审课证明未确认，不能更改学分转换状态')
-            if not self.instance.switch_img:
-                raise serializers.ValidationError('学分转换证明图片未上传，不能更改学分转换状态')
+            if self.instance.status == 'TO_UPLOAD':
+                raise serializers.ValidationError('用户还未上传审课图片，更新学分转换进度')
+            if self.instance.status == 'TO_CONFIRM':
+                raise serializers.ValidationError('未审核学生上传的审课图片，更新学分转换进度')
+            if self.instance.status == 'NOPASS':
+                raise serializers.ValidationError('学生的审课图片不通过，更新学分转换进度')
         return attrs
 
     def to_representation(self, instance):
