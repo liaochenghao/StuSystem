@@ -178,11 +178,13 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.instance:
-            if self.instance.status == 'TO_UPLOAD' and (
-                    attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
-                raise serializers.ValidationError('用户还未上传审课图片，不能更改审课状态为通过或不通过')
-            if self.instance.status == 'TO_UPLOAD' and attrs.get('status') == 'TO_CONFIRM':
-                raise serializers.ValidationError('用户还未上传审课图片，管理员不能更改状态为待审核')
+            if self.instance.status == 'TO_UPLOAD':
+                raise serializers.ValidationError('用户还未上传审课图片，不能填入成绩')
+            # if self.instance.status == 'TO_UPLOAD' and (
+            #         attrs.get('status') == 'PASS' or attrs.get('status') == 'NOPASS'):
+            #     raise serializers.ValidationError('用户还未上传审课图片，不能更改审课状态为通过或不通过')
+            # if self.instance.status == 'TO_UPLOAD' and attrs.get('status') == 'TO_CONFIRM':
+            #     raise serializers.ValidationError('用户还未上传审课图片，管理员不能更改状态为待审核')
         return attrs
 
     class Meta:
