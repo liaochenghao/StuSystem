@@ -1,6 +1,5 @@
 # coding: utf-8
 """管理后台操作权限"""
-from authentication.models import User
 from rest_framework import permissions
 
 
