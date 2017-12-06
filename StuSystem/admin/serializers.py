@@ -1,4 +1,5 @@
 # coding: utf-8
+import datetime
 import json
 
 from StuSystem import settings
@@ -190,6 +191,11 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
         model = UserCourse
         fields = ['id', 'order', 'course', 'score', 'score_grade', 'reporting_time', 'confirm_img', 'status']
         read_only_fields = ['order', 'confirm_img']
+
+    def update(self, instance, validated_data):
+        if validated_data.get('score') or validated_data.get('score_grade'):
+            validated_data.update({'reporting_time': datetime.datetime.now()})
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
