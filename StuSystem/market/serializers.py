@@ -14,7 +14,6 @@ class SalesManSerializer(serializers.ModelSerializer):
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-    # sales_man = SalesManSerializer()
 
     class Meta:
         model = Channel
