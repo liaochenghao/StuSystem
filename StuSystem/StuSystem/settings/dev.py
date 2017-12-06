@@ -26,11 +26,6 @@ MONGODB_CONFIG = {
     'user': 'stu_system',
     'password': 'qwe=-00.3690'
 }
-url = "mongodb://%s:%s@%s:%s/stu_system?authMechanism=SCRAM-SHA-1" % (quote_plus(MONGODB_CONFIG.get('user')),
-                                                                      quote_plus(MONGODB_CONFIG.get('password')),
-                                                                      quote_plus(MONGODB_CONFIG.get('host')),
-                                                                      MONGODB_CONFIG.get('port'))
-mongodb = MongoClient(url)
 
 DOMAIN = 'http://42.51.8.152:8002'
 MEDIA_ROOT = '/home/qiulei/workplace/StuSystem/media'
