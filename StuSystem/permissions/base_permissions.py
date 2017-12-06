@@ -30,6 +30,24 @@ class AdminOperatePermission(BaseOperatePermission):
             return False
 
 
+class CreateCouponOperatePermission(BaseOperatePermission):
+    """创建优惠券操作权限"""
+    def operate_permission(self, request, view):
+        if request.user.role in ['ADMIN', 'FINANCE']:
+            return True
+        else:
+            return False
+
+
+class UserCouponOperatePermission(BaseOperatePermission):
+    """分配优惠券操作权限"""
+    def operate_permission(self, request, view):
+        if request.user.role in ['ADMIN', 'SALES']:
+            return True
+        else:
+            return False
+
+
 class StudentOperatePermission(BaseOperatePermission):
     """学生操作权限"""
 
