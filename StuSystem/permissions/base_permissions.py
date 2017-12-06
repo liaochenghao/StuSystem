@@ -6,7 +6,6 @@ from rest_framework import permissions
 
 class BaseOperatePermission(permissions.BasePermission):
     """基础操作权限"""
-    roles = User.ROLE
     SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
 
     def operate_permission(self, request, view):
