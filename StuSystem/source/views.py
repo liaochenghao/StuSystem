@@ -32,6 +32,11 @@ class CampusViewSet(BaseViewSet):
     serializer_class = CampusSerializer
     permission_classes = [StudentReadOnlyPermission]
 
+    def get_queryset(self):
+        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+            self.pagination_class = None
+        return super().get_queryset()
+
     @detail_route()
     def all_projects(self, request, pk):
         instance = self.get_object()
