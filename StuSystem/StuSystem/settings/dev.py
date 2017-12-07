@@ -1,7 +1,4 @@
 from StuSystem.settings.common import *
-from urllib.parse import quote_plus
-
-from pymongo import MongoClient
 # override common
 
 DEBUG = True
