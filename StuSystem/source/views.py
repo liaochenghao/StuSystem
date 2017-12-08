@@ -216,11 +216,9 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         :return:
         """
         res = []
-        chart_ids = OrderChartRelation.objects.filter(order__user=self.request.user, order__status='CONFIRMED').\
-            values_list('chart', flat=True)
         payed_orders = Order.objects.filter(user=self.request.user, status='CONFIRMED')
         for order in payed_orders:
-            charts = ShoppingChart.objects.filter(id__in=chart_ids)
+            charts = ShoppingChart.objects.filter(orderchartrelation__order=order, orderchartrelation__order__status='CONFIRMED')
             for chart in charts:
                 current_courses = UserCourse.objects.filter(user=self.request.user, order=order, project=chart.project,
                                                             course__courseproject__project=chart.project). \
@@ -265,22 +263,25 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                         })
                     current_courses_list.append(current_course_item)
 
-                current_course_num = len(current_courses)
-                res_item = {
-                    'project': {
-                        'id': chart.project.id,
-                        'name': chart.project.name
-                    },
-                    'order': {
-                        'id': order.id
-                    },
-                    'chart': chart.id,
-                    'current_courses': current_courses_list
-                }
-                if key == 'current_courses_info':
-                    res_item.update({
-                        'course_num': chart.course_num,
-                        'current_course_num': current_course_num
-                    })
-                res.append(res_item)
+                if len(current_courses_list) == 0 and key != 'current_courses_info':
+                    pass
+                else:
+                    current_course_num = len(current_courses)
+                    res_item = {
+                        'project': {
+                            'id': chart.project.id,
+                            'name': chart.project.name
+                        },
+                        'order': {
+                            'id': order.id
+                        },
+                        'chart': chart.id,
+                        'current_courses': current_courses_list
+                    }
+                    if key == 'current_courses_info':
+                        res_item.update({
+                            'course_num': chart.course_num,
+                            'current_course_num': current_course_num
+                        })
+                    res.append(res_item)
         return res
