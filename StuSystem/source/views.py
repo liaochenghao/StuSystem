@@ -200,8 +200,6 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                                                     course=serializer.validated_data['course'],
                                                     order=serializer.validated_data['order'],
                                                     project=serializer.validated_data['project']).first()
-            if not user_course:
-                raise exceptions.ValidationError('出入参数有误')
             if user_course and api_key == 'course_credit_switch':
                 user_course.switch_img = serializer.validated_data['switch_img']
                 user_course.credit_switch_status = 'SUCCESS'
