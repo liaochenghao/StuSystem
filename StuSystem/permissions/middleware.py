@@ -8,7 +8,7 @@ import datetime
 from django.conf import settings
 from django.http.response import HttpResponse
 
-from utils.mongodb import Mongodb
+from utils import stu_system
 from authentication.functions import UserTicket
 
 EXEMPT_URLS = []
@@ -91,7 +91,6 @@ class AccessRecordMiddleWare(MiddlewareMixin):
 
     def process_response(self, request, response):
         try:
-            stu_system = Mongodb().stu_system()
             data = self.data
             data.update({
                 'status_code': response.status_code,

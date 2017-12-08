@@ -10,21 +10,20 @@ from StuSystem.settings import MONGODB_CONFIG
 
 
 class Mongodb(metaclass=SingleTon):
+    user = MONGODB_CONFIG.get('user')
+    password = MONGODB_CONFIG.get('password')
+    host = MONGODB_CONFIG.get('host')
+    port = MONGODB_CONFIG.get('port')
+    url = "mongodb://%s:%s@%s:%s/stu_system?authMechanism=SCRAM-SHA-1" % (quote_plus(user),
+                                                                          quote_plus(password),
+                                                                          quote_plus(host),
+                                                                          port)
 
-    def __int__(self):
-        self._user = MONGODB_CONFIG.get('user')
-        self._password = MONGODB_CONFIG.get('password')
-        self._host = MONGODB_CONFIG.get('host')
-        self._port = MONGODB_CONFIG.get('port')
-        self._url = "mongodb://%s:%s@%s:%s/stu_system?authMechanism=SCRAM-SHA-1" % (quote_plus(self._user),
-                                                                                    quote_plus(self._password),
-                                                                                    quote_plus(self._host),
-                                                                                    self._port)
-
-    def __connection(self):
-        mongodb = MongoClient(self._url)
+    def connection(self):
+        mongodb = MongoClient(self.url)
         return mongodb
 
+    @property
     def stu_system(self):
         """返回stu_system db 实例"""
-        return self.__connection()['stu_system']
+        return self.connection()['stu_system']
