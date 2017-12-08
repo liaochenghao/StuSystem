@@ -57,7 +57,7 @@
 
 **请求地址**:
 ```
-    PUT     /course/[course_id]/upload_confirm_img/
+    PUT     source/user_course/student_confirm_course/
 ```
 
 **请求参数**:
