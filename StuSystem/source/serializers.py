@@ -231,8 +231,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
-    confirm_img = Base64ImageField()
-    switch_img = Base64ImageField()
+    confirm_img = Base64ImageField(required=False)
+    switch_img = Base64ImageField(required=False)
     credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS, required=False)
 
     class Meta:
