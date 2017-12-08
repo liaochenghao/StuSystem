@@ -73,7 +73,10 @@ class AccessRecordMiddleWare(MiddlewareMixin):
         meta = request.META
         http_method = request.method
         get_data = request.GET
-        body_data = json.loads(request.body) if request.body else None
+        try:
+            body_data = json.load(request.body)
+        except:
+            body_data = None
         ticket = request.COOKIES.get('ticket')
         request_user_agent = meta.get('HTTP_USER_AGENT')
         url = request.path_info.lstrip('')
