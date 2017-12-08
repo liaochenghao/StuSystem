@@ -152,7 +152,7 @@ class CourseProjectViewSet(mixins.CreateModelMixin,
 class UserCourseViewSet(mixins.CreateModelMixin,
                         mixins.ListModelMixin,
                         viewsets.GenericViewSet):
-    """学生选课"""
+    """学生选课, 审课，学分转换视图"""
     queryset = UserCourse.objects.all()
     serializer_class = UserCourseSerializer
 
