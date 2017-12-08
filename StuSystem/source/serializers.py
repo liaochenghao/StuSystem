@@ -4,7 +4,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from source.models import Project, ProjectCourseFee, Campus, Course, CourseProject
-from order.models import Order, UserCourse, ShoppingChart
+from order.models import Order, UserCourse, ShoppingChart, OrderChartRelation
 from utils.serializer_fields import VerboseChoiceField
 
 
@@ -185,6 +185,9 @@ class UserCourseSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('课程id：%s 传入有误' % course_id)
 
         chart = attrs['chart']
+
+        if not OrderChartRelation.objects.filter(chart=chart, order=attrs['order']).exists():
+            raise serializers.ValidationError('传入的chart或订单号有误')
 
         current_course_num = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
                                                        order=attrs['order']).count()

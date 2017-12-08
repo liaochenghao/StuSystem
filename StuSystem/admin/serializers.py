@@ -308,6 +308,8 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
             'name': instance.course.name
         }
         chart = ShoppingChart.objects.filter(project=instance.project, orderchartrelation__order=instance.order).first()
+        if chart is None:
+            raise serializers.ValidationError('usr_course_id: %s' % instance.id)
         data['student_score_detail'] = {
             'id': chart.stu_score_detail.id,
             'department': chart.stu_score_detail.department,
