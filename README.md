@@ -67,6 +67,7 @@
 - [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
 - [获取用户成绩邮寄信息列表](docs/authentication/get_score_list.md)
 - [获取用户成绩邮寄信息详情](docs/authentication/get_score_detail.md)
+- [成绩单邮寄信息修改](docs/authentication/update_score_detail.md)
 
 **购物车**:
 - [购物车项目创建](docs/shopping_chart/shopping_chart_create.md)
