@@ -65,7 +65,8 @@
     "chart": int 必填  商品id
     "order": int    必填  订单id
     "course": int   必填  课程id
-    "switch_img": base64位字符串  必填 审课图片
+    "switch_img": base64位字符串  必填 审课图片,
+    "credit_switch_status": str 必填  SUCCESS--学分转换成功，FAILURE--学分转换失败
 }
 ```
 
