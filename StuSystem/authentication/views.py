@@ -138,6 +138,7 @@ class StudentScoreDetailViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,
                                 mixins.RetrieveModelMixin,
                                 mixins.UpdateModelMixin,
+                                mixins.DestroyModelMixin,
                                 viewsets.GenericViewSet):
     """成绩单寄送地址视图"""
     queryset = StudentScoreDetail.objects.all()
