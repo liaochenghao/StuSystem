@@ -143,3 +143,7 @@ class StudentScoreDetailViewSet(mixins.CreateModelMixin,
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
     pagination_class = None
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset

@@ -2,7 +2,7 @@
 
 **请求地址**:
 ```
-    PUT/PATCH     /auth/user/score_detail/[user_id]/
+    PUT/PATCH     /auth/user/score_detail/[score_detail_id]/
 ```
 
 **请求参数**:
