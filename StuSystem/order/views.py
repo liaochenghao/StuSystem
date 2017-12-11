@@ -16,7 +16,8 @@ class OrderViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    mixins.RetrieveModelMixin,
                    viewsets.GenericViewSet):
-    queryset = Order.objects.all().order_by('-id')
+    queryset = Order.objects.all().order_by('-id').prefetch_related('orderchartrelation_set',
+                                                                    'orderchartrelation_set__chart')
     serializer_class = OrderSerializer
     filter_fields = ['currency', 'payment', 'status', 'user']
 
@@ -35,11 +36,21 @@ class OrderViewSet(mixins.CreateModelMixin,
         return queryset
 
     @list_route()
-    def check_order(self, request):
-        if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
-            order_to = self.get_queryset().filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).first()
-            return Response(self.serializer_class(order_to).data)
-        return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
+    def last_order(self, request):
+        instance = self.queryset.filter(user=request.user).exclude(status='CANCELED').first()
+        data = self.serializer_class(instance).data
+        order_chart_relations = instance.orderchartrelation_set.all()
+        courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
+        course_current_selected_count = instance.usercourse_set.all().count()
+        data['course_to_select'] = False if courses_to_select_count == course_current_selected_count else True
+        return Response(data)
+
+    # @list_route()
+    # def check_order(self, request):
+    #     if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
+    #         order_to = self.get_queryset().filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).first()
+    #         return Response(self.serializer_class(order_to).data)
+    #     return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
     def order_currency_payment(self, request):

@@ -121,6 +121,7 @@
 - [订单详情](docs/order/order_detail.md)
 - [订单列表](docs/order/order_list.md)
 - [上传订单支付信息](docs/order/order_payment.md)
+- [最近一个订单](docs/order/)
 - [检查是否可以创建订单](docs/order/check_order.md)
 - [取消订单](docs/order/update_order.md)
 - [获取当前用户所有订单](docs/order/user_order_list.md)
