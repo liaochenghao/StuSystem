@@ -3,7 +3,7 @@ import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo
+from authentication.models import UserInfo, StudentScoreDetail
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
@@ -200,6 +200,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
 class ShoppingChartSerializer(serializers.ModelSerializer):
     """购物车"""
+    stu_score_detail = serializers.PrimaryKeyRelatedField(queryset=StudentScoreDetail.objects.filter(is_active=True))
 
     class Meta:
         model = ShoppingChart

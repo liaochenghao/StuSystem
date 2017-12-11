@@ -119,6 +119,7 @@ class StudentScoreDetail(models.Model):
     country = models.CharField('收件国家', max_length=30)
     post_code = models.CharField('邮编', max_length=30)
     address = models.CharField('详细地址', max_length=60)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'student_score_detail'

@@ -11,6 +11,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from authentication.models import User, UserInfo, StudentScoreDetail
+from order.models import ShoppingChart
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -141,10 +142,14 @@ class StudentScoreDetailViewSet(mixins.CreateModelMixin,
                                 mixins.DestroyModelMixin,
                                 viewsets.GenericViewSet):
     """成绩单寄送地址视图"""
-    queryset = StudentScoreDetail.objects.all()
+    queryset = StudentScoreDetail.objects.filter(is_active=True)
     serializer_class = StudentScoreDetailSerializer
     pagination_class = None
 
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         return queryset
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
