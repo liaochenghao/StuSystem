@@ -19,7 +19,7 @@ DATABASES = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/qiulei/workplace/summer-web-h5/src/'],
+        'DIRS': ['/home/qiulei/workplace/summer-web-h5-build/src/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
