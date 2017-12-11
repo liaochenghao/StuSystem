@@ -42,7 +42,8 @@ class OrderViewSet(mixins.CreateModelMixin,
         order_chart_relations = instance.orderchartrelation_set.all()
         courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
         course_current_selected_count = instance.usercourse_set.all().count()
-        data['course_to_select'] = False if courses_to_select_count == course_current_selected_count else True
+        data['course_to_select'] = True if instance.status == 'CONFIRMED' \
+                                           and courses_to_select_count != course_current_selected_count else False
         return Response(data)
 
     @list_route()
