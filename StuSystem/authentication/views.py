@@ -143,10 +143,3 @@ class StudentScoreDetailViewSet(mixins.CreateModelMixin,
     queryset = StudentScoreDetail.objects.all()
     serializer_class = StudentScoreDetailSerializer
     pagination_class = None
-
-    def get_object(self):
-        user = self.request.user
-        if not self.queryset.filter(user=user).exists():
-            raise exceptions.ValidationError('暂未找到该用户的成绩单详情，请先创建。')
-        instance = self.queryset.get(user=user)
-        return instance
