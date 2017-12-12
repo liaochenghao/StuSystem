@@ -47,7 +47,7 @@ class OrderViewSet(mixins.CreateModelMixin,
                                            and courses_to_select_count != course_current_selected_count else False
         else:
             data = {
-                "course_to_select": True
+                "course_to_select": False
             }
         return Response(data)
 
