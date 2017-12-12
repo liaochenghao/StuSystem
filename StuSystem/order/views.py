@@ -38,12 +38,15 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def last_order(self, request):
         instance = self.queryset.filter(user=request.user).exclude(status='CANCELED').first()
-        data = self.serializer_class(instance).data
-        order_chart_relations = instance.orderchartrelation_set.all()
-        courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
-        course_current_selected_count = instance.usercourse_set.all().count()
-        data['course_to_select'] = True if instance.status == 'CONFIRMED' \
+        if instance:
+            data = self.serializer_class(instance).data
+            order_chart_relations = instance.orderchartrelation_set.all()
+            courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
+            course_current_selected_count = instance.usercourse_set.all().count()
+            data['course_to_select'] = True if instance.status == 'CONFIRMED' \
                                            and courses_to_select_count != course_current_selected_count else False
+        else:
+            data = None
         return Response(data)
 
     @list_route()
