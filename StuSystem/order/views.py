@@ -46,7 +46,9 @@ class OrderViewSet(mixins.CreateModelMixin,
             data['course_to_select'] = True if instance.status == 'CONFIRMED' \
                                            and courses_to_select_count != course_current_selected_count else False
         else:
-            data = None
+            data = {
+                "course_to_select": True
+            }
         return Response(data)
 
     @list_route()
