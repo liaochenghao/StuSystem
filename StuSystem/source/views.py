@@ -7,9 +7,9 @@ from StuSystem.settings import DOMAIN, MEDIA_URL
 from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
-    CourseSerializer, MyScoreSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
+    CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer
-from order.models import Order, UserCourse, ShoppingChart, OrderChartRelation
+from order.models import Order, UserCourse, ShoppingChart
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -33,7 +33,7 @@ class CampusViewSet(BaseViewSet):
     """
     校区视图
     """
-    queryset = Campus.objects.filter(is_active=True)
+    queryset = Campus.objects.all().filter(is_active=True)
     serializer_class = CampusSerializer
     permission_classes = [StudentReadOnlyPermission]
 

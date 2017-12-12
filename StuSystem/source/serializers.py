@@ -221,14 +221,6 @@ class UserCourseSerializer(serializers.ModelSerializer):
         return user_courses[0]
 
 
-class MyScoreSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
-
-    class Meta:
-        model = UserCourse
-        fields = ['id', 'course', 'score', 'score_grade', 'reporting_time']
-
-
 class CommonImgUploadSerializer(serializers.ModelSerializer):
     """学生审课"""
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
