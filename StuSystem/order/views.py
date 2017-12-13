@@ -9,7 +9,8 @@ from authentication.models import User
 from coupon.models import UserCoupon
 from operate_history.models import OrderOperateHistory
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart
-from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, ShoppingChartSerializer
+from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, \
+    ShoppingChartSerializer, SimpleUserOrderSerializer
 
 
 class OrderViewSet(mixins.CreateModelMixin,
@@ -118,15 +119,16 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def user_order_list(self, request):
         """用户订单列表"""
+        # todo 暂时不实现下拉翻页功能，待时机成熟再实现
         user = request.user
         status = self.request.query_params.get('status')
-        none_canceled_order = self.request.query_params.get('none_canceled_order')
-        user_orders = self.queryset.filter(user=user).exclude()
+        none_canceled_order = self.request.query_params.get('none_canceled_order', True)
+        user_orders = self.queryset.filter(user=user).exclude(status='CANCELED')
         if status:
             user_orders = user_orders.filter(status=status)
         if none_canceled_order:
             user_orders = user_orders.exclude(status='CANCELED')
-        return Response(self.serializer_class(user_orders, many=True, context={'request': request}).data)
+        return Response(SimpleUserOrderSerializer(user_orders, many=True, context={'request': request}).data)
 
     @list_route()
     def user_order_course(self, request):

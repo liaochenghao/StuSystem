@@ -7,7 +7,14 @@
 
 **请求参数**:
 ```
-    无
+筛选项
+    {
+        "status":   str  根据订单状态筛选,
+        "none_canceled_order": boolean  未被取消的订单
+    }
+```
+```
+备注：如果不传none_canceled_order参数，默认为True。不显示已取消的订单
 ```
 
 **成功返回**：
