@@ -138,6 +138,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class SimpleUserOrderSerializer(serializers.ModelSerializer):
+    status = VerboseChoiceField(choices=Order.STATUS, required=False)
 
     class Meta:
         model = Order
