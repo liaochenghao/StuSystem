@@ -252,8 +252,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('未找到用户所选课程，请检查传入参数')
 
         if self.context.get('api_key') == 'student_confirm_course':
-            if user_course.status != 'TO_UPLOAD':
-                raise serializers.ValidationError('已上传审课图片')
+            if user_course.status == 'PASS':
+                raise serializers.ValidationError('审课已通过, 不能再次上传')
 
         if self.context.get('api_key') == 'course_credit_switch':
             if user_course.status != 'PASS':
