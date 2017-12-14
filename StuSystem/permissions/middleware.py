@@ -96,6 +96,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
     def process_response(self, request, response):
         try:
             data = self.data
+            print(response.content)
             data.update({
                 'status_code': response.status_code,
                 'process_time': int(time.time()) - data.get('time'),
