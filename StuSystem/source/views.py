@@ -225,7 +225,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     values('course__id', 'course__course_code', 'course__name', 'course__courseproject__address',
                            'course__courseproject__start_time', 'course__courseproject__end_time',
                            'course__courseproject__professor', 'status', 'credit_switch_status', 'confirm_img',
-                           'switch_img', 'score', 'score_grade', 'reporting_time')
+                           'switch_img', 'score', 'score_grade', 'reporting_time').order_by('-id')
 
                 current_courses_list = []
                 for item in current_courses:
