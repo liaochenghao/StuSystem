@@ -96,17 +96,13 @@ class AccessRecordMiddleWare(MiddlewareMixin):
     def process_response(self, request, response):
         try:
             data = self.data
-            print(response.status_code)
-            print(response.content)
-            print(json.loads(response.content.decode('utf-8')))
             data.update({
                 'status_code': response.status_code,
                 'process_time': int(time.time()) - data.get('time'),
                 'response_content': json.loads(response.content.decode('utf-8'))
             })
-            print('****\n', data)
             collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
             stu_system.get_collection(collection_name).insert(data)
         except Exception as e:
-            print(e)
+            pass
         return response
