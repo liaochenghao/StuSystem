@@ -1,4 +1,6 @@
 # coding: utf-8
+import datetime
+
 from rest_framework import serializers
 import random, string
 from .models import Coupon, UserCoupon
@@ -26,6 +28,9 @@ class UserCouponSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['user'].role != 'STUDENT':
             raise serializers.ValidationError('仅能为学生用户分配优惠券')
+        if not(attrs['coupon'].start_time.replace(tzinfo=None) < datetime.datetime.now() <
+                   attrs['coupon'].end_time.replace(tzinfo=None)):
+            raise serializers.ValidationError('优惠券已过期')
         if UserCoupon.objects.filter(coupon=attrs['coupon'], user=attrs['user']).exists():
             raise serializers.ValidationError('已经为该用户分配过该优惠券，不能重复分配')
         if UserCoupon.objects.filter(coupon=attrs['coupon']).count() >= attrs['coupon'].max_num:

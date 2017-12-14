@@ -6,3 +6,4 @@ logs/
 media/
 StuSystem/StuSystem/settings/prod.py
 StuSystem/StuSystem/settings/.DS_Store
+StuSystem/test
