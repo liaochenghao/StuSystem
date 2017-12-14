@@ -101,6 +101,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
                 'process_time': int(time.time()) - data.get('time'),
                 'response_content': json.loads(response.content)
             })
+            print('****\n', data)
             collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
             stu_system.get_collection(collection_name).insert(data)
         finally:
