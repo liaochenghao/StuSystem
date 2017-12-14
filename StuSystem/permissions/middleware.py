@@ -91,6 +91,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             'remote_addr': meta.get('REMOTE_ADDR'),
             'user_id': request.user.id
         }
+        print(self.data)
 
     def process_response(self, request, response):
         try:
