@@ -59,6 +59,7 @@
 - [更新用户档案信息](docs/authentication/personal_file_update.md)
 - [用户优惠券信息](docs/authentication/coupon_list.md)
 - [获取销售顾问二维码](docs/authentication/sales_man.md)
+- [检查是否需要完善档案信息](docs/authentication/complete_personal_file.md)
 - [已发送好友申请](docs/authentication/post_sales_man.md)
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 - [微信中分配销售顾问](docs/authentication/assign_sales_man.md)

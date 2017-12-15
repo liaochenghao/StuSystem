@@ -134,6 +134,16 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             instance = self.get_object()
         return Response(self.get_serializer(instance).data)
 
+    @list_route(['GET'])
+    def complete_personal_file(self, request):
+        user = request.user
+        instance = self.queryset.filter(user=user).first()
+        if not instance:
+            raise exceptions.ValidationError('无效的user')
+        need_complete_personal_file = all([instance.first_name, instance.last_name, instance.gender, instance.id_number,
+                                           instance.major, instance.graduate_year, instance.gpa])
+        return Response({'need_complete_personal_file': True if not need_complete_personal_file else False})
+
 
 class StudentScoreDetailViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,

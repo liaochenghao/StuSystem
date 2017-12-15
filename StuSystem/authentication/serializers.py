@@ -179,7 +179,4 @@ class LoginSerializer(serializers.Serializer):
         ticket = UserTicket.create_ticket(self.user)
         self.user.last_login = datetime.datetime.now()
         self.user.save()
-        # return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role}
-        # todo
-        return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role,
-                'need_complete_student_info': True, 'valid_sales_man': False}
+        return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role}
