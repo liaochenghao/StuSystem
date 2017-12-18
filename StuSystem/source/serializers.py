@@ -174,6 +174,9 @@ class UserCourseSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
+        if not attrs.get('course_ids'):
+            raise serializers.ValidationError('选课不能为空，请填入选入课程')
+
         if attrs['order'].status == 'TO_CONFIRM':
             raise serializers.ValidationError('订单已支付但未确认, 请联系管理员确认订单')
 
