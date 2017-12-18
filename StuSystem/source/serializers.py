@@ -212,7 +212,6 @@ class UserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        print(validated_data)
         user_course = []
         for course_id in validated_data['course_ids']:
             user_course.append(UserCourse(user=self.context['request'].user,
@@ -221,7 +220,6 @@ class UserCourseSerializer(serializers.ModelSerializer):
                                           course_id=course_id
                                           )
                                )
-        print(len(user_course))
         user_courses = UserCourse.objects.bulk_create(user_course)
         return user_courses[0]
 
