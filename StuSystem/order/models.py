@@ -20,7 +20,7 @@ class ShoppingChart(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     status = models.CharField('状态', max_length=30, choices=STATUS, default='NEW')
-    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址')
+    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址', null=True)
 
     class Meta:
         db_table = 'shopping_chart'
