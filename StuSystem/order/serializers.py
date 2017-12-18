@@ -73,7 +73,7 @@ class OrderSerializer(serializers.ModelSerializer):
         coupon_list = validated_data.pop('coupon_list', None)
         chart_ids = validated_data.pop('chart_ids')
         user = self.context['request'].user
-        standard_fee = sum([item.project.apply_fee + item.course_fee for item in ShoppingChart.objects.filter(
+        standard_fee = sum([item.course_fee for item in ShoppingChart.objects.filter(
             id__in=chart_ids, status='NEW')])
         validated_data['standard_fee'] = standard_fee
         validated_data['pay_fee'] = standard_fee
@@ -85,7 +85,7 @@ class OrderSerializer(serializers.ModelSerializer):
             coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount', flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
-            validated_data['pay_fee'] = validated_data['standard_fee'] - coupon_list_fee if \
+            validated_data['pay_fee'] = standard_fee - coupon_list_fee if \
                 (validated_data['standard_fee'] - coupon_list_fee) >= 0 else 0
         order = super().create(validated_data)
         if coupon_list:
@@ -228,7 +228,7 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
                                                              course_number=attrs['course_num']).first()
         if not project_course_fee:
             raise serializers.ValidationError('项目课程数量错误，请重新选择')
-        attrs['course_fee'] = project_course_fee.course_fee
+        attrs['course_fee'] = project_course_fee.course_fee + project.apply_fee
         attrs['user'] = self.context['request'].user
         return attrs
 
