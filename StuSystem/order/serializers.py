@@ -215,7 +215,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
 class ShoppingChartSerializer(serializers.ModelSerializer):
     """购物车"""
-    stu_score_detail = serializers.PrimaryKeyRelatedField(queryset=StudentScoreDetail.objects.filter(is_active=True))
+    stu_score_detail = serializers.PrimaryKeyRelatedField(queryset=StudentScoreDetail.objects.filter(is_active=True),
+                                                          required=False)
 
     class Meta:
         model = ShoppingChart
