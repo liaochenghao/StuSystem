@@ -317,7 +317,7 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
             'country': chart.stu_score_detail.country,
             'post_code': chart.stu_score_detail.post_code,
             'address': chart.stu_score_detail.address
-        }
+        } if chart.stu_score_detail else None
         return data
 
 
