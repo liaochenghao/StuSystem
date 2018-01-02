@@ -311,13 +311,13 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
         if chart is None:
             raise serializers.ValidationError('usr_course_id: %s' % instance.id)
         data['student_score_detail'] = {
-            'id': chart.stu_score_detail.id,
-            'department': chart.stu_score_detail.department,
-            'phone': chart.stu_score_detail.phone,
-            'country': chart.stu_score_detail.country,
-            'post_code': chart.stu_score_detail.post_code,
-            'address': chart.stu_score_detail.address
-        } if chart.stu_score_detail else None
+            'id': chart.stu_score_detail.id if chart.stu_score_detail else None,
+            'department': chart.stu_score_detail.department if chart.stu_score_detail else '无',
+            'phone': chart.stu_score_detail.phone if chart.stu_score_detail else '无',
+            'country': chart.stu_score_detail.country if chart.stu_score_detail else '无',
+            'post_code': chart.stu_score_detail.post_code if chart.stu_score_detail else '无',
+            'address': chart.stu_score_detail.address if chart.stu_score_detail else '无'
+        }
         return data
 
 
