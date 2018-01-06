@@ -27,9 +27,13 @@ class WxSmartProgram:
         # if response.status_code != 200:
         #     raise exceptions.ValidationError('connecting wechat server error')
         # res = response.json()
-        res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG9Wv02112', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
+        res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key'):
-            user, created = User.objects.get_or_create(defaults={'username': res['openid'], 'role': 'STUDENT'})
+            user_instance = User.objects.filter(username=res['openid']).exists()
+            if user_instance:
+                user = User.objects.filter(username=res['openid']).first()
+            else:
+                user = User.objects.create(username=res['openid'], role='STUDENT')
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
