@@ -29,7 +29,7 @@ class WxSmartProgram:
         # res = response.json()
         res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG9Wv02112', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key'):
-            user, created = User.objects.get_or_create(**{'username': res['openid'], 'role': 'STUDENT'})
+            user, created = User.objects.get_or_create(defaults={'username': res['openid'], 'role': 'STUDENT'})
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
