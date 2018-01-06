@@ -180,3 +180,7 @@ class LoginSerializer(serializers.Serializer):
         self.user.last_login = datetime.datetime.now()
         self.user.save()
         return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role}
+
+
+class ClientAuthorizeSerializer(serializers.Serializer):
+    code = serializers.CharField()

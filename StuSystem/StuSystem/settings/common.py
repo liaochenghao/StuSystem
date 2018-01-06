@@ -53,6 +53,7 @@ LOGIN_EXEMPT_URLS = [
     r'auth/user/login',
     r'auth/user/check_account',
     r'auth/user/assign_sales_man',
+    r'auth/user/authorize',
     r'^$',
 ]
 

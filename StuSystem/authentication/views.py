@@ -3,7 +3,7 @@
 from authentication.functions import UserTicket, auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
-    AssignSalesManSerializer
+    AssignSalesManSerializer, ClientAuthorizeSerializer
 from coupon.models import Coupon
 from rest_framework import exceptions
 from rest_framework import viewsets, mixins
@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from authentication.models import User, UserInfo, StudentScoreDetail
 from order.models import ShoppingChart
+from utils.weixin_functions import WxSmartProgram
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -26,6 +27,17 @@ class UserViewSet(mixins.ListModelMixin,
         res = serializer.create_ticket()
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
+        return response
+
+    @list_route(['GET'], serializer_class=ClientAuthorizeSerializer)
+    def authorize(self, request):
+        """客户端登录获取授权"""
+        serializer = self.serializer_class(data=self.request.query_params)
+        serializer.is_valid(raise_exception=True)
+        code = serializer.validated_data['code']
+        res = WxSmartProgram.code_authorize(code)
+        response = Response(res)
+        response.set_cookie('ticket', res['ticket'])
         return response
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)

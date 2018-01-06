@@ -63,6 +63,7 @@
 - [已发送好友申请](docs/authentication/post_sales_man.md)
 - [检查用户信息是否需要完善](docs/authentication/check_user_info.md)
 - [微信中分配销售顾问](docs/authentication/assign_sales_man.md)
+- [小程序认证接口](docs/authentication/smart_program.authorize.md)
 
 **成绩单寄送信息**
 - [创建用户成绩邮寄信息](docs/authentication/create_score_detail.md)
