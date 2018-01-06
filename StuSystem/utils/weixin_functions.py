@@ -12,8 +12,8 @@ from authentication.models import User
 class WxSmartProgram:
 
     def __init__(self):
-        self.appid = WX_CONFIG['appid']
-        self.secret = WX_CONFIG['secret']
+        self.appid = WX_CONFIG['APP_ID']
+        self.secret = WX_CONFIG['APP_SECRET']
 
     def code_authorize(self, code):
         url = "https://api.weixin.qq.com/sns/jscode2session"
