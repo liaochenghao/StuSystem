@@ -96,6 +96,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
+        print(attrs)
         if attrs.get('wcampus'):
             attrs['wcampus'] = json.dumps(attrs['wcampus'])
         return attrs
