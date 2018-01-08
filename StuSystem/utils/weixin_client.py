@@ -1,13 +1,12 @@
 # coding: utf-8
-import json, datetime
-from werobot.client import Client
+import json
 import requests
 from StuSystem.settings import WX_CONFIG
 
 from utils.redis_server import redis_client
 
 
-class WeiXinClient(Client):
+class WeiXinClient:
 
     def get_grant_token(self):
         """获取微信access_token"""
@@ -58,15 +57,9 @@ class WeiXinClient(Client):
             'url': url,
             'data': data
         }
-        base_url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='
+        base_url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % self.get_valid_access_token()
 
-        url = base_url + self.get_access_token()
-        res = requests.post(url=url, data=json.dumps(post_data), headers={'Content-Type': 'application/json'}).json()
-        if not res.get('errcode') or res.get('errcode') == 0:  # 如果access_token有效
-            return res
-        else:
-            url = base_url + self.get_access_token()
-            res = requests.post(url=url, data=json.dumps(post_data), headers={'Content-Type': 'application/json'}).json()
+        res = requests.post(url=base_url, data=json.dumps(post_data), headers={'Content-Type': 'application/json'}).json()
         return res
 
     def upload_medias(self, media_type, media_file, openid):
@@ -84,3 +77,6 @@ class WeiXinClient(Client):
         }
         requests.post(url=url, json=data)
         return
+
+
+wx_client = WeiXinClient()

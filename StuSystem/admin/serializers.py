@@ -3,7 +3,7 @@ import datetime
 import json
 
 from StuSystem import settings
-from admin.functions import get_channel_info
+from admin.functions import get_channel_info, order_confirmed_template_message
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan, FirstLevel, SecondLevel
@@ -341,13 +341,26 @@ class ChildUserSerializer(serializers.ModelSerializer):
 
 class AdminOrderSerializer(OrderSerializer):
 
+    def notice_to_user(self, instance, confirm_status, confirm_remark):
+        openid = instance.user.username
+        user_info = UserInfo.objects.filter(user=instance.user).first()
+        name = user_info.wx_name
+        order_confirmed_template_message(openid=openid, name=name, confirm_status=confirm_status, remark=confirm_remark)
+        return
+
     def update(self, instance, validated_data):
         if validated_data.get('status') == 'CONFIRMED':
             status = 'CONFIRMED'
             remark = '订单支付成功，已确认'
+
+            confirm_status = '订单支付成功'
+            confirm_remark = '您的订单审核成功，请联系您的课程顾问，开始选课吧！'
+
         elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'
             remark = '订单支付失败，验证失败'
+            confirm_status = '订单支付失败'
+            confirm_remark = '很抱歉，您的订单审核失败，请联系您的课程顾问，查看具体失败原因吧！'
         else:
             raise exceptions.ValidationError('请传入正确的status参数')
         if instance.status != 'TO_CONFIRM':
@@ -361,6 +374,7 @@ class AdminOrderSerializer(OrderSerializer):
             coupon_list = json.loads(instance.coupon_list)
             UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
                 status='USED' if status == 'CONFIRMED' else 'TO_USE')
+        self.notice_to_user(instance, confirm_status, confirm_remark)
         HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE', remark=remark,
                                      source_type='ORDER')
         return instance
