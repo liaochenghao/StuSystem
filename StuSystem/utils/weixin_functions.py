@@ -4,7 +4,7 @@ import json
 
 import requests
 from rest_framework import exceptions
-from StuSystem.settings import WX_CONFIG
+from StuSystem.settings import WX_SMART_PROGRAM
 from authentication.functions import UserTicket
 from authentication.models import User, UserInfo
 
@@ -12,8 +12,8 @@ from authentication.models import User, UserInfo
 class WxSmartProgram:
 
     def __init__(self):
-        self.appid = WX_CONFIG['APP_ID']
-        self.secret = WX_CONFIG['APP_SECRET']
+        self.appid = WX_SMART_PROGRAM['APP_ID']
+        self.secret = WX_SMART_PROGRAM['APP_SECRET']
 
     def code_authorize(self, code):
         url = "https://api.weixin.qq.com/sns/jscode2session"

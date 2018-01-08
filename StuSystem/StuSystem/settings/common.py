@@ -202,6 +202,10 @@ WX_CONFIG = {
     'APP_SECRET': '73c8e307c09027162840705e7496ed32'
 }
 
+WX_SMART_PROGRAM = {
+    'APP_ID': 'wxf2b2b9c7133fe56f',
+    'APP_SECRET': '13a268b3ffb689a7d6c38245cc7ded2f'
+}
 
 LANGUAGE_CODE = 'zh-cn'
 
