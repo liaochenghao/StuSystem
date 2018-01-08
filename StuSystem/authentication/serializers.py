@@ -107,6 +107,27 @@ class UserInfoSerializer(serializers.ModelSerializer):
         return data
 
 
+# 兼容微信小程序客户端
+class CustomUserInfoSerializer(serializers.ModelSerializer):
+    wcampus = serializers.ListField()
+
+    class Meta:
+        model = UserInfo
+        fields = ['id', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
+        read_only_fields = ['headimgurl']
+
+    def validate(self, attrs):
+        print(attrs)
+        if attrs.get('wcampus'):
+            attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+        return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
+        return data
+
+
 class ListUserInfoSerializer(serializers.ModelSerializer):
     last_login = serializers.DateTimeField(source='user.last_login')
 

@@ -3,7 +3,7 @@
 from authentication.functions import UserTicket, auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
-    AssignSalesManSerializer, ClientAuthorizeSerializer
+    AssignSalesManSerializer, ClientAuthorizeSerializer, CustomUserInfoSerializer
 from coupon.models import Coupon
 from rest_framework import exceptions
 from rest_framework import viewsets, mixins
@@ -133,6 +133,16 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             raise exceptions.ValidationError('暂未找到该用户的用户信息。')
         instance = self.queryset.get(user=user)
         return instance
+
+    @detail_route(['PUT', 'PATCH'], serializer_class=CustomUserInfoSerializer)
+    def user_info(self, request, pk):
+        # 兼容微信小程序，提供更新用户信息接口
+        partial = False if request.method == 'PUT' else True
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(self.serializer_class(instance).data)
 
     @detail_route(methods=['GET', 'PUT', 'PATCH'],
                   serializer_class=PersonalFIleUserInfoSerializer)
