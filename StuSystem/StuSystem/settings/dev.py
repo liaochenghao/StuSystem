@@ -16,6 +16,11 @@ DATABASES = {
     }
 }
 
+REDIS_CONFIG = {
+    'host': '47.92.115.126',
+    'port': 6379
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

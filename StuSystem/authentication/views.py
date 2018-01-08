@@ -12,7 +12,7 @@ from rest_framework.response import Response
 
 from authentication.models import User, UserInfo, StudentScoreDetail
 from order.models import ShoppingChart
-from utils.weixin_functions import WxSmartProgram
+from utils.wx_smart_functions import WxSmartProgram
 
 
 class UserViewSet(mixins.ListModelMixin,
