@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 
 
 class User(AbstractBaseUser):
-    name = models.CharField('姓名', max_length=30, null=True)
+    name = models.CharField('姓名', max_length=100, null=True)
     password = models.CharField(max_length=128, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
     username = models.CharField('用户名', max_length=50, unique=True)
