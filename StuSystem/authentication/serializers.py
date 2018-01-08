@@ -88,7 +88,7 @@ class AssignSalesManSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    wcampus = serializers.ListField(child=serializers.CharField(max_length=30), write_only=True)
+    wcampus = serializers.ListField(write_only=True)
 
     class Meta:
         model = UserInfo
