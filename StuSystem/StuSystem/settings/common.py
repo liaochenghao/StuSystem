@@ -114,7 +114,7 @@ CORS_ALLOW_HEADERS = ('Content-Type', 'X-Requested-With',)
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databasesREST_FRAMEWORK = {
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
+    'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend', 'rest_framework.filters.SearchFilter'),
     'DEFAULT_RENDERER_CLASSES': (
         'utils.renderers.CustomJsonRender',
