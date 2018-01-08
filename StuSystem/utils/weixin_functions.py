@@ -23,11 +23,11 @@ class WxSmartProgram:
             'js_code': code,
             'grant_type': 'authorization_code'
         }
-        # response = requests.get(url=url, params=params)
-        # if response.status_code != 200:
-        #     raise exceptions.ValidationError('connecting wechat server error')
-        # res = response.json()
-        res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
+        response = requests.get(url=url, params=params)
+        if response.status_code != 200:
+            raise exceptions.ValidationError('connecting wechat server error')
+        res = response.json()
+        # res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key'):
             user_instance = User.objects.filter(username=res['openid']).exists()
             if user_instance:
@@ -37,7 +37,7 @@ class WxSmartProgram:
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
-            student_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
+            UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
                                                                       **{
                                                                           "user": user,
                                                                           "openid": res['openid']
