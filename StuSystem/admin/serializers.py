@@ -232,7 +232,7 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         return attrs
 
     def create_course_notice(self, validated_data):
-        openid = validated_data['user'].openid
+        openid = validated_data['user'].username
         user_info = UserInfo.objects.filter(user=validated_data['user']).first()
         user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
             else user_info.wx_name
