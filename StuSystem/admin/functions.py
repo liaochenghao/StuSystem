@@ -61,7 +61,7 @@ def create_course_template_message(openid, user_name, sales_man_name, project_na
         'remark': ''
     }
     data = data_template
-    data['first'] = 'Hi【%s】，你的课程顾问【%s】刚刚为你的项目【%s】注册了课程' % (user_name, sales_man_name, project_name)
+    data['first'] = 'Hi【%s】，你的课程顾问【%s】刚刚为你的项目【%s】注册了课程\n' % (user_name, sales_man_name, project_name)
     data['keyword1'] = course_name
     data['keyword2'] = course_time
     data['remark'] = '上课地点: %s\n\n请尽快确认所选课程，若所选课程有误，请立即与您的专属课程顾问联系，更改课程！' % address
