@@ -136,7 +136,6 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
     @detail_route(['PUT', 'PATCH'], serializer_class=CustomUserInfoSerializer)
     def user_info(self, request, pk):
         # 兼容微信小程序，提供更新用户信息接口
-        print(request.data)
         partial = False if request.method == 'PUT' else True
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)

@@ -125,11 +125,6 @@ class CustomUserInfoSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('wcampus验证错误: %s' % e)
         return attrs
 
-    def update(self, instance, validated_data):
-        instance = super().update(instance, validated_data)
-        print('*******************')
-        return instance
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
