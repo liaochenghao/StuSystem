@@ -36,12 +36,20 @@ class CreateAccountSerializer(serializers.Serializer):
             user_info = client.get_web_user_info(res['access_token'], res['openid'])
             print('********', user_info)
             # 创建用户
-            user, created = User.objects.get_or_create(**{
+            user = User.objects.filter(username=user_info.get('unionid')).first()
+            print({
                 'username': user_info.get('unionid'),
                 'role': 'STUDENT',
                 'openid': res['openid'],
                 'unionid': user_info.get('unionid')
             })
+            if not user:
+                user = User.objects.create(**{
+                    'username': user_info.get('unionid'),
+                    'role': 'STUDENT',
+                    'openid': res['openid'],
+                    'unionid': user_info.get('unionid')
+                })
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
@@ -50,12 +58,6 @@ class CreateAccountSerializer(serializers.Serializer):
             student_info = UserInfo.objects.filter(user=user, openid=res['openid'], unionid=user_info.get('unionid')).first()
             if not student_info:
                 student_info = UserInfo.objects.create(user=user, unionid=user_info.get('unionid'), openid=res['openid'])
-            # student_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
-            #                                                           **{
-            #                                                               "user": user,
-            #                                                               "unionid": user_info.get('unionid'),
-            #                                                               "openid": res['openid']
-            #                                                           })
             student_info.headimgurl = user_info['headimgurl']
             student_info.wx_name = user_info['nickname']
             student_info.save()
