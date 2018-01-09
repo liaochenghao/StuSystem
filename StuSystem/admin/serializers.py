@@ -241,9 +241,10 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         course_name = validated_data['course'].name
         course_project = CourseProject.objects.filter(course=validated_data['course'], project=validated_data['project']).first()
         address = course_project.address if course_project else '上课地点待定'
+        course_time = '%s至%s' % (course_project.start_time.strftime('%Y-%m-%d'), course_project.end_time.strftime('%Y-%m-%d'))
         project_name = validated_data['project'].name
         create_course_template_message(openid=openid, user_name=user_name, sales_man_name=sales_man_name,
-                                       project_name=project_name, course_name=course_name, address=address)
+                                       project_name=project_name, course_name=course_name, course_time=course_time, address=address)
 
     def create(self, validated_data):
         instance = super().create(validated_data)

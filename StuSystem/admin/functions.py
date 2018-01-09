@@ -50,7 +50,7 @@ def order_confirmed_template_message(openid, name, confirm_status, remark):
 
 
 @run_on_executor
-def create_course_template_message(openid, user_name, sales_man_name, project_name, course_name, address):
+def create_course_template_message(openid, user_name, sales_man_name, project_name, course_name, course_time, address):
     """创建课程通知消息"""
     templates_id = 'BmuykpTx7GVgJMmc33Wmh54ukw_s_sx3j9H2gum5Mww'
     url = ''
@@ -63,8 +63,8 @@ def create_course_template_message(openid, user_name, sales_man_name, project_na
     data = data_template
     data['first'] = 'Hi【%s】，你的课程顾问【%s】刚刚为你的项目【%s】注册了课程' % (user_name, sales_man_name, project_name)
     data['keyword1'] = course_name
-    data['keyword2'] = address
-    data['remark'] = '若所选课程有误，请立即与您的专属课程顾问联系，更改课程！'
+    data['keyword2'] = course_time
+    data['remark'] = '上课地点: %s\n\n若所选课程有误，请立即与您的专属课程顾问联系，更改课程！' % address
     wx_client.template_send(openid, templates_id, url, **data)
     return
 
