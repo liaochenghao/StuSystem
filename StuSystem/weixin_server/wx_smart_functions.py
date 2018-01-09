@@ -30,7 +30,7 @@ class WxSmartProgram:
         print('#########', res)
         # res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key') and res.get('unionid'):
-            user_instance = User.objects.filter(unionid=res['unionid']).exists()
+            user_instance = User.objects.filter(username=res['unionid']).exists()
             if user_instance:
                 user = User.objects.filter(username=res['unionid']).first()
             else:
@@ -38,11 +38,13 @@ class WxSmartProgram:
             user.s_openid = res['openid']
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
+            print(user.s_openid)
             user.save()
             user_info = UserInfo.objects.filter(user=user)
             if not user_info:
                 user_info = UserInfo.objects.create(user=user, s_openid=res['openid'], unionid=res['unionid'])
             user_info.s_openid = res['openid']
+            print(user_info.s_openid)
             user_info.save()
             return {'user_id': user.id, 'ticket': ticket}
         else:
