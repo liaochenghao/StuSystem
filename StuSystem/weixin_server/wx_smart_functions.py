@@ -37,7 +37,7 @@ class WxSmartProgram:
                 user = User.objects.create(username=res['unionid'], role='STUDENT', s_openid=res['openid'], unionid=res['unionid'])
             user.s_openid = res['openid']
             ticket = UserTicket.create_ticket(user)
-            user.last_login = datetime.datetime.now()
+            # user.last_login = datetime.datetime.now()
             print(user.s_openid)
             user.save()
             user_info = UserInfo.objects.filter(user=user)
