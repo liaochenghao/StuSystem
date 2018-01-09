@@ -47,12 +47,15 @@ class CreateAccountSerializer(serializers.Serializer):
             user.save()
 
             # 创建用户信息
-            student_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
-                                                                      **{
-                                                                          "user": user,
-                                                                          "unionid": user_info.get('unionid'),
-                                                                          "openid": res['openid']
-                                                                      })
+            student_info = UserInfo.objects.filter(user=user, openid=res['openid'], unionid=user_info.get('unionid')).first()
+            if not student_info:
+                student_info = UserInfo.objects.create(user=user, unionid=user_info.get('unionid'), openid=res['openid'])
+            # student_info, created = UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
+            #                                                           **{
+            #                                                               "user": user,
+            #                                                               "unionid": user_info.get('unionid'),
+            #                                                               "openid": res['openid']
+            #                                                           })
             student_info.headimgurl = user_info['headimgurl']
             student_info.wx_name = user_info['nickname']
             student_info.save()
