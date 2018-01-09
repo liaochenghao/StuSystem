@@ -236,8 +236,8 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         user_info = UserInfo.objects.filter(user=validated_data['user']).first()
         user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
             else user_info.wx_name
-        sales_man = SalesManUser.objects.filter(user=validated_data['user']).first()
-        sales_man_name = '管理员' if not sales_man else sales_man.name
+        sales_man_user = SalesManUser.objects.filter(user=validated_data['user']).first()
+        sales_man_name = '管理员' if (not sales_man_user) else sales_man_user.sales_man.name
         course_name = validated_data['course'].name
         course_project = CourseProject.objects.filter(course=validated_data['course'], project=validated_data['project']).first()
         address = course_project.address if course_project else '上课地点待定'
