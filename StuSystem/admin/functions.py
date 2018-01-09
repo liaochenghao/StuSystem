@@ -65,7 +65,7 @@ def create_course_template_message(openid, user_name, sales_man_name, project_na
     data['keyword1'] = course_name
     data['keyword2'] = address
     data['remark'] = '若所选课程有误，请立即与您的专属课程顾问联系，更改课程！'
-    wx_client.template_send(openid, templates_id, url, data)
+    wx_client.template_send(openid, templates_id, url, **data)
     return
 
 
