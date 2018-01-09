@@ -117,8 +117,11 @@ class CustomUserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        if attrs.get('wcampus'):
-            attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+        try:
+            if attrs.get('wcampus'):
+                attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+        except Exception as e:
+            raise serializers.ValidationError('wcampus验证错误: %s' % e)
         return attrs
 
     def to_representation(self, instance):
