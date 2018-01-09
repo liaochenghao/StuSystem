@@ -247,7 +247,7 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = super().create(validated_data)
-        self.create(validated_data)
+        self.create_course_notice(validated_data)
         return instance
 
 
