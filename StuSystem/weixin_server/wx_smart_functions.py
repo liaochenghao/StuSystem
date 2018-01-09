@@ -34,18 +34,13 @@ class WxSmartProgram:
             if user_instance:
                 user = User.objects.filter(username=res['unionid']).first()
             else:
-                user = User.objects.create(username=res['unionid'], role='STUDENT', openid=res['openid'], unionid=res['unionid'])
+                user = User.objects.create(username=res['unionid'], role='STUDENT', s_openid=res['openid'], unionid=res['unionid'])
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save()
             user_info = UserInfo.objects.filter(user=user)
             if not user_info:
-                user_info = UserInfo.objects.create(user=user, openid=res['openid'], unionid=res['unionid'])
-            # UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
-            #                                                           **{
-            #                                                               "user": user,
-            #                                                               "openid": res['openid']
-            #                                                           })
+                user_info = UserInfo.objects.create(user=user, s_openid=res['openid'], unionid=res['unionid'])
             return {'user_id': user.id, 'ticket': ticket}
         else:
             raise exceptions.ValidationError('wechat authorize error： %s' % json.dumps(res))

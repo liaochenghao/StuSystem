@@ -13,6 +13,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField('是否为超级用户', default=False)
     unionid = models.CharField('微信unionid', max_length=255)
     openid = models.CharField('微信openid', max_length=255)
+    s_openid = models.CharField('署校联盟小程序openid', max_length=255)
     ROLE = (
         ('STUDENT', '学生'),
         ('ADMIN', '管理员'),
@@ -40,6 +41,7 @@ class UserInfo(models.Model):
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
     unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True, unique=True)
     openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
+    s_openid = models.CharField('署校联盟小程序openid', max_length=255, null=True, unique=True)
     headimgurl = models.CharField('微信头像url', max_length=255, null=True)
     wx_name = models.CharField('微信昵称', max_length=30, null=True)
 
