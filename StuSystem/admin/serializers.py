@@ -6,10 +6,10 @@ from StuSystem import settings
 from admin.functions import get_channel_info, order_confirmed_template_message, create_course_template_message
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
-from common.models import SalesMan, FirstLevel, SecondLevel
+from common.models import SalesMan, FirstLevel, SecondLevel, SalesManUser
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
-from source.models import Project, Campus, Course
+from source.models import Project, Campus, Course, CourseProject
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, exceptions
@@ -231,14 +231,23 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
 
+    def create_course_notice(self, validated_data):
+        openid = validated_data['user'].openid
+        user_info = UserInfo.objects.filter(user=validated_data['user']).first()
+        user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
+            else user_info.wx_name
+        sales_man = SalesManUser.objects.filter(user_info=validated_data['user']).first()
+        sales_man_name = '管理员' if not sales_man else sales_man.name
+        course_name = validated_data['course'].name
+        course_project = CourseProject.objects.filter(course=validated_data['course'], project=validated_data['project']).first()
+        address = course_project.address if course_project else '上课地点待定'
+        project_name = validated_data['project'].name
+        create_course_template_message(openid=openid, user_name=user_name, sales_man_name=sales_man_name,
+                                       project_name=project_name, course_name=course_name, address=address)
+
     def create(self, validated_data):
         instance = super().create(validated_data)
-        create_course_template_message(openid='oAKoA0_Pps0xXJSuRZPtkA_NI3jg',
-                                       user_name='邱雷',
-                                       sales_man_name='yirantai',
-                                       project_name='上海校区五周项目',
-                                       course_name='Financial Accounting',
-                                       address='武汉理工大学')
+        self.create(validated_data)
         return instance
 
 
