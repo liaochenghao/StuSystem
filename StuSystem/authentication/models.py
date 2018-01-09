@@ -11,6 +11,8 @@ class User(AbstractBaseUser):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     is_active = models.BooleanField('是否启用', default=True)
     is_superuser = models.BooleanField('是否为超级用户', default=False)
+    unionid = models.CharField('微信unionid', max_length=255)
+    openid = models.CharField('微信openid', max_length=255)
     ROLE = (
         ('STUDENT', '学生'),
         ('ADMIN', '管理员'),
