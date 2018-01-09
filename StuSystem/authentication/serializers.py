@@ -34,15 +34,8 @@ class CreateAccountSerializer(serializers.Serializer):
             if not (res.get('access_token') and res.get('openid')):
                 raise serializers.ValidationError('无效的code值, 微信网页认证失败')
             user_info = client.get_web_user_info(res['access_token'], res['openid'])
-            print('********', user_info)
             # 创建用户
             user = User.objects.filter(username=user_info.get('unionid')).first()
-            print({
-                'username': user_info.get('unionid'),
-                'role': 'STUDENT',
-                'openid': res['openid'],
-                'unionid': user_info.get('unionid')
-            })
             if not user:
                 user = User.objects.create(**{
                     'username': user_info.get('unionid'),
@@ -58,7 +51,6 @@ class CreateAccountSerializer(serializers.Serializer):
             student_info = UserInfo.objects.filter(user=user).first()
             if not student_info:
                 student_info = UserInfo.objects.create(user=user)
-            print(user_info.get('unionid'), res['openid'])
             student_info.unionid = user_info.get('unionid')
             student_info.openid = res['openid']
             student_info.headimgurl = user_info['headimgurl']
@@ -72,8 +64,6 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
-        print({'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
-                'valid_sales_man': True if student_info.valid_sales_man else False})
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
                 'valid_sales_man': True if student_info.valid_sales_man else False}
 
