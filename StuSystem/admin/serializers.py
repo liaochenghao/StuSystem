@@ -344,7 +344,8 @@ class AdminOrderSerializer(OrderSerializer):
     def notice_to_user(self, instance, confirm_status, confirm_remark):
         openid = instance.user.username
         user_info = UserInfo.objects.filter(user=instance.user).first()
-        name = user_info.wx_name
+        name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
+            else user_info.wx_name
         order_confirmed_template_message(openid=openid, name=name, confirm_status=confirm_status, remark=confirm_remark)
         return
 
@@ -352,7 +353,6 @@ class AdminOrderSerializer(OrderSerializer):
         if validated_data.get('status') == 'CONFIRMED':
             status = 'CONFIRMED'
             remark = '订单支付成功，已确认'
-
             confirm_status = '订单支付成功'
             confirm_remark = '您的订单审核成功，请联系您的课程顾问，开始选课吧！'
 
