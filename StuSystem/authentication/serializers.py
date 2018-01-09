@@ -34,10 +34,10 @@ class CreateAccountSerializer(serializers.Serializer):
             if not (res.get('access_token') and res.get('openid')):
                 raise serializers.ValidationError('无效的code值, 微信网页认证失败')
             user_info = client.get_web_user_info(res['access_token'], res['openid'])
-
+            print('********', user_info)
             # 创建用户
             user, created = User.objects.get_or_create(**{
-                'username': res['openid'],
+                'username': user_info.get('unionid'),
                 'role': 'STUDENT',
                 'openid': res['openid'],
                 'unionid': user_info.get('unionid')
@@ -76,8 +76,9 @@ class AssignSalesManSerializer(serializers.Serializer):
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
         weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
+        print('!!!!!!!', weixin_info)
         user, created = User.objects.get_or_create(**{
-            'username': res['openid'],
+            'username': weixin_info.get('unionid'),
             'role': 'STUDENT',
             'openid': res['openid'],
             'unionid': weixin_info.get('unionid')
