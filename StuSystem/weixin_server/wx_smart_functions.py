@@ -27,6 +27,7 @@ class WxSmartProgram:
         if response.status_code != 200:
             raise exceptions.ValidationError('connecting wechat server error')
         res = response.json()
+        print(res)
         # res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key'):
             user_instance = User.objects.filter(username=res['openid']).exists()
