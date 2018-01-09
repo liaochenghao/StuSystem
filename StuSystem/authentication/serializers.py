@@ -119,7 +119,8 @@ class CustomUserInfoSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         try:
             if attrs.get('wcampus'):
-                attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+                # attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+                attrs['wcampus'] = json.dumps(attrs['wcampus'])
         except Exception as e:
             raise serializers.ValidationError('wcampus验证错误: %s' % e)
         return attrs
