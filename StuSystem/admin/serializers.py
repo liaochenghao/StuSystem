@@ -3,7 +3,7 @@ import datetime
 import json
 
 from StuSystem import settings
-from admin.functions import get_channel_info, order_confirmed_template_message
+from admin.functions import get_channel_info, order_confirmed_template_message, create_course_template_message
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan, FirstLevel, SecondLevel
@@ -230,6 +230,16 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
                                      course=attrs['course']).exists():
             raise serializers.ValidationError('已选该课程，不能重复选择')
         return attrs
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        create_course_template_message(openid='oAKoA0_Pps0xXJSuRZPtkA_NI3jg',
+                                       user_name='邱雷',
+                                       sales_man_name='yirantai',
+                                       project_name='上海校区五周项目',
+                                       course_name='Financial Accounting',
+                                       address='武汉理工大学')
+        return instance
 
 
 class AdminAvailableCoursesSerializer(serializers.Serializer):

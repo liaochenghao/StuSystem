@@ -5,6 +5,7 @@ import requests
 
 
 class WxClient(Client):
+
     def __init__(self):
         self.config = WX_CONFIG
         self._token = None
@@ -92,5 +93,6 @@ class WxClient(Client):
         }
         res = requests.get(url, params=params).json()
         return res
+
 
 client = WxClient()

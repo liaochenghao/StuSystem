@@ -11,8 +11,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from authentication.models import User, UserInfo, StudentScoreDetail
-from order.models import ShoppingChart
-from utils.wx_smart_functions import WxSmartProgram
+from weixin_server.wx_smart_functions import WxSmartProgram
 
 
 class UserViewSet(mixins.ListModelMixin,
