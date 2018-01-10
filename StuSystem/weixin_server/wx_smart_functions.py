@@ -32,14 +32,16 @@ class WxSmartProgram:
         if res.get('openid') and res.get('session_key') and res.get('unionid'):
             user = User.objects.filter(username=res['unionid']).first()
             if not user:
-                user = User.objects.create(username=res['unionid'], role='STUDENT', s_openid=res['openid'], unionid=res['unionid'])
+                user = User.objects.create(username=res['unionid'], role='STUDENT', s_openid=res['openid'], openid=None,
+                                           unionid=res['unionid'])
+            print(user.id)
             user.s_openid = res['openid']
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save(update_fields=['s_openid', 'last_login'])
             user_info = UserInfo.objects.filter(user=user).first()
             if not user_info:
-                user_info = UserInfo.objects.create(user=user, s_openid=res['openid'], unionid=res['unionid'])
+                user_info = UserInfo.objects.create(user=user, s_openid=res['openid'], unionid=res['unionid'], openid=None)
             user_info.s_openid = res['openid']
             user_info.save(update_fields=['s_openid'])
             return {'user_id': user.id, 'ticket': ticket}
