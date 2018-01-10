@@ -37,7 +37,7 @@ class WxSmartProgram:
             ticket = UserTicket.create_ticket(user)
             user.last_login = datetime.datetime.now()
             user.save(update_fields=['s_openid', 'last_login'])
-            user_info = UserInfo.objects.filter(user=user)
+            user_info = UserInfo.objects.filter(user=user).first()
             if not user_info:
                 user_info = UserInfo.objects.create(user=user, s_openid=res['openid'], unionid=res['unionid'])
             user_info.s_openid = res['openid']
