@@ -9,7 +9,7 @@ class AuthorizeServer:
 
     @staticmethod
     def ticket_authorize(ticket):
-        url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
+        url = "%s/api/common/auth/authorize/" % micro_service_domain
         params = {'ticket': ticket}
         try:
             res = requests.get(url=url, params=params)
@@ -24,7 +24,7 @@ class AuthorizeServer:
 
     @staticmethod
     def create_ticket(user_id):
-        url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
+        url = "%s/api/common/auth/authorize/" % micro_service_domain
         data = {'user_id': user_id}
         try:
             res = requests.post(url=url, json=data)
@@ -40,7 +40,7 @@ class AuthorizeServer:
 
     @staticmethod
     def delete_ticket(ticket):
-        url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
+        url = "%s/api/common/auth/authorize/" % micro_service_domain
         params = {'ticket': ticket}
         try:
             res = requests.get(url=url, params=params)
