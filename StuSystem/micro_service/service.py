@@ -23,7 +23,7 @@ class AuthorizeServer:
     def create_ticket(user_id):
         url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
         data = {'user_id': user_id}
-        res = requests.post(url=url, data=data)
+        res = requests.post(url=url, json=data)
         if res.status_code != 200:
             raise exceptions.ValidationError('Micro Service 发生错误')
 
