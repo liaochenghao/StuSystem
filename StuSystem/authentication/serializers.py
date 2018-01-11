@@ -2,14 +2,14 @@
 import datetime
 import json
 
-from authentication.functions import UserTicket, auto_assign_sales_man
+from authentication.functions import auto_assign_sales_man
 from common.models import SalesManUser, SalesMan
-from source.models import Campus
 from rest_framework import serializers
 from weixin_server.client import client
 
 from authentication.models import User, UserInfo, StudentScoreDetail
 from utils.serializer_fields import VerboseChoiceField
+from micro_service.service import AuthorizeServer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,38 +25,17 @@ class CreateAccountSerializer(serializers.Serializer):
     ticket = serializers.CharField(required=False, allow_null=True)
 
     def check_account(self, validated_data):
-        res = client.get_web_access_token(validated_data['code'])
-        if validated_data.get('ticket') and UserTicket.check_ticket(validated_data['ticket']):
-            user = UserTicket.check_ticket(validated_data['ticket'])
-            student_info = UserInfo.objects.filter(user=user).first()
-            ticket = validated_data['ticket']
+
+        if validated_data.get('ticket'):
+            ticket_authorize = AuthorizeServer.ticket_authorize(validated_data['ticket'])
+            if ticket_authorize['valid_ticket']:
+                user = User.objects.get(id=ticket_authorize['user_id'])
+                student_info = UserInfo.objects.filter(user=user).first()
+                ticket = validated_data['ticket']
+            else:
+                user, student_info, ticket = self.weixin_authorize(validated_data)
         else:
-            if not (res.get('access_token') and res.get('openid')):
-                raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-            user_info = client.get_web_user_info(res['access_token'], res['openid'])
-            # 创建用户
-            user = User.objects.filter(username=user_info.get('unionid')).first()
-            if not user:
-                user = User.objects.create(**{
-                    'username': user_info.get('unionid'),
-                    'role': 'STUDENT',
-                    'openid': res['openid'],
-                    'unionid': user_info.get('unionid')
-                })
-            ticket = UserTicket.create_ticket(user)
-            user.last_login = datetime.datetime.now()
-            user.save()
-
-            # 创建用户信息
-            student_info = UserInfo.objects.filter(user=user).first()
-            if not student_info:
-                student_info = UserInfo.objects.create(user=user)
-            student_info.unionid = user_info.get('unionid')
-            student_info.openid = res['openid']
-            student_info.headimgurl = user_info['headimgurl']
-            student_info.wx_name = user_info['nickname']
-            student_info.save()
-
+            user, student_info, ticket = self.weixin_authorize(validated_data)
             # 自动分配课程顾问
             auto_assign_sales_man(user)
 
@@ -66,6 +45,35 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = False
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
                 'valid_sales_man': True if student_info.valid_sales_man else False}
+
+    def weixin_authorize(self, validated_data):
+        res = client.get_web_access_token(validated_data['code'])
+        if not (res.get('access_token') and res.get('openid')):
+            raise serializers.ValidationError('无效的code值, 微信网页认证失败')
+        user_info = client.get_web_user_info(res['access_token'], res['openid'])
+        # 创建用户
+        user = User.objects.filter(username=user_info.get('unionid')).first()
+        if not user:
+            user = User.objects.create(**{
+                'username': user_info.get('unionid'),
+                'role': 'STUDENT',
+                'openid': res['openid'],
+                'unionid': user_info.get('unionid')
+            })
+        ticket = AuthorizeServer.create_ticket(user)
+        user.last_login = datetime.datetime.now()
+        user.save()
+
+        # 创建用户信息
+        student_info = UserInfo.objects.filter(user=user).first()
+        if not student_info:
+            student_info = UserInfo.objects.create(user=user)
+        student_info.unionid = user_info.get('unionid')
+        student_info.openid = res['openid']
+        student_info.headimgurl = user_info['headimgurl']
+        student_info.wx_name = user_info['nickname']
+        student_info.save()
+        return user, student_info, ticket
 
 
 class AssignSalesManSerializer(serializers.Serializer):
@@ -83,7 +91,7 @@ class AssignSalesManSerializer(serializers.Serializer):
             'unionid': weixin_info.get('unionid')
         })
 
-        ticket = UserTicket.create_ticket(user)
+        ticket = AuthorizeServer.create_ticket(user)
         user.last_login = datetime.datetime.now()
         user.save()
         UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
@@ -212,7 +220,7 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
     def create_ticket(self):
-        ticket = UserTicket.create_ticket(self.user)
+        ticket = AuthorizeServer.create_ticket(self.user)
         self.user.last_login = datetime.datetime.now()
         self.user.save()
         return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role}

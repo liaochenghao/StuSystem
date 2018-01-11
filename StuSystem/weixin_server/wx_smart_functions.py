@@ -5,7 +5,7 @@ import json
 import requests
 from rest_framework import exceptions
 from StuSystem.settings import WX_SMART_PROGRAM
-from authentication.functions import UserTicket
+from micro_service.service import AuthorizeServer
 from authentication.models import User, UserInfo
 
 
@@ -27,16 +27,14 @@ class WxSmartProgram:
         if response.status_code != 200:
             raise exceptions.ValidationError('connecting wechat server error')
         res = response.json()
-        print(res)
         # res = {'openid': 'oAKoA03ardxfbwr8gO-FCHnG11', "session_key": "tiihtNczf5v6AKRyjwEUhQ=="}
         if res.get('openid') and res.get('session_key') and res.get('unionid'):
             user = User.objects.filter(username=res['unionid']).first()
             if not user:
                 user = User.objects.create(username=res['unionid'], role='STUDENT', s_openid=res['openid'], openid=None,
                                            unionid=res['unionid'])
-            print(user.id)
             user.s_openid = res['openid']
-            ticket = UserTicket.create_ticket(user)
+            ticket = AuthorizeServer.create_ticket(user.id)
             user.last_login = datetime.datetime.now()
             user.save(update_fields=['s_openid', 'last_login'])
             user_info = UserInfo.objects.filter(user=user).first()

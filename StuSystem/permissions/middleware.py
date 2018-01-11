@@ -8,8 +8,9 @@ import datetime
 from django.conf import settings
 from django.http.response import HttpResponse
 
+from authentication.models import User
 from utils import stu_system
-from authentication.functions import UserTicket
+from micro_service.service import AuthorizeServer
 
 EXEMPT_URLS = []
 if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
@@ -46,11 +47,13 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
         if not ticket:
             return HttpResponse(content=json.dumps(dict(code=401, msg='未登录')),
                                 content_type='application/json')
-
-        user = UserTicket.check_ticket(ticket)
-        if not user:
-            return HttpResponse(content=json.dumps(dict(code=401, msg='未登录')),
+        auth_res = AuthorizeServer.ticket_authorize(ticket)
+        valid_ticket = auth_res['valid_ticket']
+        err_msg = auth_res['err_msg']
+        if not valid_ticket:
+            return HttpResponse(content=json.dumps(dict(code=401, msg=err_msg)),
                                 content_type='application/json')
+        user = User.objects.get(id=auth_res['user_id'])
         request.user = user
 
 

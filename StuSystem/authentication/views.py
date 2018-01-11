@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from authentication.functions import UserTicket, auto_assign_sales_man
+from authentication.functions import auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
     AssignSalesManSerializer, ClientAuthorizeSerializer, CustomUserInfoSerializer
@@ -9,7 +9,7 @@ from rest_framework import exceptions
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-
+from micro_service.service import AuthorizeServer
 from authentication.models import User, UserInfo, StudentScoreDetail
 from weixin_server.wx_smart_functions import WxSmartProgram
 
@@ -75,7 +75,7 @@ class UserViewSet(mixins.ListModelMixin,
         """ 退出登录
         """
         ticket = request.COOKIES.get('ticket')
-        UserTicket.delete_ticket(ticket)
+        AuthorizeServer.delete_ticket(ticket)
         ret_data = {'msg': '退出登录成功'}
         return Response(ret_data)
 
