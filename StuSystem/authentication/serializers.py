@@ -60,7 +60,7 @@ class CreateAccountSerializer(serializers.Serializer):
                 'openid': res['openid'],
                 'unionid': user_info.get('unionid')
             })
-        ticket = AuthorizeServer.create_ticket(user)
+        ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
 
@@ -91,7 +91,7 @@ class AssignSalesManSerializer(serializers.Serializer):
             'unionid': weixin_info.get('unionid')
         })
 
-        ticket = AuthorizeServer.create_ticket(user)
+        ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
         UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
@@ -220,7 +220,7 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
     def create_ticket(self):
-        ticket = AuthorizeServer.create_ticket(self.user)
+        ticket = AuthorizeServer.create_ticket(self.user.id)
         self.user.last_login = datetime.datetime.now()
         self.user.save()
         return {'msg': '登录成功', 'user_id': self.user.id, 'ticket': ticket, 'role': self.user.role}
