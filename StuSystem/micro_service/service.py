@@ -11,7 +11,10 @@ class AuthorizeServer:
     def ticket_authorize(ticket):
         url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
         params = {'ticket': ticket}
-        res = requests.get(url=url, params=params)
+        try:
+            res = requests.get(url=url, params=params)
+        except:
+            raise exceptions.ValidationError('Micro Service 发生错误')
         if res.status_code != 200:
             raise exceptions.ValidationError('Micro Service 发生错误')
         if res.json()['code'] != 0:
@@ -23,7 +26,10 @@ class AuthorizeServer:
     def create_ticket(user_id):
         url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
         data = {'user_id': user_id}
-        res = requests.post(url=url, json=data)
+        try:
+            res = requests.post(url=url, json=data)
+        except:
+            raise exceptions.ValidationError('Micro Service 发生错误')
         if res.status_code != 200:
             raise exceptions.ValidationError('Micro Service 发生错误')
 
@@ -36,7 +42,10 @@ class AuthorizeServer:
     def delete_ticket(ticket):
         url = "%s/api/stu_system/auth/authorize/" % micro_service_domain
         params = {'ticket': ticket}
-        res = requests.get(url=url, params=params)
+        try:
+            res = requests.get(url=url, params=params)
+        except:
+            raise exceptions.ValidationError('Micro Service 发生错误')
         if res.status_code != 200:
             raise exceptions.ValidationError('Micro Service 发生错误')
         else:
