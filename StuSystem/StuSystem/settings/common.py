@@ -198,12 +198,6 @@ LOGGING = {
 
 micro_service_domain = 'http://127.0.0.1:7070'
 
-# 微信服务号配置
-WX_CONFIG = {
-    'APP_ID': 'wx6cdbbafe0da85703',
-    'APP_SECRET': '73c8e307c09027162840705e7496ed32'
-}
-
 # 微信小程序
 WX_SMART_PROGRAM = {
     'APP_ID': 'wxf2b2b9c7133fe56f',

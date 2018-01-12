@@ -94,3 +94,18 @@ class WeixinServer:
         data = BaseHttpServer.post(url, json_data)
         return data
 
+    @staticmethod
+    def code_authorize(code):
+        """通过code获取网页授权"""
+        url = "%s/api/weixin/service_center/code_authorize/" % micro_service_domain
+        params = {'code': code}
+        data = BaseHttpServer.get(url, params)
+        return data
+
+    @staticmethod
+    def get_web_user_info(openid, access_token):
+        """获取网页授权用户信息"""
+        url = "%s/api/weixin/service_center/user_info/" % micro_service_domain
+        data = BaseHttpServer.get(url, {'openid': openid, 'access_token': access_token})
+        return data
+

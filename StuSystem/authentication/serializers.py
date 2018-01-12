@@ -5,11 +5,10 @@ import json
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesManUser, SalesMan
 from rest_framework import serializers
-from weixin_server.client import client
 
 from authentication.models import User, UserInfo, StudentScoreDetail
 from utils.serializer_fields import VerboseChoiceField
-from micro_service.service import AuthorizeServer
+from micro_service.service import AuthorizeServer, WeixinServer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -47,10 +46,10 @@ class CreateAccountSerializer(serializers.Serializer):
                 'valid_sales_man': True if student_info.valid_sales_man else False}
 
     def weixin_authorize(self, validated_data):
-        res = client.get_web_access_token(validated_data['code'])
+        res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-        user_info = client.get_web_user_info(res['access_token'], res['openid'])
+        user_info = WeixinServer.get_web_user_info(res['access_token'], res['openid'])
         # 创建用户
         user = User.objects.filter(username=user_info.get('unionid')).first()
         if not user:
@@ -80,10 +79,10 @@ class AssignSalesManSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
 
     def create(self, validated_data):
-        res = client.get_web_access_token(validated_data['code'])
+        res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-        weixin_info = client.get_web_user_info(res['access_token'], res['openid'])
+        weixin_info = WeixinServer.get_web_user_info(res['access_token'], res['openid'])
         user, created = User.objects.get_or_create(**{
             'username': weixin_info.get('unionid'),
             'role': 'STUDENT',
