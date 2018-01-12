@@ -2,8 +2,8 @@
 import datetime
 
 from market.models import Channel
-from weixin_server.weixin_client import wx_client
 from utils.future_help import run_on_executor
+from micro_service.service import WeixinServer
 
 
 def get_channel_info(user_info_instance):
@@ -45,7 +45,7 @@ def order_confirmed_template_message(openid, name, confirm_status, remark):
     data['keyword3'] = confirm_status
     data['remark'] = remark
     url = ''
-    res = wx_client.template_send(openid, template_id, url, **data)
+    WeixinServer.send_template_message(openid, template_id, url, **data)
     return
 
 
@@ -65,18 +65,5 @@ def create_course_template_message(openid, user_name, sales_man_name, project_na
     data['keyword1'] = course_name
     data['keyword2'] = course_time
     data['remark'] = '上课地点: %s\n\n请尽快确认所选课程，若所选课程有误，请立即与您的专属课程顾问联系，更改课程！' % address
-    wx_client.template_send(openid, templates_id, url, **data)
+    WeixinServer.send_template_message(openid, templates_id, url, **data)
     return
-
-
-if __name__ == '__main__':
-    # order_confirmed_template_message(openid='oAKoA0_Pps0xXJSuRZPtkA_NI3jg',
-    #                                  name='邱雷',
-    #                                  confirm_status='审核成功',
-    #                                  remark='您的订单审核成功，请联系您的课程顾问，开始选课吧！')
-    create_course_template_message(openid='oAKoA0_Pps0xXJSuRZPtkA_NI3jg',
-                                   user_name='邱雷',
-                                   sales_man_name='yirantai',
-                                   project_name='上海校区五周项目',
-                                   course_name='Financial Accounting',
-                                   address='武汉理工大学')
