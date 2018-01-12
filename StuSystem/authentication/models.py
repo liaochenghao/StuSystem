@@ -12,8 +12,8 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField('是否启用', default=True)
     is_superuser = models.BooleanField('是否为超级用户', default=False)
     unionid = models.CharField('微信unionid', max_length=255)
-    openid = models.CharField('微信openid', max_length=255)
-    s_openid = models.CharField('署校联盟小程序openid', max_length=255)
+    openid = models.CharField('微信openid', max_length=255, null=True)
+    s_openid = models.CharField('署校联盟小程序openid', max_length=255, null=True)
     ROLE = (
         ('STUDENT', '学生'),
         ('ADMIN', '管理员'),
