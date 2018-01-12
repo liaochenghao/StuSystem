@@ -1,5 +1,4 @@
 # coding: utf-8
-from weixin_server.client import client
 
 
 def get_key_verbose_data(data: dict):
@@ -18,8 +17,9 @@ def get_long_qr_code(key):
             'scene': {'scene_str': key}
         }
     }
-    res = client.create_qrcode(data)
+    # todo
+    # res = client.create_qrcode(data)
     qr_code = ''
-    if res.get('url') and res.get('ticket'):
-        qr_code = client.show_qrcode(res['ticket']).url
+    # if res.get('url') and res.get('ticket'):
+    #     qr_code = client.show_qrcode(res['ticket']).url
     return qr_code
