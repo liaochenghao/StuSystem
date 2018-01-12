@@ -11,7 +11,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from micro_service.service import AuthorizeServer
 from authentication.models import User, UserInfo, StudentScoreDetail
-from weixin_server.wx_smart_functions import WxSmartProgram
+from micro_service.wx_smart_functions import WxSmartProgram
 
 
 class UserViewSet(mixins.ListModelMixin,
