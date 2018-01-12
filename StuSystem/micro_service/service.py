@@ -109,3 +109,27 @@ class WeixinServer:
         data = BaseHttpServer.get(url, {'openid': openid, 'access_token': access_token})
         return data
 
+    @staticmethod
+    def get_temporary_qr_code(action_name, scene_id, expired_time=7*24*60*60):
+        """获取临时二维码"""
+        url = "%s/api/weixin/service_center/temporary_qr_code/" % micro_service_domain
+        json_data = {
+            "action_name": action_name,
+            "scene_id": scene_id,
+            "expired_time": expired_time
+        }
+        data = BaseHttpServer.post(url, json_data)
+        return data['qr_img_url']
+
+    @staticmethod
+    def get_forever_qr_code(action_name, scene_id):
+        """获取永久二维码"""
+        url = "%s/api/weixin/service_center/forever_qr_code/" % micro_service_domain
+        json_data = {
+            "action_name": action_name,
+            "scene_id": scene_id,
+        }
+        data = BaseHttpServer.post(url, json_data)
+        return data['qr_img_url']
+
+

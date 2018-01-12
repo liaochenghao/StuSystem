@@ -18,7 +18,7 @@ from authentication.models import UserInfo, UserInfoRemark, StudentScoreDetail, 
 from order.models import UserCourse, Order, ShoppingChart
 from order.serializers import OrderSerializer
 from utils.serializer_fields import VerboseChoiceField
-from utils.functions import get_long_qr_code
+from micro_service.service import WeixinServer
 
 
 class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
@@ -355,7 +355,7 @@ class ChildUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
         instance = super().create(validated_data)
-        qr_code = get_long_qr_code('child_user_%s' % instance.id)
+        qr_code = WeixinServer.get_forever_qr_code(action_name='QR_LIMIT_SCENE', scene_id='child_user_%s' % instance.id)
         instance.qr_code = qr_code
         instance.save()
         return instance
