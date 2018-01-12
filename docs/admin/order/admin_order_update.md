@@ -10,6 +10,7 @@
 {
     "status": "CONFIRMED"   -- 确认订单
     "status": "CONFIRM_FAILED"  -- 支付认证失败
+    ""
 }
 ```
 

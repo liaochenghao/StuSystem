@@ -371,6 +371,12 @@ class AdminOrderSerializer(OrderSerializer):
         order_confirmed_template_message(openid=openid, name=name, confirm_status=confirm_status, remark=confirm_remark)
         return
 
+    def validate(self, attrs):
+        super().validate(attrs)
+        if attrs.get('status') == 'CONFIRM_FAILED' and not attrs.get('remark'):
+            raise serializers.ValidationError('订单审核失败时，必须填写失败原因')
+        return attrs
+
     def update(self, instance, validated_data):
         if validated_data.get('status') == 'CONFIRMED':
             status = 'CONFIRMED'
@@ -380,9 +386,9 @@ class AdminOrderSerializer(OrderSerializer):
 
         elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'
-            remark = '订单支付失败，验证失败'
+            remark = '订单支付失败，原因为: %s' % validated_data.get('remark')
             confirm_status = '订单支付失败'
-            confirm_remark = '很抱歉，您的订单审核失败，请联系您的课程顾问，查看具体失败原因吧！'
+            confirm_remark = '很抱歉，您的订单审核失败，失败原因为: %s' % validated_data.get('remark')
         else:
             raise exceptions.ValidationError('请传入正确的status参数')
         if instance.status != 'TO_CONFIRM':
