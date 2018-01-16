@@ -51,7 +51,9 @@ class CreateAccountSerializer(serializers.Serializer):
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
         user_info = WeixinServer.get_web_user_info(res['access_token'], res['openid'])
-        print(user_info)
+        if user_info.get('errorcode', 0) != 0:
+            print('******', user_info)
+            raise serializers.ValidationError('user info 获取错误')
         # 创建用户
         user = User.objects.filter(username=user_info.get('unionid')).first()
         if not user:
