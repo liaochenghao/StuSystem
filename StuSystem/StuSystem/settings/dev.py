@@ -44,6 +44,6 @@ MONGODB_CONFIG = {
     'user': 'stu_system',
     'password': 'qwe=-00.3690'
 }
-
+micro_service_domain = 'http://42.51.8.152:7070'
 DOMAIN = 'http://42.51.8.152:8002'
 MEDIA_ROOT = '/home/qiulei/workplace/StuSystem/media'
