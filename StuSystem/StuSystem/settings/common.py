@@ -204,6 +204,8 @@ WX_SMART_PROGRAM = {
     'APP_SECRET': '13a268b3ffb689a7d6c38245cc7ded2f'
 }
 
+DEFAULT_CHARSET = 'utf-8'
+
 LANGUAGE_CODE = 'zh-cn'
 
 # TIME_ZONE = 'UTC'
