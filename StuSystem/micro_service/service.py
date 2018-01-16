@@ -105,7 +105,7 @@ class WeixinServer:
     @staticmethod
     def get_web_user_info(openid, access_token):
         """获取网页授权用户信息"""
-        url = "%s/api/weixin/service_center/user_info/" % micro_service_domain
+        url = "%s/api/weixin/service_center/get_web_user_info/" % micro_service_domain
         data = BaseHttpServer.get(url, {'openid': openid, 'access_token': access_token})
         return data
 
