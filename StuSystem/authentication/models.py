@@ -125,7 +125,7 @@ class UserInfoRemark(models.Model):
 
 
 class StudentScoreDetail(models.Model):
-    """用户成绩邮寄信息"""
+    """用户成绩邮寄信息1"""
     user = models.ForeignKey(User)
     department = models.CharField('收件部门', max_length=30)
     phone = models.CharField('联系电话', max_length=30)
