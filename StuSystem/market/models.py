@@ -18,18 +18,18 @@ class Channel(models.Model):
     qr_code = models.CharField('推广二维码', max_length=255, null=True)
 
     class Meta:
-        db_table = ''
+        db_table = 'market_channel'
 
     def __str__(self):
         return self.name
 
 
-class UserChannel(models.Model):
-    openid = models.CharField('微信openid', max_length=255)
-    user = models.ForeignKey(User)
-    channel = models.ForeignKey(Channel)
-    create_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'user_channel'
+# class UserChannel(models.Model):
+#     openid = models.CharField('微信openid', max_length=255)
+#     user = models.ForeignKey(User)
+#     channel = models.ForeignKey(Channel)
+#     create_time = models.DateTimeField(auto_now_add=True)
+#     modified_time = models.DateTimeField(auto_now=True)
+#
+#     class Meta:
+#         db_table = 'user_channel'
