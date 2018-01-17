@@ -9,7 +9,7 @@ from rest_framework import exceptions
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from micro_service.service import AuthorizeServer
+from micro_service.service import AuthorizeServer, WeixinServer
 from authentication.models import User, UserInfo, StudentScoreDetail
 from micro_service.wx_smart_functions import WxSmartProgram
 
@@ -107,6 +107,16 @@ class UserViewSet(mixins.ListModelMixin,
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'msg': '操作成功'})
+
+    @list_route()
+    def sharing_qrcode(self, request):
+        """用户分享自己的二维码"""
+        user = request.user
+        valid_time = 2*60*60
+        qr_img_url = WeixinServer.get_temporary_qr_code(action_name='QR_STR_SCENE',
+                                                        scene_id='recommend_user_id_%s' % user.id,
+                                                        expired_time=valid_time)
+        return Response({'qr_img_url': qr_img_url})
 
     @list_route(serializer_class=AssignSalesManSerializer)
     def assign_sales_man(self, request):
