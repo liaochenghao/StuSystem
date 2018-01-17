@@ -9,7 +9,7 @@ class Channel(models.Model):
     """推广渠道"""
     name = models.CharField('推广名称', unique=True, max_length=30)
     plan_date = models.DateField('计划推广日期')
-    sales_man = models.ForeignKey(SalesMan)
+    sales_man = models.ForeignKey(SalesMan,on_delete=models.DO_NOTHING)
     plan_student_number = models.IntegerField('预计参加人数')
     plan_file_student_number = models.IntegerField('预计建档人数')
     plan_payed_student_number = models.IntegerField('预计缴费人数')
@@ -26,8 +26,8 @@ class Channel(models.Model):
 
 class UserChannel(models.Model):
     openid = models.CharField('微信openid', max_length=255)
-    user = models.ForeignKey(User)
-    channel = models.ForeignKey(Channel)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    channel = models.ForeignKey(Channel,on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 

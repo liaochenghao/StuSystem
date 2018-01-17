@@ -28,8 +28,8 @@ class SalesManUser(models.Model):
         ('NEW', '新关注'),
         ('CONTACTED', '已联系'),
     )
-    user = models.ForeignKey(User)
-    sales_man = models.ForeignKey(SalesMan)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    sales_man = models.ForeignKey(SalesMan,on_delete=models.DO_NOTHING)
     status = models.CharField('用户状态', max_length=30, choices=STATUS, default='NEW')
     create_time = models.DateTimeField(auto_now=True)
     remark = models.CharField('备注', max_length=255, null=True)
@@ -51,7 +51,7 @@ class FirstLevel(models.Model):
 
 class FirstLevelRole(models.Model):
     """一级目录与角色间关系"""
-    pre = models.ForeignKey(FirstLevel)
+    pre = models.ForeignKey(FirstLevel,on_delete=models.DO_NOTHING)
     role = models.CharField('角色名称', choices=User.ROLE, max_length=30)
 
     class Meta:
@@ -71,8 +71,8 @@ class SecondLevel(models.Model):
 
 class FirstSecondRelation(models.Model):
     """一二级目录关系"""
-    first = models.ForeignKey(FirstLevel)
-    second = models.ForeignKey(SecondLevel)
+    first = models.ForeignKey(FirstLevel,on_delete=models.DO_NOTHING)
+    second = models.ForeignKey(SecondLevel,on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'first_second_relation'
@@ -80,7 +80,7 @@ class FirstSecondRelation(models.Model):
 
 class SecondLevelRole(models.Model):
     """二级目录与角色间关系"""
-    pre = models.ForeignKey(SecondLevel)
+    pre = models.ForeignKey(SecondLevel,on_delete=models.DO_NOTHING)
     role = models.CharField('角色名称', choices=User.ROLE, max_length=30)
 
     class Meta:
