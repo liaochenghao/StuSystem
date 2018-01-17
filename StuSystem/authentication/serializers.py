@@ -168,7 +168,10 @@ class ListUserInfoSerializer(serializers.ModelSerializer):
 class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
-    grade = VerboseChoiceField(choices=UserInfo.GRADE)
+    # todo 暂时将grade, birth_date, phone 设置为非必要参数
+    grade = VerboseChoiceField(choices=UserInfo.GRADE, required=False)
+    birth_date = serializers.DateField(required=False)
+    phone = serializers.CharField(required=False)
 
     class Meta:
         model = UserInfo
