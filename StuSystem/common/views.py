@@ -19,6 +19,7 @@ class GlobalEnumsViewSet(APIView):
             'account_payment': get_key_verbose_data(dict(PaymentAccountInfo.PAYMENT)),
             'account_currency': get_key_verbose_data(dict(PaymentAccountInfo.CURRENCY)),
             'user_info_gender': get_key_verbose_data(dict(UserInfo.GENDER)),
+            'user_grade': get_key_verbose_data(dict(UserInfo.GRADE)),
             'order_payment': get_key_verbose_data(dict(Order.PAYMENT)),
             'order_currency': get_key_verbose_data(dict(Order.CURRENCY)),
             'order_status': get_key_verbose_data(dict(Order.STATUS)),

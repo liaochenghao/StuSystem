@@ -57,6 +57,15 @@ class UserInfo(models.Model):
     major = models.CharField('专业', max_length=30, null=True)
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA')
+    birth_date = models.DateField('出生日期')
+    GRADE = (
+        ('GRADE_ONE', '大一'),
+        ('GRADE_TWO', '大二'),
+        ('GRADE_THREE', '大三'),
+        ('GRADE_FOUR', '大四'),
+        ('GRADE_FIVE', '大五')
+    )
+    grade = models.CharField(choices=GRADE, default='grade_one', max_length=10)
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
     channel_id = models.IntegerField('用户渠道信息')
     recommand_user_id = models.IntegerField('推荐用户id')

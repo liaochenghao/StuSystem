@@ -116,7 +116,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        print(attrs)
         if attrs.get('wcampus'):
             attrs['wcampus'] = json.dumps(attrs['wcampus'])
         return attrs
@@ -167,12 +166,14 @@ class ListUserInfoSerializer(serializers.ModelSerializer):
 
 
 class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
+    """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
+    grade = VerboseChoiceField(choices=UserInfo.GRADE)
 
     class Meta:
         model = UserInfo
         fields = ['id', 'name', 'email', 'wechat', 'cschool', 'first_name', 'last_name', 'gender', 'id_number',
-                  'major', 'graduate_year', 'gpa']
+                  'major', 'graduate_year', 'gpa', 'birth_date', 'grade', 'phone']
         read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
 
 
