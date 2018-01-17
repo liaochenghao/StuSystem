@@ -25,6 +25,8 @@ class User(AbstractBaseUser):
     role = models.CharField(choices=ROLE, max_length=30)
     USERNAME_FIELD = 'username'
     qr_code = models.CharField('二维码', max_length=255, null=True)
+    channel_id = models.IntegerField(verbose_name='用户渠道信息', null=True)
+    recommend_user = models.ForeignKey('self', verbose_name='推荐的用户', null=True)
 
     class Meta:
         db_table = 'user'
@@ -67,8 +69,6 @@ class UserInfo(models.Model):
     )
     grade = models.CharField(choices=GRADE, default='grade_one', max_length=10)
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
-    channel_id = models.IntegerField('用户渠道信息')
-    recommand_user_id = models.IntegerField('推荐用户id')
 
     class Meta:
         db_table = 'student_info'
