@@ -183,7 +183,7 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'province_post_code', 'university' 'department', 'transfer_department',
+        fields = ['id', 'user', 'province_post_code', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
         read_only_fields = ['user']
 

@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractBaseUser
 
 class User(AbstractBaseUser):
     name = models.CharField('姓名', max_length=100, null=True)
-    password1 = models.CharField(max_length=128, null=True)
-    last_login1 = models.DateTimeField(blank=True, null=True)
+    password = models.CharField(max_length=128, null=True)
+    last_login = models.DateTimeField(blank=True, null=True)
     username = models.CharField('用户名', max_length=50, unique=True)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     is_active = models.BooleanField('是否启用', default=True)
@@ -114,28 +114,18 @@ class UserInfoRemark(models.Model):
         db_table = 'user_info_remark'
 
 
-# class Ticket(models.Model):
-#     user = models.ForeignKey(User)
-#     ticket = models.CharField('用户ticket', max_length=100, unique=True)
-#     create_time = models.DateTimeField('创建时间', auto_now=True)
-#     expired_time = models.DateTimeField('过期时间')
-#
-#     class Meta:
-#         db_table = 'ticket'
-
-
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     province_post_code = models.CharField('具体的州/省的邮编', max_length=30)
     university = models.CharField('大学名称', max_length=30)
-    department = models.CharField('院系名称', max_length=30, default='')
+    department = models.CharField('院系名称', max_length=30, default=None)
     transfer_department = models.CharField('转学分部门/办公楼', max_length=30)
     transfer_office = models.CharField('具体办公室', max_length=30)
-    address = models.CharField('详细地址', max_length=60, default='')
-    teacher_name = models.CharField('收件老师姓名', max_length=30, default='')
+    address = models.CharField('详细地址', max_length=60, default=None)
+    teacher_name = models.CharField('收件老师姓名', max_length=30, default=None)
     phone = models.CharField('联系电话', max_length=30)
-    email = models.CharField('邮箱', max_length=30, default='')
+    email = models.EmailField('邮箱', max_length=30)
     is_active = models.BooleanField(default=True)
 
     class Meta:
