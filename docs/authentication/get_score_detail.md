@@ -15,15 +15,21 @@
 {
     "code": 0,
     "msg": "请求成功",
-    "data": {
-        "id": 1,
-        "user": 1,                          int     用户id
-        "department": "英语部",              str     收件人/部门
-        "phone": "010-2014567",             str     收件联系电话
-        "country": "中国",                   str     收件国家
-        "post_code": "631741",              str      邮编
-        "address": "北京大学昌平区E栋1233号"   str     详细地址
-    },
+    "data": [
+        {
+            "id": 42,
+            "user": 2,
+            "province_post_code": "342101",
+            "university": "加州大学",
+            "department": "教务处",
+            "transfer_department": "东八楼",
+            "transfer_office": "2312A",
+            "address": "加州大学教务处东八楼2312A室",
+            "teacher_name": "lisa rong",
+            "phone": "082-1231-2331",
+            "email": "ldiw@ste.org"
+        }
+    ],
     "field_name": ""
 }
 ```
