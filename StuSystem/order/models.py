@@ -13,14 +13,14 @@ class ShoppingChart(models.Model):
         ('PAYED', '已支付'),
         ('DELETED', '已删除')
     )
-    project = models.ForeignKey(Project)
-    user = models.ForeignKey(User)
+    project = models.ForeignKey(Project,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     course_num = models.IntegerField('课程数量')
     course_fee = models.FloatField('课程费用')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     status = models.CharField('状态', max_length=30, choices=STATUS, default='NEW')
-    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址', null=True)
+    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址', null=True,on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'shopping_chart'
@@ -45,7 +45,7 @@ class Order(models.Model):
         ('CONFIRMED', '已确认'),
         ('CONFIRM_FAILED', '验证失败')
     )
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     currency = models.CharField('币种', choices=CURRENCY, max_length=30)
     payment = models.CharField('支付方式', choices=PAYMENT, max_length=30)
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')
@@ -62,8 +62,8 @@ class Order(models.Model):
 
 class OrderChartRelation(models.Model):
     """订单与商品关系"""
-    chart = models.ForeignKey(ShoppingChart)
-    order = models.ForeignKey(Order)
+    chart = models.ForeignKey(ShoppingChart,on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -78,10 +78,10 @@ class UserCourse(models.Model):
         ('PASS', '通过'),
         ('NOPASS', '不通过')
     )
-    user = models.ForeignKey(User)
-    course = models.ForeignKey(Course)
-    order = models.ForeignKey(Order)
-    project = models.ForeignKey(Project)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course,on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project,on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField('创建时间', auto_now=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     score = models.IntegerField('课程成绩分数')
@@ -108,7 +108,7 @@ class UserCourse(models.Model):
 
 class OrderPayment(models.Model):
     """订单支付信息"""
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
     amount = models.FloatField('支付金额')
     account_number = models.CharField('支付账号', max_length=30)
     account_name = models.CharField('支付姓名', max_length=30)

@@ -11,7 +11,7 @@ class OperateHistory(models.Model):
         ('UPDATE', '更新'),
         ('DELETE', '删除')
     )
-    operator = models.ForeignKey(User)
+    operator = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     key = models.CharField('操作类型', max_length=30, choices=OPERATE_KEY)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     source = None
@@ -23,7 +23,7 @@ class OperateHistory(models.Model):
 
 class OrderOperateHistory(OperateHistory):
     """订单操作记录"""
-    source = models.ForeignKey(Order)
+    source = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'order_operate_history'

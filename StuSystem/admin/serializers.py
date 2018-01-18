@@ -69,7 +69,8 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         user_coupon = None
         if UserCoupon.objects.filter(user=instance.user, status='TO_USE').exists():
             user_coupon = UserCoupon.objects.filter(user=instance.user, status='TO_USE').values(
-                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code', 'coupon__amount')
+                'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code',
+                'coupon__amount')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
                 item['info'] = item.pop('coupon__info')
@@ -81,7 +82,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         data['user_coupon'] = user_coupon
         data['channel'] = get_channel_info(instance)
         try:
-            data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)).\
+            data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)). \
                 values('id', 'name', 'info', 'create_time')
         except Exception as e:
             data['wcampus'] = None
@@ -119,7 +120,6 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
 
 
 class CourseScoreSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserCourse
         fields = ['score', 'score_grade', 'user', 'order', 'course', 'id']
@@ -135,7 +135,8 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
+        fields = ['id', 'user', 'province_post_code', 'university' 'department', 'transfer_department',
+                  'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
 
 class ProjectOverViewSerializer(serializers.ModelSerializer):
@@ -160,6 +161,7 @@ class CampusOverViewSerializer(serializers.ModelSerializer):
 
 class SalesManSerializer(serializers.ModelSerializer):
     qr_code = Base64ImageField()
+
     # qr_code = serializers.ImageField()
 
     class Meta:
@@ -207,6 +209,7 @@ class AdminUserCourseSerializer(serializers.ModelSerializer):
 
 class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
     """管理员为学生选课"""
+
     class Meta:
         model = UserCourse
         fields = ['id', 'course', 'order', 'user', 'project']
@@ -223,7 +226,8 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
         if not chart:
             raise serializers.ValidationError('未找到有效的chart')
 
-        if UserCourse.objects.filter(order=attrs['order'], project=attrs['project'], user=attrs['user']).count() >= chart.course_num:
+        if UserCourse.objects.filter(order=attrs['order'], project=attrs['project'],
+                                     user=attrs['user']).count() >= chart.course_num:
             raise serializers.ValidationError('已达到订单最大选课数，不能再继续选课')
 
         if UserCourse.objects.filter(user=attrs['user'], order=attrs['order'], project=attrs['project'],
@@ -234,19 +238,22 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
     def create_course_notice(self, validated_data):
         openid = validated_data['user'].username
         user_info = UserInfo.objects.filter(user=validated_data['user']).first()
-        user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
+        user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (
+                user_info.first_name and user_info.last_name) \
             else user_info.wx_name
         sales_man_user = SalesManUser.objects.filter(user=validated_data['user']).first()
         sales_man_name = '管理员' if (not sales_man_user) else sales_man_user.sales_man.name
         course_name = validated_data['course'].name
-        course_project = CourseProject.objects.filter(course=validated_data['course'], project=validated_data['project']).first()
+        course_project = CourseProject.objects.filter(course=validated_data['course'],
+                                                      project=validated_data['project']).first()
         address = course_project.address if course_project else '上课地点待定'
         course_time = '%s至%s' % (course_project.start_time.strftime('%Y-%m-%d'),
                                  course_project.end_time.strftime('%Y-%m-%d')) if \
             (course_project.start_time and course_project.end_time) else '上课时间待定'
         project_name = validated_data['project'].name
         create_course_template_message(openid=openid, user_name=user_name, sales_man_name=sales_man_name,
-                                       project_name=project_name, course_name=course_name, course_time=course_time, address=address)
+                                       project_name=project_name, course_name=course_name, course_time=course_time,
+                                       address=address)
 
     def create(self, validated_data):
         instance = super().create(validated_data)
@@ -305,7 +312,8 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         user_info = UserInfo.objects.filter(user=instance.user).values('id', 'name', 'email', 'wechat').first()
         data['user_info'] = user_info
-        data['switch_img'] = '%s%s%s' % (settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
+        data['switch_img'] = '%s%s%s' % (
+            settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
         data['project'] = {'id': instance.project.id, 'name': instance.project.name}
@@ -314,6 +322,7 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
 
 class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
     """成绩单寄送地址Serializer"""
+
     class Meta:
         model = UserCourse
         fields = ['id', 'project', 'course']
@@ -403,7 +412,8 @@ class AdminOrderSerializer(OrderSerializer):
             UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
                 status='USED' if status == 'CONFIRMED' else 'TO_USE')
         self.notice_to_user(instance, confirm_status, confirm_remark)
-        HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE', remark=remark,
+        HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE',
+                                     remark=remark,
                                      source_type='ORDER')
         return instance
 
@@ -414,7 +424,8 @@ class AdminOrderSerializer(OrderSerializer):
             current_course_num = instance.usercourse_set.all().filter(
                 user=instance.user, project_id=chart['project']['id'], order=instance).count()
             chart['current_course_num'] = current_course_num
-        user_coupons = UserCoupon.objects.filter(coupon_id__in=json.loads(instance.coupon_list), user=instance.user) if instance.coupon_list else None
+        user_coupons = UserCoupon.objects.filter(coupon_id__in=json.loads(instance.coupon_list),
+                                                 user=instance.user) if instance.coupon_list else None
         data['coupons_info'] = [{'id': user_coupon.coupon.id, 'amount': user_coupon.coupon.amount,
                                  'coupon_code': user_coupon.coupon.coupon_code, 'info': user_coupon.coupon.info}
                                 for user_coupon in user_coupons] if user_coupons else None
@@ -423,6 +434,7 @@ class AdminOrderSerializer(OrderSerializer):
 
 class SecondLevelSerializer(serializers.ModelSerializer):
     """二级菜单Serializer"""
+
     class Meta:
         model = SecondLevel
         fields = ['id', 'name', 'key', 'icon']

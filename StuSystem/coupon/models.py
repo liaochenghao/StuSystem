@@ -33,8 +33,8 @@ class UserCoupon(models.Model):
         ('LOCKED', '被锁定'),
         ('USED', '已使用')
     )
-    user = models.ForeignKey(User)
-    coupon = models.ForeignKey(Coupon)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    coupon = models.ForeignKey(Coupon,on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=30, choices=STATUS, default='TO_USE')
 
     class Meta:

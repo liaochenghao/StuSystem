@@ -21,7 +21,7 @@ class Campus(models.Model):
 
 class Project(models.Model):
     """项目表"""
-    campus = models.ForeignKey(Campus)
+    campus = models.ForeignKey(Campus,on_delete=models.DO_NOTHING)
     name = models.CharField('项目名称', max_length=30, null=True)
     start_date = models.DateField('开始时间')
     end_date = models.DateField('结束时间')
@@ -55,7 +55,7 @@ class Project(models.Model):
 
 class ProjectCourseFee(models.Model):
     """项目课程费用对应表"""
-    project = models.ForeignKey(Project, related_name='project_course_fee')
+    project = models.ForeignKey(Project, related_name='project_course_fee',on_delete=models.DO_NOTHING)
     course_number = models.IntegerField('课程门数')
     course_fee = models.FloatField('课程费用')
 
@@ -85,8 +85,8 @@ class Course(models.Model):
 
 class CourseProject(models.Model):
     """课程与项目对应表"""
-    project = models.ForeignKey(Project, verbose_name='项目名称')
-    course = models.ForeignKey(Course, verbose_name='课程名称')
+    project = models.ForeignKey(Project, verbose_name='项目名称',on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, verbose_name='课程名称',on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     professor = models.CharField('授课教授', max_length=30)

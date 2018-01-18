@@ -97,12 +97,12 @@ class AssignSalesManSerializer(serializers.Serializer):
         user.save()
         UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
                                           **{
-                                               "user": user,
-                                               "unionid": weixin_info.get('unionid'),
-                                               "headimgurl": weixin_info['headimgurl'],
-                                               "openid": res['openid'],
-                                               "wx_name": weixin_info['nickname']
-                                           })
+                                              "user": user,
+                                              "unionid": weixin_info.get('unionid'),
+                                              "headimgurl": weixin_info['headimgurl'],
+                                              "openid": res['openid'],
+                                              "wx_name": weixin_info['nickname']
+                                          })
         sales_man_info = auto_assign_sales_man(user)
         return {'sales_man': sales_man_info, 'ticket': ticket}
 
@@ -160,7 +160,7 @@ class ListUserInfoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
-                             instance.major, instance.graduate_year, instance.gpa])     # 判断用户是否已建档
+                             instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
 
@@ -183,7 +183,8 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
+        fields = ['id', 'user', 'province_post_code', 'university' 'department', 'transfer_department',
+                  'transfer_office', 'address', 'teacher_name', 'phone', 'email']
         read_only_fields = ['user']
 
     def create(self, validated_data):
