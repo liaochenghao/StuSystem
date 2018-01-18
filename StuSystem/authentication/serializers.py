@@ -183,9 +183,13 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'province_post_code', 'university' 'department', 'transfer_department',
+        fields = ['id', 'user', 'province_post_code', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
         read_only_fields = ['user']
+
+    def validate(self, attrs):
+        if StudentScoreDetail.objects.filter(user=self.context['request'].user).exists():
+            raise serializers.ValidationError('成绩单邮寄信息已经存在，不能创建')
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
