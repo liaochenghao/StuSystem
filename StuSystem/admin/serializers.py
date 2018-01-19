@@ -41,7 +41,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['channel'] = get_channel_info(instance)
+        data['channel'] = get_channel_info(instance.user)
         return data
 
 
@@ -80,7 +80,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['amount'] = item.pop('coupon__amount')
 
         data['user_coupon'] = user_coupon
-        data['channel'] = get_channel_info(instance)
+        data['channel'] = get_channel_info(instance.user)
         try:
             data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)). \
                 values('id', 'name', 'info', 'create_time')
