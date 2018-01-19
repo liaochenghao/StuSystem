@@ -1,16 +1,15 @@
 # coding: utf-8
 from admin.models import PaymentAccountInfo
 from common.models import SalesManUser
-from common.serializers import CampusSerializer
+from common.serializers import CommonNoticeSerializer
 from coupon.models import UserCoupon
-from source.models import Campus
-from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from authentication.models import User
 from authentication.models import UserInfo
 from order.models import Order, UserCourse
-from utils.functions import get_key_verbose_data
+from utils.functions import get_key_verbose_data, handle_mongodb_cursor_data
+from utils import stu_system
 
 
 class GlobalEnumsViewSet(APIView):
@@ -30,3 +29,17 @@ class GlobalEnumsViewSet(APIView):
             'user_role': get_key_verbose_data(dict(User.ROLE)),
         }
         return Response(res)
+
+
+class CommonNoticeViewSet(APIView):
+    def get(self, request):
+        notice_message = handle_mongodb_cursor_data(stu_system.message_auto_notice.find({'user_id': request.user.id,
+                                                                                         'read': {'$ne': True}}))
+        return Response(notice_message)
+
+    def put(self, request):
+        serializer = CommonNoticeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        stu_system.message_auto_notice.update({'user_id': request.user.id, 'module_name': validated_data['module_name']})
+        return Response()
