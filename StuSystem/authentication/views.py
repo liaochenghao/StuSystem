@@ -3,7 +3,7 @@
 from authentication.functions import auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
-    AssignSalesManSerializer, ClientAuthorizeSerializer, CustomUserInfoSerializer
+    AssignSalesManSerializer, ClientAuthorizeSerializer
 from coupon.models import Coupon
 from rest_framework import exceptions
 from rest_framework import viewsets, mixins
@@ -143,7 +143,7 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
         instance = self.queryset.get(user=user)
         return instance
 
-    @detail_route(['PUT', 'PATCH'], serializer_class=CustomUserInfoSerializer)
+    @detail_route(['PUT', 'PATCH'])
     def user_info(self, request, pk):
         # 兼容微信小程序，提供更新用户信息接口
         partial = False if request.method == 'PUT' else True

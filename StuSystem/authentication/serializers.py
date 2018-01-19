@@ -117,66 +117,28 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs.get('wcampus'):
-            attrs['wcampus'] = json.dumps(attrs['wcampus'])
-        return attrs
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
-        return data
-
-
-# 兼容微信小程序客户端
-class CustomUserInfoSerializer(serializers.ModelSerializer):
-    wcampus = serializers.ListField()
-
-    class Meta:
-        model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
-        read_only_fields = ['headimgurl']
-
-    def validate(self, attrs):
-        try:
-            if attrs.get('wcampus'):
-                # attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+            try:
                 attrs['wcampus'] = json.dumps(attrs['wcampus'])
-        except Exception as e:
-            raise serializers.ValidationError('wcampus验证错误: %s' % e)
+            except Exception as e:
+                raise serializers.ValidationError('wcampus验证错误: %s' % e)
         return attrs
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
-        return data
-
-
-class ListUserInfoSerializer(serializers.ModelSerializer):
-    last_login = serializers.DateTimeField(source='user.last_login')
-
-    class Meta:
-        model = UserInfo
-        fields = ['user_id', 'name', 'email', 'cschool', 'last_login']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        personal_file = any([instance.english_name, instance.gender, instance.id_number,
-                             instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
-        data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
 
 
 class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
-    grade = VerboseChoiceField(choices=UserInfo.GRADE, required=False)
-    birth_date = serializers.DateField(required=False)
-    phone = serializers.CharField(required=False)
+    grade = VerboseChoiceField(choices=UserInfo.GRADE)
+    cschool_info = serializers.DictField(source='school_info')
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'english_name', 'email', 'wechat', 'cschool', 'gender', 'id_number',
-                  'major', 'graduate_year', 'gpa', 'birth_date', 'grade', 'phone']
-        read_only_fields = ['id', 'cschool']
+        fields = ['id', 'name', 'english_name', 'email', 'wechat', 'gender', 'id_number', 'birth_date', 'grade',
+                  'phone', 'cschool_info']
 
 
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
