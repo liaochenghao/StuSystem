@@ -33,33 +33,10 @@ class User(AbstractBaseUser):
 
 
 class UserInfo(models.Model):
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    name = models.CharField('学生姓名', max_length=30)
-    email = models.EmailField('email', max_length=30)
-    wechat = models.CharField('微信号', max_length=30)
-    cschool = models.CharField('当前学校', max_length=30)
-    wcampus = models.CharField('意向校区', max_length=60)
-    create_time = models.DateTimeField('创建时间', auto_now=True)
-    webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
-    unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, blank=True, unique=True)
-    openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
-    s_openid = models.CharField('署校联盟小程序openid', max_length=255, null=True, unique=True)
-    headimgurl = models.CharField('微信头像url', max_length=255, null=True)
-    wx_name = models.CharField('微信昵称', max_length=30, null=True)
-
-    first_name = models.CharField('First Name', max_length=30, null=True)
-    last_name = models.CharField('Last name', max_length=30, null=True)
-    phone = models.CharField('联系手机', max_length=11)
     GENDER = (
         ('MALE', '男'),
         ('FEMALE', '女')
     )
-    gender = models.CharField('性别', choices=GENDER, max_length=30)
-    id_number = models.CharField('身份证号/护照号', max_length=30, unique=True, null=True)
-    major = models.CharField('专业', max_length=30, null=True)
-    graduate_year = models.CharField('毕业年份', max_length=30, null=True)
-    gpa = models.FloatField('GPA')
-    birth_date = models.DateField('出生日期')
     GRADE = (
         ('GRADE_ONE', '大一'),
         ('GRADE_TWO', '大二'),
@@ -67,7 +44,28 @@ class UserInfo(models.Model):
         ('GRADE_FOUR', '大四'),
         ('GRADE_FIVE', '大五')
     )
-    grade = models.CharField(choices=GRADE, default='grade_one', max_length=10)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    name = models.CharField('学生姓名', max_length=30, null=True)
+    english_name = models.CharField('英文名称', max_length=30, null=True)
+    email = models.EmailField('email', max_length=30, null=True)
+    wechat = models.CharField('微信号', max_length=30, null=True)
+    cschool = models.CharField('当前学校', max_length=30, null=True)
+    wcampus = models.CharField('意向校区', max_length=60, null=True)
+    create_time = models.DateTimeField('创建时间', auto_now=True)
+    webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
+    unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, unique=True)
+    openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
+    s_openid = models.CharField('署校联盟小程序openid', max_length=255, null=True, unique=True)
+    headimgurl = models.CharField('微信头像url', max_length=255, null=True)
+    wx_name = models.CharField('微信昵称', max_length=30, null=True)
+    phone = models.CharField('联系手机', max_length=11, null=True)
+    gender = models.CharField('性别', choices=GENDER, max_length=30, null=True)
+    id_number = models.CharField('身份证号/护照号', max_length=30, unique=True, null=True)
+    major = models.CharField('专业', max_length=30, null=True)
+    graduate_year = models.CharField('毕业年份', max_length=30, null=True)
+    gpa = models.FloatField('GPA', null=True)
+    birth_date = models.DateField('出生日期', null=True)
+    grade = models.CharField(choices=GRADE, default='grade_one', max_length=10, null=True)
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
 
     class Meta:
@@ -95,7 +93,7 @@ class UserInfo(models.Model):
             student_status = 'PAYED_ORDER'
         elif Order.objects.filter(user=self.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
             student_status = 'SUPPLY_ORDER'
-        elif all([self.first_name, self.last_name, self.gender, self.id_number, self.major,
+        elif all([self.english_name, self.gender, self.id_number, self.major,
                   self.graduate_year, self.gpa]):
             student_status = 'PERSONAL_FILED'
         else:

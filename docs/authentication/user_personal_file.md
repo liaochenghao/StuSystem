@@ -18,11 +18,10 @@
     "data": {
         "id": 1,
         "name": "yirantai",                     str   用户姓名
+        "english_name": "flyer"                 str   英文名
         "email": "896275756@qq.com",            str   email
         "wechat": "flyerweixin",                str   微信号
         "cschool": "北京大学",                   str   所在学校
-        "first_name": null,                     str
-        "last_name": null,                      str
         "gender": null,                         dict   性别
         "id_number": null,                      str    身份证号／护照号
         "major": null,                          str    专业

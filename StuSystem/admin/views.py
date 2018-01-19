@@ -99,8 +99,7 @@ class StatisticsViewSet(mixins.ListModelMixin,
     @list_route()
     def students_overview(self, request):
         students_num = self.queryset.filter(user__role='STUDENT').count()
-        personal_file_num = self.queryset.filter(first_name__isnull=False,
-                                                 last_name__isnull=False,
+        personal_file_num = self.queryset.filter(english_name__isnull=False,
                                                  phone__isnull=False,
                                                  gender__isnull=False,
                                                  id_number__isnull=False,

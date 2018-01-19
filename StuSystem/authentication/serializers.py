@@ -159,7 +159,7 @@ class ListUserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
+        personal_file = any([instance.english_name, instance.gender, instance.id_number,
                              instance.major, instance.graduate_year, instance.gpa])  # 判断用户是否已建档
         data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
@@ -168,16 +168,15 @@ class ListUserInfoSerializer(serializers.ModelSerializer):
 class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
-    # todo 暂时将grade, birth_date, phone 设置为非必要参数
     grade = VerboseChoiceField(choices=UserInfo.GRADE, required=False)
     birth_date = serializers.DateField(required=False)
     phone = serializers.CharField(required=False)
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'cschool', 'first_name', 'last_name', 'gender', 'id_number',
+        fields = ['id', 'name', 'english_name', 'email', 'wechat', 'cschool', 'gender', 'id_number',
                   'major', 'graduate_year', 'gpa', 'birth_date', 'grade', 'phone']
-        read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
+        read_only_fields = ['id', 'cschool']
 
 
 class StudentScoreDetailSerializer(serializers.ModelSerializer):

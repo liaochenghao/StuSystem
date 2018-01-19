@@ -8,8 +8,9 @@
 **请求参数**:
 ```
     {
-        "first_name":   str     最大长度30
-        "last_name":    str     最大长度30
+        "name":         str     中文名称
+        "english_name": str     英文名称
+        "email":        str     邮箱
         "gender":       str     MALE--男, FEMALE--女
         "id_number":    str     最大长度30
         "major":        str     专业
@@ -30,11 +31,10 @@
     "data": {
         "id": 1,
         "name": "yirantai",                     str   用户姓名
+        "english_name": "flyer"                 str   英文名
         "email": "896275756@qq.com",            str   email
         "wechat": "flyerweixin",                str   微信号
         "cschool": "北京大学",                   str   所在学校
-        "first_name": null,                     str
-        "last_name": null,                      str
         "gender": null,                         dict   性别
         "id_number": null,                      str    身份证号／护照号
         "major": null,                          str    专业

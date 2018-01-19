@@ -61,7 +61,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['user_id', 'name', 'email', 'first_name', 'last_name', 'gender', 'id_number', 'wechat',
+        fields = ['user_id', 'name', 'email', 'gender', 'id_number', 'wechat',
                   'cschool', 'wcampus', 'major', 'graduate_year', 'gpa', 'user_info_remark']
 
     def to_representation(self, instance):
@@ -238,9 +238,7 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
     def create_course_notice(self, validated_data):
         openid = validated_data['user'].username
         user_info = UserInfo.objects.filter(user=validated_data['user']).first()
-        user_name = '%s%s' % (user_info.first_name, user_info.last_name) if (
-                user_info.first_name and user_info.last_name) \
-            else user_info.wx_name
+        user_name = user_info.name if user_info.name else user_info.wx_name
         sales_man_user = SalesManUser.objects.filter(user=validated_data['user']).first()
         sales_man_name = '管理员' if (not sales_man_user) else sales_man_user.sales_man.name
         course_name = validated_data['course'].name
@@ -379,8 +377,7 @@ class AdminOrderSerializer(OrderSerializer):
     def notice_to_user(self, instance, confirm_status, confirm_remark):
         openid = instance.user.username
         user_info = UserInfo.objects.filter(user=instance.user).first()
-        name = '%s%s' % (user_info.first_name, user_info.last_name) if (user_info.first_name and user_info.last_name) \
-            else user_info.wx_name
+        name = user_info.name if user_info.name else user_info.wx_name
         order_confirmed_template_message(openid=openid, name=name, confirm_status=confirm_status, remark=confirm_remark)
         return
 
