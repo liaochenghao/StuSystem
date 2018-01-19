@@ -114,9 +114,19 @@ class UserInfoRemark(models.Model):
         db_table = 'user_info_remark'
 
 
+# class Ticket(models.Model):
+#     user = models.ForeignKey(User)
+#     ticket = models.CharField('用户ticket', max_length=100, unique=True)
+#     create_time = models.DateTimeField('创建时间', auto_now=True)
+#     expired_time = models.DateTimeField('过期时间')
+#
+#     class Meta:
+#         db_table = 'ticket'
+
+
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     province_post_code = models.CharField('具体的州/省的邮编', max_length=30)
     university = models.CharField('大学名称', max_length=30)
     department = models.CharField('院系名称', max_length=30, default=None)
@@ -125,7 +135,7 @@ class StudentScoreDetail(models.Model):
     address = models.CharField('详细地址', max_length=60, default=None)
     teacher_name = models.CharField('收件老师姓名', max_length=30, default=None)
     phone = models.CharField('联系电话', max_length=30)
-    email = models.EmailField('邮箱', max_length=30)
+    email = models.CharField('邮箱', max_length=30, default=None)
     is_active = models.BooleanField(default=True)
 
     class Meta:

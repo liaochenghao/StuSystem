@@ -135,7 +135,7 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'province_post_code', 'university' 'department', 'transfer_department',
+        fields = ['id', 'user', 'province_post_code', 'university','department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
 
@@ -343,10 +343,14 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('usr_course_id: %s' % instance.id)
         data['student_score_detail'] = {
             'id': chart.stu_score_detail.id if chart.stu_score_detail else None,
+            'province_post_code': chart.stu_score_detail.province_post_code if chart.stu_score_detail else '无',
+            'university': chart.stu_score_detail.university if chart.stu_score_detail else '无',
             'department': chart.stu_score_detail.department if chart.stu_score_detail else '无',
+            'transfer_department': chart.stu_score_detail.transfer_department if chart.stu_score_detail else '无',
+            'transfer_office': chart.stu_score_detail.transfer_office if chart.stu_score_detail else '无',
             'phone': chart.stu_score_detail.phone if chart.stu_score_detail else '无',
-            'country': chart.stu_score_detail.country if chart.stu_score_detail else '无',
-            'post_code': chart.stu_score_detail.post_code if chart.stu_score_detail else '无',
+            'teacher_name': chart.stu_score_detail.teacher_name if chart.stu_score_detail else '无',
+            'email': chart.stu_score_detail.email if chart.stu_score_detail else '无',
             'address': chart.stu_score_detail.address if chart.stu_score_detail else '无'
         }
         return data
