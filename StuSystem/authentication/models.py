@@ -72,6 +72,15 @@ class UserInfo(models.Model):
         db_table = 'student_info'
 
     @property
+    def school_info(self):
+        return {
+            'cschool': self.cschool,
+            'major': self.major,
+            'graduate_year': self.graduate_year,
+            'gpa': self.gpa
+        }
+
+    @property
     def student_status(self):
         from order.models import UserCourse, Order
         STUDENT_STATUS = (
@@ -111,15 +120,6 @@ class UserInfoRemark(models.Model):
     class Meta:
         db_table = 'user_info_remark'
 
-
-# class Ticket(models.Model):
-#     user = models.ForeignKey(User)
-#     ticket = models.CharField('用户ticket', max_length=100, unique=True)
-#     create_time = models.DateTimeField('创建时间', auto_now=True)
-#     expired_time = models.DateTimeField('过期时间')
-#
-#     class Meta:
-#         db_table = 'ticket'
 
 
 class StudentScoreDetail(models.Model):
