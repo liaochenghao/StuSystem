@@ -23,7 +23,22 @@ class Mongodb(metaclass=SingleTon):
         mongodb = MongoClient(self.url)
         return mongodb
 
-    @property
-    def stu_system(self):
-        """返回stu_system db 实例"""
-        return self.connection()['stu_system']
+    def find(self, collection_name, search_data, db_name='stu_system'):
+        db = self.connection()[db_name]
+        return db.get_collection(collection_name).find(search_data)
+
+    def insert(self, collection_name, insert_data, db_name='stu_system'):
+        db = self.connection()[db_name]
+        return db.get_collection(collection_name).insert(insert_data)
+
+    def update_one(self, collection_name, search_data, update_data, db_name='stu_system'):
+        db = self.connection()[db_name]
+        return db.get_collection(collection_name).update(search_data, update_data)
+
+    def update_many(self, collection_name, search_data, update_data, db_name='stu_system'):
+        db = self.connection()[db_name]
+        return db.get_collection(collection_name).update(search_data, update_data, multi=True)
+
+
+stu_db = Mongodb()
+

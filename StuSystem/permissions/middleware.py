@@ -9,7 +9,7 @@ from django.conf import settings
 from django.http.response import HttpResponse
 
 from authentication.models import User
-from utils import stu_system
+from utils.mongodb import stu_db
 from micro_service.service import AuthorizeServer
 
 EXEMPT_URLS = []
@@ -104,7 +104,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
                 'response_content': json.loads(response.content.decode('utf-8'))
             })
             collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
-            stu_system.get_collection(collection_name).insert(data)
+            stu_db.insert(collection_name=collection_name, insert_data=data)
         except Exception as e:
             pass
         return response
