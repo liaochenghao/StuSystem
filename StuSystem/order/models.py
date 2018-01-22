@@ -28,7 +28,7 @@ class ShoppingChart(models.Model):
 class Order(models.Model):
     """订单"""
     CURRENCY = (
-        ('DOLLAR', '美金'),
+        ('FOREIGN_CURRENCY', '外币'),
         ('RMB', '人民币')
     )
     PAYMENT = (
