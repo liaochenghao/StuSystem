@@ -10,7 +10,6 @@
 {
     "project": int 项目id 必填
     "course_num": int  课程数量  必填
-    "stu_score_detail":  int  学生成绩单寄送地址id  选填
 }
 ```
 

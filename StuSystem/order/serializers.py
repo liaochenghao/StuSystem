@@ -215,12 +215,10 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
 class ShoppingChartSerializer(serializers.ModelSerializer):
     """购物车"""
-    stu_score_detail = serializers.PrimaryKeyRelatedField(queryset=StudentScoreDetail.objects.filter(is_active=True),
-                                                          required=False)
 
     class Meta:
         model = ShoppingChart
-        fields = ['id', 'project', 'course_num', 'course_fee', 'create_time', 'stu_score_detail']
+        fields = ['id', 'project', 'course_num', 'course_fee', 'create_time']
         read_only_fields = ['course_fee']
 
     def validate(self, attrs):
@@ -236,5 +234,4 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project'] = ProjectSerializer(instance.project).data
-        data['stu_score_detail'] = StudentScoreDetailSerializer(instance.stu_score_detail).data
         return data

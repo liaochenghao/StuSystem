@@ -339,18 +339,6 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
         chart = ShoppingChart.objects.filter(project=instance.project, orderchartrelation__order=instance.order).first()
         if chart is None:
             raise serializers.ValidationError('usr_course_id: %s' % instance.id)
-        data['student_score_detail'] = {
-            'id': chart.stu_score_detail.id if chart.stu_score_detail else None,
-            'province_post_code': chart.stu_score_detail.province_post_code if chart.stu_score_detail else '无',
-            'university': chart.stu_score_detail.university if chart.stu_score_detail else '无',
-            'department': chart.stu_score_detail.department if chart.stu_score_detail else '无',
-            'transfer_department': chart.stu_score_detail.transfer_department if chart.stu_score_detail else '无',
-            'transfer_office': chart.stu_score_detail.transfer_office if chart.stu_score_detail else '无',
-            'phone': chart.stu_score_detail.phone if chart.stu_score_detail else '无',
-            'teacher_name': chart.stu_score_detail.teacher_name if chart.stu_score_detail else '无',
-            'email': chart.stu_score_detail.email if chart.stu_score_detail else '无',
-            'address': chart.stu_score_detail.address if chart.stu_score_detail else '无'
-        }
         return data
 
 

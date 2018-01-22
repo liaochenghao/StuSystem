@@ -10,7 +10,6 @@
 {
     "project": int 项目id
     "course_num": int  课程数量
-    "stu_score_detail":  int  学生成绩单寄送地址id
 }
 ```
 

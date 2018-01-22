@@ -13,14 +13,13 @@ class ShoppingChart(models.Model):
         ('PAYED', '已支付'),
         ('DELETED', '已删除')
     )
-    project = models.ForeignKey(Project,on_delete=models.DO_NOTHING)
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     course_num = models.IntegerField('课程数量')
     course_fee = models.FloatField('课程费用')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     status = models.CharField('状态', max_length=30, choices=STATUS, default='NEW')
-    stu_score_detail = models.ForeignKey(StudentScoreDetail, verbose_name='学生成绩地址', null=True,on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'shopping_chart'
@@ -78,10 +77,10 @@ class UserCourse(models.Model):
         ('PASS', '通过'),
         ('NOPASS', '不通过')
     )
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    course = models.ForeignKey(Course,on_delete=models.DO_NOTHING)
-    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
-    project = models.ForeignKey(Project,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField('创建时间', auto_now=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     score = models.IntegerField('课程成绩分数')

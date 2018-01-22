@@ -58,15 +58,6 @@
         "course_num": 3,      课程数量
         "course_fee": 28120.0,      课程价格
         "create_time": "2017-11-15T07:06:13.588045Z",
-        "stu_score_detail": {   用户成绩单寄送信息
-            "id": 10,
-            "user": 2,
-            "department": "材料科学与工程学院",
-            "phone": "18608146540",
-            "country": "美国",
-            "post_code": "021878768687",
-            "address": "纽约市布鲁克林区布鲁克林大道58号"
-        }
     },
     "field_name": ""
 }
