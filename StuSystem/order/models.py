@@ -44,9 +44,10 @@ class Order(models.Model):
         ('CONFIRMED', '已确认'),
         ('CONFIRM_FAILED', '验证失败')
     )
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    currency = models.CharField('币种', choices=CURRENCY, max_length=30)
-    payment = models.CharField('支付方式', choices=PAYMENT, max_length=30)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    order_number = models.CharField('订单号', max_length=30, null=True, unique=True)
+    currency = models.CharField('币种', choices=CURRENCY, max_length=30, null=True)
+    payment = models.CharField('支付方式', choices=PAYMENT, max_length=30, null=True)
     status = models.CharField('订单状态', choices=STATUS, max_length=30, default='TO_PAY')
     standard_fee = models.FloatField('标准费用')
     pay_fee = models.FloatField('支付费用')
