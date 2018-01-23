@@ -9,7 +9,7 @@ from authentication.models import User
 from authentication.models import UserInfo
 from order.models import Order, UserCourse
 from utils.functions import get_key_verbose_data, handle_mongodb_cursor_data
-from utils.mongodb import stu_db
+from utils import stu_system
 
 
 class GlobalEnumsViewSet(APIView):
@@ -33,16 +33,13 @@ class GlobalEnumsViewSet(APIView):
 
 class CommonNoticeViewSet(APIView):
     def get(self, request):
-        notice_message = handle_mongodb_cursor_data(stu_db.find(collection_name='message_auto_notice',
-                                                                search_data={'user_id': request.user.id,
-                                                                             'read': {'$ne': True}}))
+        notice_message = handle_mongodb_cursor_data(stu_system.message_auto_notice.find({'user_id': request.user.id,
+                                                                                         'read': {'$ne': True}}))
         return Response(notice_message)
 
     def put(self, request):
         serializer = CommonNoticeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-        stu_db.update_many(collection_name='message_auto_notice',
-                           search_data={'user_id': request.user.id, 'module_name': validated_data['module_name']},
-                           update_data={"$set": {'read': True}})
-        return Response({'msg': '操作成功'})
+        stu_system.message_auto_notice.update({'user_id': request.user.id, 'module_name': validated_data['module_name']})
+        return Response()
