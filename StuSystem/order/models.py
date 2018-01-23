@@ -108,11 +108,11 @@ class UserCourse(models.Model):
 
 class OrderPayment(models.Model):
     """订单支付信息"""
-    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
-    amount = models.FloatField('支付金额')
-    account_number = models.CharField('支付账号', max_length=30)
-    account_name = models.CharField('支付姓名', max_length=30)
-    opening_bank = models.CharField('开户银行', max_length=30, null=True)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
+    amount = models.FloatField('支付金额', null=True)
+    account_number = models.CharField('支付账号', max_length=60, null=True)
+    account_name = models.CharField('支付姓名', max_length=60, null=True)
+    opening_bank = models.CharField('开户银行', max_length=60, null=True)
     pay_date = models.DateField('支付日期')
     img = models.ImageField(upload_to='order/order_payment')
     create_time = models.DateTimeField(auto_now_add=True)

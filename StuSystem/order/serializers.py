@@ -198,18 +198,30 @@ class UserOrderCourseSerializer(serializers.ModelSerializer):
 
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
-    img = Base64ImageField()
+    # img = Base64ImageField()
+    payment = VerboseChoiceField(choices=Order.PAYMENT, write_only=True)
+    currency = VerboseChoiceField(choices=Order.CURRENCY, write_only=True)
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'img', 'amount']
+        fields = ['id', 'img', 'order', 'payment', 'currency']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        order = attrs['order']
+        if order.user.id != user.id:
+            raise serializers.ValidationError('您权限操作他人的订单')
+        return attrs
 
     def create(self, validated_data):
-        validated_data['order'].status = 'TO_CONFIRM'
-        validated_data['order'].save()
+        order = validated_data['order']
+        order.status = 'TO_CONFIRM'
+        order.currency = validated_data.pop('currency')
+        order.payment = validated_data.pop('payment')
+        order.save(update_fields=['status', 'currency', 'payment'])
         instance = super().create(validated_data)
-        HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE', remark='上传了订单支付信息',
-                                     source_type='ORDER')
+        HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE',
+                                     remark='上传了订单支付信息', source_type='ORDER')
         return instance
 
     def to_representation(self, instance):

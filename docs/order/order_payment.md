@@ -9,12 +9,9 @@
 ```
 {
     "order":   int     订单id   必填
-    "account_number":  varchar 支付账号  必填
-    "account_name":   varchar  支付姓名  必填
-    "opening_bank":   varchar  开户银行，选填
-    "pay_date":        date  支付日期    必填
     "img":             Base64   确认图片,
-    "amount": float   用户支付的金额
+    "currency": str    币种     必填
+    "payment":  str    支付方式  必填
 }
 ```
 
