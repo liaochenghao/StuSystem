@@ -8,25 +8,20 @@
 **请求参数**:
 ```
     {
-        "order":  int   订单id， 必填
+        "order":    int   订单id， 必填
+        "project":  int   项目id， 必填
     }
 ```
 
 **成功返回**：
 ```
-"code": 0,
+{
+    "code": 0,
     "msg": "请求成功",
     "data": {
-        "course_num": 5,                                                # 当前订单可选课程总数
-        "current_course": [                                             # 当前订单已选择课程课程
-            {
-                "course__course_code": "2"
-            },
-            {
-                "course__course_code": "5"
-            }
-        ],
-        "project_all_course": [                                         # 当前订单所有课程信息
+        "course_num": 5,                                                # 当前项目课程总数
+        "surplus_course_num": 3,,                                       # 当前项目剩余可选课程数
+        "project_all_course": [                                         # 当前项目所有可选课程信息
             {
                 "course_code": "1",                                     # 课程代码
                 "name": "Financial Accounting",                         # 课程名称
