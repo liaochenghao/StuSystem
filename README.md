@@ -45,6 +45,7 @@
 
 **通用接口**:
 - [获取全局的enums](docs/common/global_enums.md)
+- [获取付款帐号信息](docs//common/order_currency_payment.md)
 - [管理后台导航菜单栏](docs/common/desktop_navigation.md)
 
 **管理后台接口文档**:

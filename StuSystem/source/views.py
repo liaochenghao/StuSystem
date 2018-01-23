@@ -7,7 +7,7 @@ from StuSystem.settings import DOMAIN, MEDIA_URL
 from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
-    CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, \
+    CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, CurrentProjectCoursesSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer
 from order.models import Order, UserCourse, ShoppingChart
 
@@ -174,30 +174,18 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     @list_route()
     def current_project_courses(self, request):
         """获取当前项目，选课数量,课程总数及课程详细信息"""
-        order_id = request.query_params.get('order')
-        project_id = request.query_params.get('project')
-        if not order_id:
-            raise exceptions.ValidationError('请传入正确的order参数')
-        if not project_id:
-            raise exceptions.ValidationError('请传入正确的project参数')
+        serializer = CurrentProjectCoursesSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        order_id = serializer.validated_data['order_id']['id']
+        project_id = serializer.validated_data['project_id']['id']
         current_course = UserCourse.objects.filter(
             order_id=order_id, user=self.request.user, project_id=project_id).values_list('course__course_code')
-        project_all_course = Course.objects.filter(
+        current_all_course = Course.objects.filter(
             courseproject__project_id=project_id, is_active=True).exclude(course_code__in=current_course).values(
             'course_code', 'name', 'max_num', 'credit', 'courseproject__project__start_date',
             'courseproject__project__end_date', )
-        course = ShoppingChart.objects.filter(orderchartrelation__order_id=order_id,
-                                              orderchartrelation__order__status='CONFIRMED').values('course_num')
-        if course:
-            course_num = course[0].get('course_num')
-        else:
-            raise exceptions.ValidationError('当前项目没有课程 ！')
-        res = {
-            'course_num': course_num,
-            'surplus_course_num': course_num - len(current_course),
-            'project_all_course': project_all_course
-        }
-        return Response(res)
+
+        return Response(current_all_course)
 
     @list_route()
     def my_scores(self, request):
