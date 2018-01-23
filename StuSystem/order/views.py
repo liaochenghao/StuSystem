@@ -64,8 +64,8 @@ class OrderViewSet(mixins.CreateModelMixin,
         """订单币种及支付方式"""
         data = [
             {
-                'key': 'FOREIGN_CURRENCY',
-                'verbose': dict(Order.CURRENCY).get('FOREIGN_CURRENCY'),
+                'key': 'DOLLAR',
+                'verbose': dict(Order.CURRENCY).get('DOLLAR'),
                 'payment': [
                     {
                         'key': 'BANK',
@@ -119,6 +119,7 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def user_order_list(self, request):
         """用户订单列表"""
+        # todo 暂时不实现下拉翻页功能，待时机成熟再实现
         user = request.user
         status = self.request.query_params.get('status')
         none_canceled_order = self.request.query_params.get('none_canceled_order', True)

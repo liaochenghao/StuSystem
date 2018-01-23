@@ -38,7 +38,6 @@
         "standard_fee": 50240,
         "pay_fee": 50240,
         "remark": null,
-        "order_number": "2018012217443323"
         "charts": [
             {
                 "id": 2,
