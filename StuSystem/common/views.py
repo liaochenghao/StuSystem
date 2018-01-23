@@ -46,3 +46,52 @@ class CommonNoticeViewSet(APIView):
                            search_data={'user_id': request.user.id, 'module_name': validated_data['module_name']},
                            update_data={"$set": {'read': True}})
         return Response({'msg': '操作成功'})
+
+
+class OrderCurrencyPaymentViewSet(APIView):
+    def get(self, request):
+        payment = PaymentAccountInfo.objects.all()
+        inland_bank = payment.filter(payment='BANK', currency='RMB'). \
+            values('payment', 'currency', 'account_number', 'account_name', 'opening_bank', )
+        international_bank = payment.filter(payment='BANK', currency='FOREIGN_CURRENCY'). \
+            values('payment', 'currency', 'account_number', 'account_name', 'pay_link')
+        ali_pay = payment.filter(payment='ALI_PAY'). \
+            values('payment', 'currency', 'account_number', 'account_name', )
+        pay_pal = payment.filter(payment='PAY_PAL'). \
+            values('payment', 'opening_bank', 'currency', 'account_name', 'swift_code', 'routing_number_paper',
+                   'swift_code_foreign_currency', 'company_address', 'account_number', 'routing_number_wires')
+        res = [
+            {
+                'key': 'FOREIGN_CURRENCY',
+                'verbose': dict(PaymentAccountInfo.CURRENCY).get('FOREIGN_CURRENCY'),
+                'payment': [
+                    {
+                        'key': 'BANK',
+                        'verbose': dict(PaymentAccountInfo.PAYMENT).get('BANK'),
+                        'payment_information': international_bank
+                    },
+                    {
+                        'key': 'PAY_PAL',
+                        'verbose': dict(PaymentAccountInfo.PAYMENT).get('PAY_PAL'),
+                        'payment_information': pay_pal
+                    }
+                ]
+            },
+            {
+                'key': 'RMB',
+                'verbose': dict(PaymentAccountInfo.CURRENCY).get('RMB'),
+                'payment': [
+                    {
+                        'key': 'BANK',
+                        'verbose': dict(PaymentAccountInfo.PAYMENT).get('BANK'),
+                        'payment_information': inland_bank
+                    },
+                    {
+                        'key': 'ALI_PAY',
+                        'verbose': dict(PaymentAccountInfo.PAYMENT).get('ALI_PAY'),
+                        'payment_information': ali_pay
+                    },
+                ]
+            }
+        ]
+        return Response(res)
