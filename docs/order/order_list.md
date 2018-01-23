@@ -55,7 +55,6 @@
             "id": 14,
             "name": "anni"
         },
-        "order_number": "2018012217443323"
         "charts": [
             {
                 "id": 2,

@@ -1,5 +1,4 @@
 # coding: utf-8
-import datetime
 import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
@@ -29,8 +28,8 @@ class PaymentAccountInfoSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     """订单的serializer"""
-    currency = VerboseChoiceField(choices=Order.CURRENCY, required=False)
-    payment = VerboseChoiceField(choices=Order.PAYMENT, required=False)
+    currency = VerboseChoiceField(choices=Order.CURRENCY)
+    payment = VerboseChoiceField(choices=Order.PAYMENT)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
     coupon_list = serializers.ListField(write_only=True, required=False)
     chart_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
@@ -38,8 +37,8 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'chart_ids', 'currency', 'payment', 'create_time', 'modified_time', 'status',
-                  'standard_fee', 'pay_fee', 'remark', 'coupon_list', 'order_number']
-        read_only_fields = ['user', 'pay_fee', 'standard_fee', 'order_number']
+                  'standard_fee', 'pay_fee', 'remark', 'coupon_list']
+        read_only_fields = ['user', 'pay_fee', 'standard_fee']
 
     def validate(self, attrs):
         if not self.instance:
@@ -76,9 +75,6 @@ class OrderSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         standard_fee = sum([item.course_fee for item in ShoppingChart.objects.filter(
             id__in=chart_ids, status='NEW')])
-        order_count = Order.objects.all().count()
-        order_number = '%s%s%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S'), user.id, order_count)
-        validated_data['order_number'] = order_number
         validated_data['standard_fee'] = standard_fee
         validated_data['pay_fee'] = standard_fee
         validated_data['user'] = user
@@ -86,8 +82,7 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['coupon_list'] = json.dumps(coupon_list)
             # 计算优惠券费用
             coupon_list_fee = 0
-            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount',
-                                                                                                      flat=True)
+            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount', flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
             validated_data['pay_fee'] = standard_fee - coupon_list_fee if \

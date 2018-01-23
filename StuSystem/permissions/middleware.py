@@ -9,7 +9,7 @@ from django.conf import settings
 from django.http.response import HttpResponse
 
 from authentication.models import User
-from utils.mongodb import stu_db
+from utils import stu_system
 from micro_service.service import AuthorizeServer
 
 EXEMPT_URLS = []
@@ -71,8 +71,8 @@ class BackendAPIRequestMiddleWare(MiddlewareMixin):
 
 class AccessRecordMiddleWare(MiddlewareMixin):
     """接口访问记录"""
+    def process_request(self, request):
 
-    def process_response(self, request, response):
         meta = request.META
         http_method = request.method
         get_data = request.GET
@@ -83,7 +83,7 @@ class AccessRecordMiddleWare(MiddlewareMixin):
         ticket = request.COOKIES.get('ticket')
         request_user_agent = meta.get('HTTP_USER_AGENT')
         url = request.path_info.lstrip('')
-        insert_data = {
+        self.data = {
             'url': url,
             'method': http_method,
             'user_agent': request_user_agent,
@@ -94,14 +94,17 @@ class AccessRecordMiddleWare(MiddlewareMixin):
             'remote_addr': meta.get('REMOTE_ADDR'),
             'user_id': request.user.id
         }
+
+    def process_response(self, request, response):
         try:
-            insert_data.update({
+            data = self.data
+            data.update({
                 'status_code': response.status_code,
-                'process_time': int(time.time()) - insert_data.get('time'),
+                'process_time': int(time.time()) - data.get('time'),
                 'response_content': json.loads(response.content.decode('utf-8'))
             })
             collection_name = "access_records_%s" % datetime.datetime.now().strftime('%Y-%m-%d')
-            stu_db.insert(collection_name=collection_name, insert_data=insert_data)
+            stu_system.get_collection(collection_name).insert(data)
         except Exception as e:
             pass
         return response
