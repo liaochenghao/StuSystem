@@ -15,7 +15,6 @@ class CustomCampusSerializer(serializers.ModelSerializer):
 
 
 class CampusSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time', 'network_course']
@@ -147,7 +146,6 @@ class CourseCreditSwitchSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Course
         fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time']
@@ -163,8 +161,24 @@ class CourseSerializer(serializers.ModelSerializer):
         return data
 
 
-class UserCourseSerializer(serializers.ModelSerializer):
+class CurrentProjectCoursesSerializer(serializers.ModelSerializer):
+    """查询当前项目可选课程"""
+    order_id = serializers.PrimaryKeyRelatedField(queryset=Order.objects.values('id'), write_only=True)
+    project_id = serializers.PrimaryKeyRelatedField(queryset=Project.objects.values('id'), write_only=True)
 
+    class Meta:
+        model = Course
+        fields = ['order_id', 'project_id', ]
+
+    def validate(self, attrs):
+        order_id = attrs.get('order_id').get('id')
+        project_id = attrs.get('project_id').get('id')
+        if not ShoppingChart.objects.filter(orderchartrelation__order_id=order_id, project_id=project_id):
+            raise serializers.ValidationError('订单id : %s 不存在项目id : %s 的项目' % (order_id, project_id))
+        return attrs
+
+
+class UserCourseSerializer(serializers.ModelSerializer):
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all(), write_only=True)
     course_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
@@ -264,7 +278,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
             if user_course.credit_switch_status in ['SUCCESS', 'FAILURE']:
                 raise serializers.ValidationError('已上传学分转换图片，状态为: %s' %
-                                                  dict(UserCourse.CREDIT_SWITCH_STATUS).get(user_course.credit_switch_status))
+                                                  dict(UserCourse.CREDIT_SWITCH_STATUS).get(
+                                                      user_course.credit_switch_status))
 
             if user_course.credit_switch_status == 'PRE_POSTED':
                 raise serializers.ValidationError('成绩单尚未寄出')
@@ -290,7 +305,6 @@ class ProjectCourseSerializer(serializers.ModelSerializer):
 
 
 class CourseFilterElementsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time']
@@ -303,6 +317,7 @@ class CourseFilterElementsSerializer(serializers.ModelSerializer):
 
 class CourseProjectSerializer(serializers.ModelSerializer):
     """课程项目关联"""
+
     class Meta:
         model = CourseProject
         fields = ['id', 'course', 'project', 'create_time', 'professor', 'start_time', 'end_time', 'address']
