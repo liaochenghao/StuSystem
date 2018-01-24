@@ -17,7 +17,7 @@ DATABASES = {
 }
 
 REDIS_CONFIG = {
-    'host': '47.92.115.126',
+    'host': '42.51.8.152',
     'port': 6379
 }
 
