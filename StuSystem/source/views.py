@@ -176,15 +176,13 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         """获取当前项目，选课数量,课程总数及课程详细信息"""
         serializer = CurrentProjectCoursesSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        order_id = serializer.validated_data['order_id']['id']
-        project_id = serializer.validated_data['project_id']['id']
+        order = serializer.validated_data['order']
+        project = serializer.validated_data['project']
         current_course = UserCourse.objects.filter(
-            order_id=order_id, user=self.request.user, project_id=project_id).values_list('course__course_code')
+            order=order, user=self.request.user, project=project).values_list('id', flat=True)
         current_all_course = Course.objects.filter(
-            courseproject__project_id=project_id, is_active=True).exclude(course_code__in=current_course).values(
-            'course_code', 'name', 'max_num', 'credit', 'courseproject__project__start_date',
-            'courseproject__project__end_date', )
-
+            courseproject__project=project, is_active=True).exclude(id__in=current_course).\
+            values('id', 'course_code', 'name', 'credit')
         return Response(current_all_course)
 
     @list_route()

@@ -1,4 +1,4 @@
-### 获取当前项目，选课数量,课程总数及课程详细信息
+### 根据订单，项目，获取当前可选课程列表
 
 **请求地址**:
 ```
@@ -8,8 +8,8 @@
 **请求参数**:
 ```
     {
-        "order_id":    int   订单id， 必填
-        "project_id":  int   项目id， 必填
+        "order":    int   订单id， 必填
+        "project":  int   项目id， 必填
     }
 ```
 
@@ -19,26 +19,13 @@
     "code": 0,
     "msg": "请求成功",
     "data": [                                                           # 当前项目所有可选课程信息
-            {
-                "course_code": "1",                                     # 课程代码
-                "name": "Financial Accounting",                         # 课程名称
-                "max_num": 20,                                          # 最大容纳人数
-                "credit": 4,                                            # 课程学分
-                "courseproject__project__start_date": "2018-06-04",     # 项目开始时间
-                "courseproject__project__end_date": "2018-07-06"        # 项目结束时间
-            },
-            {
-                "course_code": "2",
-                "name": "Managerial Accounting",
-                "max_num": 20,
-                "credit": 4,
-                "courseproject__project__start_date": "2018-06-04",
-                "courseproject__project__end_date": "2018-07-06"
-            },
-
-        ......
-
-    ],
+        {
+            "id": 56,                                               # 课程id
+            "course_code": "1",                                     # 课程代码
+            "name": "Financial Accounting",                         # 课程名称
+            "credit": 4,                                            # 课程学分
+        },
+    ]
     "field_name": ""
 }
 ```

@@ -163,18 +163,18 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CurrentProjectCoursesSerializer(serializers.ModelSerializer):
     """查询当前项目可选课程"""
-    order_id = serializers.PrimaryKeyRelatedField(queryset=Order.objects.values('id'), write_only=True)
-    project_id = serializers.PrimaryKeyRelatedField(queryset=Project.objects.values('id'), write_only=True)
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), write_only=True)
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all(), write_only=True)
 
     class Meta:
         model = Course
-        fields = ['order_id', 'project_id', ]
+        fields = ['order', 'project']
 
     def validate(self, attrs):
-        order_id = attrs.get('order_id').get('id')
-        project_id = attrs.get('project_id').get('id')
-        if not ShoppingChart.objects.filter(orderchartrelation__order_id=order_id, project_id=project_id):
-            raise serializers.ValidationError('订单id : %s 不存在项目id : %s 的项目' % (order_id, project_id))
+        order = attrs['order']
+        project = attrs['project']
+        if not ShoppingChart.objects.filter(orderchartrelation__order=order, project=project):
+            raise serializers.ValidationError('订单id : %s 不存在项目id : %s 的项目' % (order.id, project.id))
         return attrs
 
 
