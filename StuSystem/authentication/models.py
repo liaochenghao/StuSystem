@@ -121,7 +121,6 @@ class UserInfoRemark(models.Model):
         db_table = 'user_info_remark'
 
 
-
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
