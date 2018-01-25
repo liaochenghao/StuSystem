@@ -24,6 +24,9 @@ class ShoppingChart(models.Model):
     class Meta:
         db_table = 'shopping_chart'
 
+    def __str__(self):
+        return str(self.pk)
+
 
 class Order(models.Model):
     """订单"""
@@ -59,11 +62,14 @@ class Order(models.Model):
     class Meta:
         db_table = 'order'
 
+    def __str__(self):
+        return str(self.pk)
+
 
 class OrderChartRelation(models.Model):
     """订单与商品关系"""
-    chart = models.ForeignKey(ShoppingChart,on_delete=models.DO_NOTHING)
-    order = models.ForeignKey(Order,on_delete=models.DO_NOTHING)
+    chart = models.ForeignKey(ShoppingChart, on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -88,6 +94,7 @@ class UserCourse(models.Model):
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_img = models.ImageField('审课照片', upload_to='course/confirm_img', null=True)
+    confirm_remark = models.CharField('审课备注', max_length=255, default=None)
     status = models.CharField('学生审课状态', choices=STATUS, default='TO_UPLOAD', max_length=30)
     post_datetime = models.DateTimeField('快递时间', null=True)
     post_channel = models.CharField('快递方式', max_length=30, null=True)
@@ -101,6 +108,7 @@ class UserCourse(models.Model):
     )
     credit_switch_status = models.CharField(max_length=30, choices=STATUS, default='PRE_POSTED')
     switch_img = models.ImageField('学分转换结果证明', upload_to='project/result/photo/', null=True)
+    switch_remark = models.CharField('学分转换备注', max_length=255, default=None)
 
     class Meta:
         db_table = 'user_course'
@@ -115,6 +123,7 @@ class OrderPayment(models.Model):
     opening_bank = models.CharField('开户银行', max_length=60, null=True)
     pay_date = models.DateField('支付日期')
     img = models.ImageField(upload_to='order/order_payment')
+    remark = models.CharField(max_length=255, default=None)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

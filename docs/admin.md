@@ -40,6 +40,7 @@
 
 **管理员学生成绩单寄送地址**：
 - [学生成绩寄送地址列表](docs/admin/user_course_address/user_course_address_list.md)
+- [学生成绩寄送地址详细](docs/admin/user_course_address/user_course_address_detail.md)
 - [修改学生成绩寄送地址](docs/admin/user_course_address/user_course_address_updata.md)
 
 **管理员为学生选课**：

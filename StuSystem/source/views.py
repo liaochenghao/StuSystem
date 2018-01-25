@@ -217,9 +217,13 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                                                     project=serializer.validated_data['project']).first()
             if user_course and api_key == 'course_credit_switch':
                 user_course.switch_img = serializer.validated_data['switch_img']
+                if serializer.validated_data['switch_remark']:
+                    user_course.switch_remark = serializer.validated_data['switch_remark']
                 user_course.credit_switch_status = 'SUCCESS'
             elif user_course and api_key == 'student_confirm_course':
                 user_course.confirm_img = serializer.validated_data['confirm_img']
+                if serializer.validated_data['confirm_remark']:
+                    user_course.confirm_remark = serializer.validated_data['confirm_remark']
                 user_course.status = 'TO_CONFIRM'
             user_course.save()
             res = {'msg': '图片上传成功'}
