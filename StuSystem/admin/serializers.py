@@ -137,7 +137,7 @@ class CourseScoreSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'province_post_code', 'university','department', 'transfer_department',
+        fields = ['id', 'user', 'province_post_code', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
 
@@ -324,24 +324,14 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
     """成绩单寄送地址Serializer"""
 
     class Meta:
-        model = UserCourse
-        fields = ['id', 'project', 'course']
+        model = StudentScoreDetail
+        fields = ['id', 'province_post_code', 'university', 'department', 'transfer_department',
+                  'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['project'] = {
-            'id': instance.project.id,
-            'name': instance.project.name
-        }
-        data['course'] = {
-            'id': instance.course.id,
-            'course_code': instance.course.course_code,
-            'name': instance.course.name
-        }
-        chart = ShoppingChart.objects.filter(project=instance.project, orderchartrelation__order=instance.order).first()
-        if chart is None:
-            raise serializers.ValidationError('usr_course_id: %s' % instance.id)
-        return data
+    def validate(self, attrs):
+        if not self.instance:
+            raise serializers.ValidationError('用户不存在，请求失败')
+        return attrs
 
 
 class ChildUserSerializer(serializers.ModelSerializer):

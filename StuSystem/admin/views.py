@@ -181,19 +181,22 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
 
 
 class AdminUserCourseAddressViewSet(mixins.ListModelMixin,
+                                    mixins.UpdateModelMixin,
+                                    mixins.RetrieveModelMixin,
                                     viewsets.GenericViewSet):
     """学生成绩单寄送地址"""
-    queryset = UserCourse.objects.filter(user__role='STUDENT')
+    queryset = StudentScoreDetail.objects.filter(user__role='STUDENT')
     serializer_class = AdminUserCourseAddressSerializer
     pagination_class = None
 
-    def get_queryset(self):
+    def get_object(self):
+        # pk 传过来的是user_id，需要转换为user_info
+        user_id = self.kwargs.get('pk')
         try:
-            user_id = self.request.query_params.get('user')
-            queryset = self.queryset.filter(user_id=user_id)
+            user_info = self.queryset.filter(user_id=user_id, is_active=True).first()
         except:
-            raise exceptions.ValidationError('请传入正确的user参数')
-        return queryset
+            raise exceptions.NotFound('user_id参数错误')
+        return user_info
 
 
 class ChildUserViewSet(mixins.CreateModelMixin,
@@ -294,7 +297,8 @@ class AdminOrderViewSet(mixins.ListModelMixin,
     filter_fields = ['currency', 'payment', 'status', 'user']
 
     def get_queryset(self):
-        if self.request.query_params.get('pagination') and self.request.query_params.get('pagination').upper() == 'FALSE':
+        if self.request.query_params.get('pagination') and self.request.query_params.get(
+                'pagination').upper() == 'FALSE':
             self.pagination_class = None
         return super().get_queryset()
 
