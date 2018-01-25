@@ -328,11 +328,6 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
         fields = ['id', 'province_post_code', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
-    def validate(self, attrs):
-        if not self.instance:
-            raise serializers.ValidationError('用户不存在，请求失败')
-        return attrs
-
 
 class ChildUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)

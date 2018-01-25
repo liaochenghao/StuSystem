@@ -189,14 +189,16 @@ class AdminUserCourseAddressViewSet(mixins.ListModelMixin,
     serializer_class = AdminUserCourseAddressSerializer
     pagination_class = None
 
-    def get_object(self):
-        # pk 传过来的是user_id，需要转换为user_info
-        user_id = self.kwargs.get('pk')
+    def list(self, request, *args, **kwargs):
+        user_id = self.request.query_params.get('user')
+        if not user_id:
+            raise exceptions.ValidationError('user为必填参数')
         try:
-            user_info = self.queryset.filter(user_id=user_id, is_active=True).first()
-        except:
-            raise exceptions.NotFound('user_id参数错误')
-        return user_info
+            user_id = int(user_id)
+        except ValueError:
+            raise exceptions.ValidationError('user必须为int值')
+        self.queryset = self.queryset.filter(user_id=user_id)
+        return super().list(request, *args, **kwargs)
 
 
 class ChildUserViewSet(mixins.CreateModelMixin,

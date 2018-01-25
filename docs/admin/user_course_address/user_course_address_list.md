@@ -2,12 +2,14 @@
 
 **请求地址**:
 ```
-    GET     /admin/user_course_address/[user_id]/
+    GET     /admin/user_course_address/
 ```
 
 **请求参数**:
 ```
-
+{
+    "user": int
+}
 ```
 
 **成功返回**：
