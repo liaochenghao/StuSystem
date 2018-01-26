@@ -204,7 +204,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'img', 'order', 'payment', 'currency']
+        fields = ['id', 'img', 'order', 'payment','remark', 'currency']
 
     def validate(self, attrs):
         user = self.context['request'].user

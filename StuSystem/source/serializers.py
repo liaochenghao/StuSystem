@@ -249,7 +249,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'switch_img', 'credit_switch_status']
+        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'confirm_remark', 'switch_img', 'switch_remark',
+                  'credit_switch_status']
 
     def validate(self, attrs):
         if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
