@@ -44,7 +44,15 @@ MONGODB_CONFIG = {
     'user': 'stu_system',
     'password': 'qwe=-00.3690'
 }
+
 micro_service_domain = 'http://42.51.8.152:7070'
 DOMAIN = 'http://42.51.8.152:8002'
 BASE_MEDIA_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 MEDIA_ROOT = '%s/media' % BASE_MEDIA_ROOT
+
+MQ_SERVER = {
+    'EXCHANGE': 'stu_system_exchange',
+    'QUEUE_AUTO': 'stu_system_queue_auto',
+    'QUEUE_NOTICE': 'stu_system_queue_notice',
+    'URL_PARAMS': 'amqp://stu_system:qwe896275756@42.51.8.152:5672/stu_system'
+}
