@@ -57,9 +57,9 @@ class UserInfoViewSet(mixins.ListModelMixin,
 
     @detail_route(['POST'])
     def add_remark(self, request, pk):
-        data = request.data
+        data = {'remark': request.data.get('remark', '')}
         data['user_info'] = self.get_object().id
-        serializer = UserInfoRemarkSerializer(data=request.data)
+        serializer = UserInfoRemarkSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         return Response(UserInfoRemarkSerializer(instance).data)

@@ -24,9 +24,6 @@ class ShoppingChart(models.Model):
     class Meta:
         db_table = 'shopping_chart'
 
-    def __str__(self):
-        return str(self.pk)
-
 
 class Order(models.Model):
     """订单"""
@@ -61,9 +58,6 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'order'
-
-    def __str__(self):
-        return str(self.pk)
 
 
 class OrderChartRelation(models.Model):
