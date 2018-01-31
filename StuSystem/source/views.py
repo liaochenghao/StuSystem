@@ -245,7 +245,8 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     values('course__id', 'course__course_code', 'course__name', 'course__courseproject__address',
                            'course__courseproject__start_time', 'course__courseproject__end_time',
                            'course__courseproject__professor', 'status', 'credit_switch_status', 'confirm_img',
-                           'switch_img', 'score', 'score_grade', 'reporting_time').order_by('-id')
+                           'switch_img', 'score', 'score_grade', 'reporting_time','post_datetime','post_channel',
+                           'post_number',).order_by('-id')
 
                 current_courses_list = []
                 for item in current_courses:
@@ -274,6 +275,9 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                                                                                  UserCourse.CREDIT_SWITCH_STATUS).get(
                                                                                  item.get('credit_switch_status'))
                                                                              },
+                                                    'post_datetime':item.get('post_datetime'),
+                                                    'post_channel':item.get('post_channel'),
+                                                    'post_number':item.get('post_number'),
                                                     'switch_img': '%s%s%s' % (DOMAIN, MEDIA_URL, item.get('switch_img'))
                                                     if item.get('switch_img') else None})
                     elif key == 'my_scores':
