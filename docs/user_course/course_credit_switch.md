@@ -18,30 +18,50 @@
     "data": [
         {
             "project": {
-                "id": 11,
-                "name": "暑期课程第一期"
+                "id": 5,
+                "name": "武汉校区第一期四周项目"
             },
             "order": {
-                "id": 118
+                "id": 3
             },
-            "chart": 3,
+            "chart": 2,
             "current_courses": [
                 {
-                    "id": 15,
-                    "course_code": "ART 12",
-                    "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
-                    "professor": "Steven Curry",
-                    "start_time": "2017-11-16",
-                    "end_time": "2017-11-16",
-                    "address": "???????",
-                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/test2_TdFjewg.png"
+                    "id": 8,
+                    "course_code": "8",
+                    "name": "Introduction to Modern Art",
+                    "professor": "somebody",
+                    "start_time": "2018-01-30",
+                    "end_time": "2018-02-28",
+                    "address": "武汉理工大学",
                     "credit_switch_status": {
-                        "key": "PRE_POSTED",
-                        "verbose": "成绩待寄出"
-                    }
+                        "key": null,
+                        "verbose": null
+                    },
+                    "post_datetime": null,
+                    "post_channel": null,
+                    "post_number": null,
+                    "switch_img": null
                 },
+                {
+                    "id": 5,
+                    "course_code": "5",
+                    "name": "Western Art: Ancient to Medieval",
+                    "professor": null,
+                    "start_time": null,
+                    "end_time": null,
+                    "address": "武汉理工大学",
+                    "credit_switch_status": {
+                        "key": "SUCCESS",
+                        "verbose": "学分转换成功"
+                    },
+                    "post_datetime": "2018-01-31T16:40:02Z",
+                    "post_channel": "东风快递",
+                    "post_number": "DF-41",
+                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/70277236478236737.jpg"
+                }
             ]
-        },
+        }
     ],
     "field_name": ""
 }
