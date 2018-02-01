@@ -30,7 +30,8 @@ def handle_mongodb_cursor_data(mongo_cursor):
         cursor_data = list(mongo_cursor)
         for item in cursor_data:
             item['id'] = str(item.pop('_id'))
-            item['create_time'] = timestamp_to_datetime(item.pop('create_time'))
+            if item.get('create_time'):
+                item['create_time'] = timestamp_to_datetime(item.pop('create_time'))
     except TypeError:
         cursor_data = None
     return cursor_data

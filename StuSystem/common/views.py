@@ -1,4 +1,6 @@
 # coding: utf-8
+import time
+
 from admin.models import PaymentAccountInfo
 from common.models import SalesManUser
 from common.serializers import CommonNoticeSerializer
@@ -33,9 +35,17 @@ class GlobalEnumsViewSet(APIView):
 
 class CommonNoticeViewSet(APIView):
     def get(self, request):
-        notice_message = handle_mongodb_cursor_data(stu_db.find(collection_name='message_auto_notice',
-                                                                search_data={'user_id': request.user.id,
-                                                                             'read': {'$ne': True}}))
+        notice_message = handle_mongodb_cursor_data(
+            stu_db.find(
+                collection_name='message_auto_notice',
+                pagination=True,
+                sort_field=("_id", -1),
+                search_data={
+                    'user_id': request.user.id,
+                    'read': {'$ne': True},
+                }
+            )
+        )
         return Response(notice_message)
 
     def put(self, request):

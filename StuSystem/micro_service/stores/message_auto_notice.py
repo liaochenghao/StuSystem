@@ -7,4 +7,4 @@ class MessageAutoNotice:
         self.user_id = kwargs.pop('user_id')
         self.module_name = kwargs.pop('module_name')
         self.msg = kwargs.pop('msg')
-        self.read = kwargs.pop('read')
+        self.read = kwargs.pop('read', False)

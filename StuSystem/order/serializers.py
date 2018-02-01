@@ -8,6 +8,7 @@ from authentication.models import UserInfo, StudentScoreDetail
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
+from order.functions import order_auto_notice_message
 from source.models import ProjectCourseFee, Course
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -70,10 +71,8 @@ class OrderSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('管理员已确认订单支付认证失败，不能进行任何更新操作')
         return attrs
 
-    def create(self, validated_data):
-        coupon_list = validated_data.pop('coupon_list', None)
-        chart_ids = validated_data.pop('chart_ids')
-        user = self.context['request'].user
+    def validated_data_additional(self, validated_data, chart_ids, coupon_list, user):
+        """对validated_data参数进行补充"""
         standard_fee = sum([item.course_fee for item in ShoppingChart.objects.filter(
             id__in=chart_ids, status='NEW')])
         order_count = Order.objects.all().count()
@@ -92,7 +91,20 @@ class OrderSerializer(serializers.ModelSerializer):
                 coupon_list_fee += item
             validated_data['pay_fee'] = standard_fee - coupon_list_fee if \
                 (validated_data['standard_fee'] - coupon_list_fee) >= 0 else 0
+        return validated_data
+
+    def create(self, validated_data):
+        coupon_list = validated_data.pop('coupon_list', None)
+        chart_ids = validated_data.pop('chart_ids')
+        user = self.context['request'].user
+        validated_data = self.validated_data_additional(validated_data, chart_ids, coupon_list, user)
         order = super().create(validated_data)
+
+        self.additional_order_update(order, coupon_list, chart_ids, user)
+        return order
+
+    def additional_order_update(self, order, coupon_list, chart_ids, user):
+        """订单创建后，更新与订单相关信息"""
         if coupon_list:
             # 更新优惠券状态
             for coupon_id in coupon_list:
@@ -109,7 +121,8 @@ class OrderSerializer(serializers.ModelSerializer):
         # 操作记录
         HistoryFactory.create_record(operator=self.context['request'].user, source=order, key='CREATE', remark='创建了订单',
                                      source_type='ORDER')
-        return order
+        order_auto_notice_message(order=order, user=user)
+        return
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
