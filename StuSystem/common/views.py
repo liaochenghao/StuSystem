@@ -43,6 +43,7 @@ class CommonNoticeViewSet(APIView):
                 search_data={
                     'user_id': request.user.id,
                     'read': {'$ne': True},
+                    'create_time': {'$gte': int(time.time() - 3 * 24 * 3600)}
                 }
             )
         )
