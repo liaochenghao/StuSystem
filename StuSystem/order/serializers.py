@@ -4,7 +4,7 @@ import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo, StudentScoreDetail
+from authentication.models import UserInfo
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
@@ -12,7 +12,6 @@ from order.functions import order_auto_notice_message
 from source.models import ProjectCourseFee, Course
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from authentication.serializers import StudentScoreDetailSerializer
 from source.serializers import ProjectSerializer
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart, OrderChartRelation
 from utils.serializer_fields import VerboseChoiceField
@@ -211,7 +210,7 @@ class UserOrderCourseSerializer(serializers.ModelSerializer):
 
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
-    # img = Base64ImageField()
+    img = Base64ImageField()
     payment = VerboseChoiceField(choices=Order.PAYMENT, write_only=True)
     currency = VerboseChoiceField(choices=Order.CURRENCY, write_only=True)
 
