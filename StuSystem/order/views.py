@@ -45,7 +45,7 @@ class OrderViewSet(mixins.CreateModelMixin,
             courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
             course_current_selected_count = instance.usercourse_set.all().count()
             data['course_to_select'] = True if instance.status == 'CONFIRMED' \
-                                           and courses_to_select_count != course_current_selected_count else False
+                                               and courses_to_select_count != course_current_selected_count else False
         else:
             data = {
                 "course_to_select": False
@@ -160,3 +160,8 @@ class ShoppingChartViewSet(mixins.ListModelMixin,
     def perform_destroy(self, instance):
         instance.status = 'DELETED'
         instance.save()
+
+    @list_route(['DELETE'])
+    def shopping_chart_clear(self, request):
+        self.get_queryset().update(status='DELETED')
+        return Response({'msg': '请求成功'})

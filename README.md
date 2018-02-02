@@ -82,6 +82,7 @@
 - [购物车项目详情](docs/shopping_chart/shopping_chart_detail.md)
 - [购物车项目更新](docs/shopping_chart/shopping_chart_update.md)
 - [购物车项目删除](docs/shopping_chart/shopping_chart_delete.md)
+- [清空购物车](docs/shopping_chart/shopping_chart_clear.md)
 
 
 **校区模块**:
