@@ -301,11 +301,11 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if self.instance:
             if self.instance.status == 'TO_UPLOAD':
-                raise serializers.ValidationError('用户还未上传审课图片，更新学分转换进度')
+                raise serializers.ValidationError('用户还未上传审课图片，不能更新学分转换进度')
             if self.instance.status == 'TO_CONFIRM':
-                raise serializers.ValidationError('未审核学生上传的审课图片，更新学分转换进度')
+                raise serializers.ValidationError('未审核学生上传的审课图片，不能更新学分转换进度')
             if self.instance.status == 'NOPASS':
-                raise serializers.ValidationError('学生的审课图片不通过，更新学分转换进度')
+                raise serializers.ValidationError('学生的审课图片不通过，不能更新学分转换进度')
         return attrs
 
     def to_representation(self, instance):

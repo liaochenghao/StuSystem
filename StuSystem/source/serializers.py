@@ -277,7 +277,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
             if user_course.status != 'PASS':
                 raise serializers.ValidationError('审课尚未完成, 不能上传学分转换图片')
 
-            if user_course.credit_switch_status in ['SUCCESS', 'FAILURE']:
+            if user_course.credit_switch_status == 'SWITCHED':
                 raise serializers.ValidationError('已上传学分转换图片，状态为: %s' %
                                                   dict(UserCourse.CREDIT_SWITCH_STATUS).get(
                                                       user_course.credit_switch_status))
