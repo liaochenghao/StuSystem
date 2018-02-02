@@ -8,7 +8,8 @@ from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, CurrentProjectCoursesSerializer, \
-    UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer
+    UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer, \
+    CourseConfirmSerializer
 from order.models import Order, UserCourse, ShoppingChart
 
 
@@ -152,9 +153,10 @@ class CourseProjectViewSet(mixins.CreateModelMixin,
 
 class UserCourseViewSet(mixins.CreateModelMixin,
                         mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
                         viewsets.GenericViewSet):
     """学生选课, 审课，学分转换视图"""
-    queryset = UserCourse.objects.all().select_related('course', 'course__courseproject')
+    queryset = UserCourse.objects.all().select_related('course')
     serializer_class = UserCourseSerializer
 
     def get_queryset(self):
@@ -164,6 +166,10 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
         return Response({'msg': '选课成功'})
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CourseConfirmSerializer
+        return super().retrieve(request, *args, **kwargs)
 
     @list_route()
     def current_courses_info(self, request):
@@ -246,14 +252,15 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                            'course__courseproject__start_time', 'course__courseproject__end_time',
                            'course__courseproject__professor', 'status', 'credit_switch_status', 'confirm_img',
                            'switch_img', 'score', 'score_grade', 'reporting_time', 'post_datetime', 'post_channel',
-                           'post_number',).order_by('-id')
+                           'post_number', 'id').order_by('-id')
 
                 current_courses_list = []
                 for item in current_courses:
                     current_course_item = {}
                     current_course_item.update(
                         {
-                            'id': item.get('course__id'),
+                            'id': item.get('id'),
+                            'course_id': item.get('course__id'),
                             'course_code': item.get('course__course_code'),
                             'name': item.get('course__name'),
                             'professor': item.get('course__courseproject__professor'),

@@ -121,6 +121,7 @@
 - [我的成绩](docs/user_course/my_scores.md)
 - [学生审课](docs/user_course/student_course_confirm.md)
 - [学分转换](docs/user_course/course_credit_switch.md)
+- [学分转换操作详情](docs/user_course/course_credit_switch_detail.md)
 - [根据学生订单，项目获取允许选课列表](docs/project/student_available_courses.md)
 
 

@@ -238,6 +238,21 @@ class UserCourseSerializer(serializers.ModelSerializer):
         return user_courses[0]
 
 
+class CourseConfirmSerializer(serializers.ModelSerializer):
+    credit_switch_status = VerboseChoiceField(UserCourse.CREDIT_SWITCH_STATUS)
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course_id', 'credit_switch_status',
+                  'post_datetime', 'post_channel', 'post_number', 'switch_img']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['name'] = instance.course.name
+        data['course_code'] = instance.course.course_code
+        return data
+
+
 class CommonImgUploadSerializer(serializers.ModelSerializer):
     """学生审课"""
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
