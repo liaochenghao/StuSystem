@@ -95,7 +95,7 @@ class UserCourse(models.Model):
     post_number = models.CharField('快递单号', max_length=30, null=True)
     CREDIT_SWITCH_STATUS = (
         ('PRE_POSTED', '成绩待寄出'),
-        ('POSTED', '成绩单已寄出'),
+        ('POSTED', '成绩已寄出'),
         ('SWITCHED', '学分已转换')
     )
     credit_switch_status = models.CharField(max_length=30, choices=STATUS, default='PRE_POSTED')
