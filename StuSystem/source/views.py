@@ -54,6 +54,12 @@ class ProjectViewSet(BaseViewSet):
     filter_fields = ['campus']
     permission_classes = [StudentReadOnlyPermission]
 
+    def list(self, request, *args, **kwargs):
+        if not request.query_params.get('multiple') and ShoppingChart.objects.filter(user=self.request.user,
+                                                                                     status='NEW').exists():
+            return Response({'msg': '已存在购物车'})
+        return super().list(request, *args, **kwargs)
+
     @detail_route()
     def available_courses(self, request, pk):
         """新建课程关联时允许关联的课程列表"""
@@ -187,7 +193,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         current_course = UserCourse.objects.filter(
             order=order, user=self.request.user, project=project).values_list('id', flat=True)
         current_all_course = Course.objects.filter(
-            courseproject__project=project, is_active=True).exclude(id__in=current_course).\
+            courseproject__project=project, is_active=True).exclude(id__in=current_course). \
             values('id', 'course_code', 'name', 'credit')
         return Response(current_all_course)
 

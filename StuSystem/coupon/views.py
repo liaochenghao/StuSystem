@@ -3,7 +3,7 @@ from coupon.serializers import CouponSerializer, UserCouponSerializer
 from permissions.base_permissions import CreateCouponOperatePermission, UserCouponOperatePermission
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
-
+from admin.functions import coupon_auto_notice_message
 from coupon.models import Coupon, UserCoupon
 
 
@@ -24,5 +24,6 @@ class UserCouponViewSet(mixins.CreateModelMixin,
     permission_classes = [UserCouponOperatePermission]
 
     def create(self, request, *args, **kwargs):
-        super().create(request, *args, **kwargs)
+        instance =super().create(request, *args, **kwargs)
+        coupon_auto_notice_message(instance)
         return Response({'msg': '操作成功'})

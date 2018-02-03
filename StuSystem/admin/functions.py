@@ -2,8 +2,11 @@
 import datetime
 
 from market.models import Channel
+from order.models import UserCourse, Order
 from utils.future_help import run_on_executor
 from micro_service.service import WeixinServer
+from EventAggregator.event_aggregator import EventAggregator
+from micro_service.stores.message_auto_notice import MessageAutoNotice
 
 
 def get_channel_info(user_instance):
@@ -59,3 +62,69 @@ def create_course_template_message(openid, user_name, sales_man_name, project_na
     data['remark'] = '上课地点: %s\n\n请尽快确认所选课程，若所选课程有误，请立即与您的专属课程顾问联系，更改课程！' % address
     WeixinServer.send_template_message(openid, templates_id, url, **data)
     return
+
+
+@run_on_executor
+def order_auto_notice_message(order, user):
+    """缴费审核通知"""
+    data = {
+        'user_id': user['id'],
+        'module_name': 'order',
+        'msg': '您有一条订单%s，订单号为:%d' % (order.get('status')['verbose'], order.get('id'))
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))
+
+
+@run_on_executor
+def course_auto_notice_message(instance):
+    """管理员新增课程通知"""
+    data = {
+        'user_id': instance.user_id,
+        'module_name': 'course',
+        'msg': '您新增了一门课程:%s' % instance.course.name
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))
+
+
+@run_on_executor
+def confirm_auto_notice_message(usercourse, user):
+    """课程审核通知"""
+    data = {
+        'user_id': user.id,
+        'module_name': 'course_confirm',
+        'msg': '您有一门课程:%s,审核%s' % (usercourse.course.name, dict(UserCourse.STATUS).get(usercourse.status))
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))
+
+
+@run_on_executor
+def score_auto_notice_message(course, user):
+    """课程成绩通知"""
+    data = {
+        'user_id': user['user'],
+        'module_name': 'scores',
+        'msg': '您有一门课程:%s,成绩已提交' % course.get('name')
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))
+
+
+@run_on_executor
+def switch_auto_notice_message(user, course, status):
+    """学分转换通知"""
+    data = {
+        'user_id': user['id'],
+        'module_name': 'credit_switch',
+        'msg': '您有一门课程:%s,%s' % (course.get('name'), status.get('verbose'))
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))
+
+
+@run_on_executor
+def coupon_auto_notice_message(instance):
+    """新增优惠券通知"""
+    data = {
+        'user_id': instance.data.get('user'),
+        'module_name': 'coupon',
+        'msg': '您获得了新的优惠卷'
+    }
+    EventAggregator.publish(MessageAutoNotice(**data))

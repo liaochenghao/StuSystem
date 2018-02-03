@@ -38,6 +38,7 @@
                     "payment_information": [
                         {
                             "payment": "PAY_PAL",
+                            "bank_name": "Bank of America",
                             "opening_bank": "1761 Massachusetts Ave, LexingtonMA 02420",
                             "currency": "FOREIGN_CURRENCY",
                             "account_name": "International Association of University Summer Sessions",

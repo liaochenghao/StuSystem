@@ -1,6 +1,8 @@
 # coding: utf-8
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
+from admin.functions import order_auto_notice_message,course_auto_notice_message, confirm_auto_notice_message, \
+    score_auto_notice_message, switch_auto_notice_message
 from authentication.models import UserInfo, StudentScoreDetail, User
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
@@ -142,6 +144,11 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     filter_class = UserCourseFilterSet
     permission_classes = [BaseOperatePermission]
 
+    def update(self, request, *args, **kwargs):
+        instance = super().update(request, *args, **kwargs)
+        score_auto_notice_message(instance.data.get('course'), instance.data.get('user_info'))
+        return instance
+
     @list_route(['GET', 'PUT'])
     def confirm_course(self, request):
         if request.method == 'GET':
@@ -159,6 +166,7 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
             self.queryset.filter(user=data['user'], course=data['course'],
                                  project=data['project'], order=data['order']).update(status=data['status'])
             instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
+            confirm_auto_notice_message(usercourse=instance, user=data['user'])
             return Response(self.get_serializer(instance).data)
 
 
@@ -178,6 +186,12 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         except:
             raise exceptions.ValidationError('请传入正确的user参数')
         return Response(self.serializer_class(self.queryset.filter(user_id=user_id), many=True).data)
+
+    def update(self, request, *args, **kwargs):
+        instance = super().update(request, *args, **kwargs)
+        switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
+                                   instance.data.get('credit_switch_status'), )
+        return instance
 
 
 class AdminUserCourseAddressViewSet(mixins.ListModelMixin,
@@ -238,6 +252,7 @@ class AdminCourseViewSet(mixins.DestroyModelMixin,
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        course_auto_notice_message(serializer.instance)
         return Response({'msg': '选课成功'})
 
     @list_route(['GET'], serializer_class=AdminAvailableCoursesSerializer)
@@ -303,6 +318,11 @@ class AdminOrderViewSet(mixins.ListModelMixin,
                 'pagination').upper() == 'FALSE':
             self.pagination_class = None
         return super().get_queryset()
+
+    def update(self, request, *args, **kwargs):
+        instance = super().update(request, *args, **kwargs)
+        order_auto_notice_message(instance.data, instance.data.get('user'))
+        return instance
 
 
 class NavigationViewSet(mixins.ListModelMixin,
