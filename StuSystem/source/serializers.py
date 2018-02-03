@@ -250,6 +250,10 @@ class CourseConfirmSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['name'] = instance.course.name
         data['course_code'] = instance.course.course_code
+        data['project'] = {
+            'id': instance.project.id,
+            'name': instance.project.name
+        }
         return data
 
 
