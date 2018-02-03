@@ -15,6 +15,7 @@ class PaymentAccountInfo(models.Model):
         ('RMB', '人民币')
     )
     currency = models.CharField('币种', choices=CURRENCY, default='RMB', max_length=30)
+    bank_name = models.CharField('银行名称(pay_pal)', max_length=60, null=True)
     account_number = models.CharField('账号', max_length=30)
     account_name = models.CharField('账户姓名(beneficiary company name)', max_length=60)
     opening_bank = models.CharField('开户行地址(bank address)', max_length=60, null=True)
