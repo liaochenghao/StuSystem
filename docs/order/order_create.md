@@ -8,9 +8,9 @@
 **请求参数**:
 ```
 {
-    "chart_ids":   list     项目id,
-    "currency":  varchar
-    "payment":   varchar
+    "chart_ids":   list     购物车id,
+    "currency":  varchar    选填
+    "payment":   varchar    选填
     "coupon_list": list  选填  优惠券列表
 }
 ```
