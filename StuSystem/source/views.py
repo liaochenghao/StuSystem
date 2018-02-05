@@ -54,12 +54,6 @@ class ProjectViewSet(BaseViewSet):
     filter_fields = ['campus']
     permission_classes = [StudentReadOnlyPermission]
 
-    def list(self, request, *args, **kwargs):
-        if not request.query_params.get('multiple') and ShoppingChart.objects.filter(user=self.request.user,
-                                                                                     status='NEW').exists():
-            return Response({'msg': '已存在购物车'})
-        return super().list(request, *args, **kwargs)
-
     @detail_route()
     def available_courses(self, request, pk):
         """新建课程关联时允许关联的课程列表"""
