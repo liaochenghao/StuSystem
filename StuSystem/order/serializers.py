@@ -44,6 +44,8 @@ class OrderSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if not self.instance:
             chart_ids = attrs['chart_ids']
+            if not chart_ids:
+                raise serializers.ValidationError('请传入chart_ids参数')
             for chart_id in chart_ids:
                 if not ShoppingChart.objects.filter(id=chart_id, status='NEW').exists():
                     raise serializers.ValidationError('无效的chart_id: %s，请检查传入参数' % chart_id)
