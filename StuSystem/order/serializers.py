@@ -215,11 +215,10 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
     img = Base64ImageField()
     payment = VerboseChoiceField(choices=Order.PAYMENT, write_only=True)
     currency = VerboseChoiceField(choices=Order.CURRENCY, write_only=True)
-    remark = serializers.CharField(required=False, default=None)
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'img', 'order', 'payment','remark', 'currency']
+        fields = ['id', 'img', 'order', 'payment', 'remark', 'currency']
 
     def validate(self, attrs):
         user = self.context['request'].user
