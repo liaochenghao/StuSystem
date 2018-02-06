@@ -137,7 +137,7 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'english_name', 'email', 'wechat', 'gender', 'id_number', 'birth_date', 'grade',
+        fields = ['id', 'name', 'english_name', 'email','first_language','ielts_scores', 'wechat', 'gender', 'id_number', 'birth_date', 'grade',
                   'phone', 'headimgurl', 'cschool_info']
         read_only_fields = ['headimgurl']
 

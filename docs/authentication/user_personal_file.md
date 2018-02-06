@@ -20,6 +20,8 @@
         "name": "yirantai",                     str   用户姓名
         "english_name": "flyer"                 str   英文名
         "email": "896275756@qq.com",            str   email
+        "first_language": null,                 str    母语        --选填
+        "ielts_scores": null,                   str    雅思成绩      --选填
         "wechat": "flyerweixin",                str   微信号
         "gender": null,                         dict   性别
         "id_number": null,                      str    身份证号／护照号

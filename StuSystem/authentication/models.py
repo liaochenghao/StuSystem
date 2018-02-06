@@ -47,6 +47,8 @@ class UserInfo(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     name = models.CharField('学生姓名', max_length=30, null=True)
     english_name = models.CharField('英文名称', max_length=30, null=True)
+    first_language = models.CharField('母语', max_length=30, null=True)
+    ielts_scores = models.CharField('雅思成绩', max_length=30, null=True)
     email = models.EmailField('email', max_length=30, null=True)
     wechat = models.CharField('微信号', max_length=30, null=True)
     cschool = models.CharField('当前学校', max_length=30, null=True)
