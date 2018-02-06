@@ -215,6 +215,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
     img = Base64ImageField()
     payment = VerboseChoiceField(choices=Order.PAYMENT, write_only=True)
     currency = VerboseChoiceField(choices=Order.CURRENCY, write_only=True)
+    remark = serializers.CharField(required=False, default=None)
 
     class Meta:
         model = OrderPayment
@@ -224,7 +225,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         order = attrs['order']
         if order.user.id != user.id:
-            raise serializers.ValidationError('您权限操作他人的订单')
+            raise serializers.ValidationError('您无权限操作他人的订单')
         return attrs
 
     def create(self, validated_data):
