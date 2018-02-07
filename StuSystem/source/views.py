@@ -302,7 +302,9 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     res_item = {
                         'project': {
                             'id': chart.project.id,
-                            'name': chart.project.name
+                            'name': chart.project.name,
+                            'start_time':chart.project.start_date,
+                            'end_time':chart.project.end_date
                         },
                         'order': {
                             'id': order.id
