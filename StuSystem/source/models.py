@@ -90,8 +90,8 @@ class CourseProject(models.Model):
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     modified_time = models.DateTimeField('修改时间', auto_now=True)
     professor = models.CharField('授课教授', max_length=30)
-    start_time = models.DateField('上课开始时间')
-    end_time = models.DateField('上课结束时间')
+    start_time = models.DateTimeField('上课开始时间')
+    end_time = models.DateTimeField('上课结束时间')
     address = models.CharField('上课地点', max_length=100)
 
     class Meta:

@@ -225,6 +225,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         order = attrs['order']
         if order.user.id != user.id:
             raise serializers.ValidationError('您无权限操作他人的订单')
+        if OrderPayment.objects.filter(order=order).exists():
+            raise serializers.ValidationError('当前订单已经上传过支付信息')
         return attrs
 
     def create(self, validated_data):
