@@ -73,10 +73,10 @@ class OrderChartRelation(models.Model):
 class UserCourse(models.Model):
     """用户选课表"""
     STATUS = (
-        ('TO_UPLOAD', '待上传'),
-        ('TO_CONFIRM', '待审核'),
-        ('PASS', '通过'),
-        ('NOPASS', '不通过')
+        ('TO_UPLOAD', '未审课'),
+        ('TO_CONFIRM', '审课中'),
+        ('PASS', '审课通过'),
+        ('NOPASS', '审课失败')
     )
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
