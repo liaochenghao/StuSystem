@@ -98,7 +98,7 @@ class UserCourse(models.Model):
         ('POSTED', '成绩已寄出'),
         ('SWITCHED', '学分已转换')
     )
-    credit_switch_status = models.CharField(max_length=30, choices=STATUS, default='PRE_POSTED')
+    credit_switch_status = models.CharField(max_length=30, choices=CREDIT_SWITCH_STATUS, default='PRE_POSTED')
     switch_img = models.ImageField('学分转换结果证明', upload_to='project/result/photo/', null=True)
     switch_remark = models.CharField('学分转换备注', max_length=255, default=None)
 

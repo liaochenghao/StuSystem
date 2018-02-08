@@ -243,13 +243,13 @@ class CourseConfirmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course_id', 'credit_switch_status','order_id',
+        fields = ['id', 'course_id', 'credit_switch_status', 'order_id',
                   'post_datetime', 'post_channel', 'post_number', 'switch_img']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['name'] = instance.course.name
-        data['chart']=ShoppingChart.objects.filter(orderchartrelation__order=instance.order).values('id').first()
+        data['chart'] = ShoppingChart.objects.filter(orderchartrelation__order=instance.order).values('id').first()
         data['course_code'] = instance.course.course_code
         data['project'] = {
             'id': instance.project.id,
@@ -265,12 +265,10 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     confirm_img = Base64ImageField(required=False)
     switch_img = Base64ImageField(required=False)
-    credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS, required=False)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'confirm_remark', 'switch_img', 'switch_remark',
-                  'credit_switch_status']
+        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'confirm_remark', 'switch_img', 'switch_remark']
 
     def validate(self, attrs):
         if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
@@ -278,9 +276,6 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
         if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('switch_img'):
             raise serializers.ValidationError('学分转换证明图片为必传参数')
-
-        if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('credit_switch_status'):
-            raise serializers.ValidationError('学分转换状态为必填参数')
 
         chart = attrs['chart']
         attrs['project'] = chart.project
