@@ -18,28 +18,32 @@
     "data": [
         {
             "project": {
-                "id": 11,
-                "name": "暑期课程第一期"
+                "id": 4,
+                "name": "成都校区五周项目",
+                "start_time": "2018-07-02",
+                "end_time": "2018-08-03"
             },
             "order": {
-                "id": 118
+                "id": 1
             },
-            "chart": 3,
+            "chart": 1,
             "current_courses": [
                 {
-                    "id": 15,
-                    "course_code": "ART 12",
-                    "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
-                    "professor": "Steven Curry",
-                    "start_time": "2017-11-16",
-                    "end_time": "2017-11-16",
-                    "address": "???????",
+                    "id": 17,
+                    "course_id": 1,
+                    "course_code": "1",
+                    "name": "Financial Accounting",
+                    "professor": "aass",
+                    "start_time": "2018-02-07T17:43:34Z",
+                    "end_time": "2018-02-07T19:43:38Z",
+                    "address": "西南财经大学",
                     "status": {
                         "key": "TO_UPLOAD",
-                        "verbose": "待上传"
+                        "verbose": "未审课"
                     },
-                    "confirm_img": null
+                    "confirm_img": http://42.51.8.152:8002/media/course/confirm_img/70277236478236737_Nwcj2Yl.jpg
                 },
+
             ]
         }
     ],

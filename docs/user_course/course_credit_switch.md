@@ -18,50 +18,54 @@
     "data": [
         {
             "project": {
-                "id": 5,
-                "name": "武汉校区第一期四周项目"
+                "id": 4,
+                "name": "成都校区五周项目",
+                "start_time": "2018-07-02",
+                "end_time": "2018-08-03"
             },
             "order": {
-                "id": 3
+                "id": 1
             },
-            "chart": 2,
+            "chart": 1,
             "current_courses": [
                 {
-                    "id": 8,
-                    "course_code": "8",
-                    "name": "Introduction to Modern Art",
-                    "professor": "somebody",
-                    "start_time": "2018-01-30",
-                    "end_time": "2018-02-28",
-                    "address": "武汉理工大学",
+                    "id": 17,
+                    "course_id": 1,
+                    "course_code": "1",
+                    "name": "Financial Accounting",
+                    "professor": "aass",
+                    "start_time": "2018-02-07T17:43:34Z",
+                    "end_time": "2018-02-07T19:43:38Z",
+                    "address": "西南财经大学",
                     "credit_switch_status": {
-                        "key": null,
-                        "verbose": null
+                        "key": "PRE_POSTED",
+                        "verbose": "成绩待寄出"
                     },
-                    "post_datetime": null,
-                    "post_channel": null,
-                    "post_number": null,
-                    "switch_img": null
+                    "post_datetime": "2018-02-02T11:12:52Z",
+                    "post_channel": "123456",
+                    "post_number": "dfda",
+                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/70277236478236737.jpg"
                 },
                 {
-                    "id": 5,
-                    "course_code": "5",
-                    "name": "Western Art: Ancient to Medieval",
-                    "professor": null,
-                    "start_time": null,
-                    "end_time": null,
-                    "address": "武汉理工大学",
+                    "id": 1,
+                    "course_id": 2,
+                    "course_code": "2",
+                    "name": "Managerial Accounting",
+                    "professor": "asd",
+                    "start_time": "2018-02-07T07:00:00Z",
+                    "end_time": "2018-02-07T11:00:00Z",
+                    "address": "西南财经大学",
                     "credit_switch_status": {
-                        "key": "SUCCESS",
-                        "verbose": "学分转换成功"
+                        "key": "PRE_POSTED",
+                        "verbose": "成绩待寄出"
                     },
-                    "post_datetime": "2018-01-31T16:40:02Z",
-                    "post_channel": "东风快递",
-                    "post_number": "DF-41",
+                    "post_datetime": "2018-02-02T11:12:52Z",
+                    "post_channel": "123456",
+                    "post_number": "dfda",
                     "switch_img": "http://42.51.8.152:8002/media/project/result/photo/70277236478236737.jpg"
                 }
             ]
-        }
+        },
     ],
     "field_name": ""
 }

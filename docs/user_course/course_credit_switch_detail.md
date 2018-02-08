@@ -16,26 +16,30 @@
     "code": 0,
     "msg": "请求成功",
     "data": {
-        "id": 2,
-        "course_id": 5,
-        "order_id": 3,
-        "chart": {
-            "id": 2
-        },
-        "project": {
-            "id":  1,
-            "name": "北京校区五周项目"
-        }
+        "id": 3,
+        "course_id": 8,
         "credit_switch_status": {
             "key": "SWITCHED",
             "verbose": "学分已转换"
         },
-        "post_datetime": "2018-01-31T16:40:02Z",
-        "post_channel": "东风快递",
-        "post_number": "DF-41",
-        "switch_img": "http://127.0.0.1:8002/media/project/result/photo/70277236478236737.jpg",
-        "name": "Western Art: Ancient to Medieval",
-        "course_code": "5"
+        "order_id": 3,
+        "status": {
+            "key": "PASS",
+            "verbose": "审课通过"
+        },
+        "post_datetime": "2018-02-02T11:12:52Z",
+        "post_channel": "123456",
+        "post_number": "dfda",
+        "switch_img": "http://127.0.0.1:8001/media/project/result/photo/70277236478236737.jpg",
+        "name": "Introduction to Modern Art",
+        "chart": {
+            "id": 2
+        },
+        "course_code": "8",
+        "project": {
+            "id": 5,
+            "name": "武汉校区第一期四周项目"
+        }
     },
     "field_name": ""
 }
