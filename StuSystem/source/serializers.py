@@ -243,12 +243,13 @@ class CourseConfirmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'course_id', 'credit_switch_status',
+        fields = ['id', 'course_id', 'credit_switch_status','order_id',
                   'post_datetime', 'post_channel', 'post_number', 'switch_img']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['name'] = instance.course.name
+        data['chart']=ShoppingChart.objects.filter(orderchartrelation__order=instance.order).values('id').first()
         data['course_code'] = instance.course.course_code
         data['project'] = {
             'id': instance.project.id,

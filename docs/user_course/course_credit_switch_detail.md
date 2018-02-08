@@ -18,6 +18,10 @@
     "data": {
         "id": 2,
         "course_id": 5,
+        "order_id": 3,
+        "chart": {
+            "id": 2
+        },
         "project": {
             "id":  1,
             "name": "北京校区五周项目"
