@@ -281,7 +281,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
         chart = attrs['chart']
         attrs['project'] = chart.project
         user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
-                                                order=attrs['order']).first()
+                                                order=attrs['order'], course=attrs['course']).first()
         if not user_course:
             raise serializers.ValidationError('未找到用户所选课程，请检查传入参数')
 
