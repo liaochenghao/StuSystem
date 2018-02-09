@@ -88,7 +88,7 @@ class UserCourse(models.Model):
     score_grade = models.CharField('课程等级', max_length=30, null=True)
     reporting_time = models.DateTimeField('成绩录入时间', null=True)
     confirm_img = models.ImageField('审课照片', upload_to='course/confirm_img', null=True)
-    confirm_remark = models.CharField('审课备注', max_length=255, default=None)
+    confirm_remark = models.CharField('审课备注', max_length=255, blank=True, null=True)
     status = models.CharField('学生审课状态', choices=STATUS, default='TO_UPLOAD', max_length=30)
     post_datetime = models.DateTimeField('快递时间', null=True)
     post_channel = models.CharField('快递方式', max_length=30, null=True)
@@ -100,7 +100,7 @@ class UserCourse(models.Model):
     )
     credit_switch_status = models.CharField(max_length=30, choices=CREDIT_SWITCH_STATUS, default='PRE_POSTED')
     switch_img = models.ImageField('学分转换结果证明', upload_to='project/result/photo/', null=True)
-    switch_remark = models.CharField('学分转换备注', max_length=255, default=None)
+    switch_remark = models.CharField('学分转换备注', max_length=255, blank=True, null=True)
 
     class Meta:
         db_table = 'user_course'
