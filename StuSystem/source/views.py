@@ -73,7 +73,11 @@ class ProjectViewSet(BaseViewSet):
                                                        ).values_list('course_id', flat=True)
         related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
         courses = Course.objects.filter(id__in=related_course_ids).exclude(id__in=current_course_ids)
-        return Response(CourseSerializer(courses, many=True).data)
+        course_list = CourseSerializer(courses, many=True).data
+        return Response({
+            'chart': ShoppingChart.objects.filter(orderchartrelation__order_id=order, project=pk).values('id').first(),
+            'course_list': course_list
+        })
 
     @detail_route()
     def related_courses_detail(self, request, pk):
@@ -303,8 +307,8 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                         'project': {
                             'id': chart.project.id,
                             'name': chart.project.name,
-                            'start_time':chart.project.start_date,
-                            'end_time':chart.project.end_date
+                            'start_time': chart.project.start_date,
+                            'end_time': chart.project.end_date
                         },
                         'order': {
                             'id': order.id
