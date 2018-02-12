@@ -133,12 +133,11 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
     grade = VerboseChoiceField(choices=UserInfo.GRADE)
-    cschool_info = serializers.DictField(source='school_info', read_only=True)
 
     class Meta:
         model = UserInfo
         fields = ['id', 'name', 'english_name', 'email', 'first_language', 'ielts_scores', 'wechat', 'gender',
-                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool_info']
+                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa']
         read_only_fields = ['headimgurl']
 
 
