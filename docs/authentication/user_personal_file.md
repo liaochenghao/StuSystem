@@ -28,11 +28,9 @@
         "birth_date":                           date    出生日期
         "grade":                                dict     所在年级
         "phone":                                str     phone
-        "cschool_info": {                       dict    当前所在学校信息
-            "cschool": "加州大学",               str   所在学校
-            "major": "计算机科学",               str    专业
-            "graduate_year": "2018",            str    预计毕业年份
-            "gpa": 4.3                          float    GPA值
+        "cschool": "加州大学",                  str   所在学校
+        "major": "计算机科学",                   str    专业
+        "gpa": 4.3                              float    GPA值
         }
     },
     "field_name": ""
