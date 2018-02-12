@@ -17,8 +17,8 @@
         "gpa"：         float   小数点后两位
         "birth_date":   date    出生日期
         "grade":        str     所在年级
+        "cshool":        str     学校
         "phone":        str     phone
-
     }
 ```
 
