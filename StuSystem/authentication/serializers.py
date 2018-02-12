@@ -140,6 +140,12 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
                   'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa']
         read_only_fields = ['headimgurl']
 
+    def validate(self, attrs):
+        gpa = attrs.get('gpa',-1)
+        if gpa > 4 or gpa < 0:
+            raise serializers.ValidationError('GPA参数错误')
+        return attrs
+
 
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
