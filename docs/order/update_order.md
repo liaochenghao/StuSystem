@@ -38,6 +38,7 @@
         "standard_fee": 50240,
         "pay_fee": 50240,
         "remark": null,
+        "order_number": "2018012217443323"
         "charts": [
             {
                 "id": 2,
@@ -82,15 +83,6 @@
                 "course_num": 1,
                 "course_fee": 23120,
                 "create_time": "2017-11-15T07:06:14Z",
-                "stu_score_detail": {
-                    "id": 10,
-                    "user": 2,
-                    "department": "材料科学与工程学院",
-                    "phone": "18608146540",
-                    "country": "美国",
-                    "post_code": "021878768687",
-                    "address": "纽约市布鲁克林区布鲁克林大道58号"
-                }
             },
         "remark": ""            订单备注
         "sales_man": {          # 销售人员

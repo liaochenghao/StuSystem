@@ -17,16 +17,30 @@
 {
     "code": 0,
     "msg": "请求成功",
-    "data": [
-        {
-            "id": 23,
-            "course_code": "BIL 108",
-            "name": "course 9",
-            "max_num": 100,
-            "credit": 3,
-            "create_time": "2017-11-29T18:03:26Z"
+    "data": {
+        "chart": {
+            "id": 1
         },
-    ],
+        "course_list": [
+            {
+                "id": 3,
+                "course_code": "3",
+                "name": "Introduction to Finance",
+                "max_num": 20,
+                "credit": 4,
+                "create_time": "2018-01-15T12:22:05Z"
+            },
+            {
+                "id": 4,
+                "course_code": "4",
+                "name": "Ethics in Banking",
+                "max_num": 20,
+                "credit": 4,
+                "create_time": "2018-01-15T12:22:05Z"
+            },
+            ...
+        ]
+    }
     "field_name": ""
 }
 ```

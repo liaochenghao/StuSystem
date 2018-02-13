@@ -15,7 +15,6 @@ class CustomCampusSerializer(serializers.ModelSerializer):
 
 
 class CampusSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time', 'network_course']
@@ -147,7 +146,6 @@ class CourseCreditSwitchSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Course
         fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'create_time']
@@ -163,8 +161,24 @@ class CourseSerializer(serializers.ModelSerializer):
         return data
 
 
-class UserCourseSerializer(serializers.ModelSerializer):
+class CurrentProjectCoursesSerializer(serializers.ModelSerializer):
+    """查询当前项目可选课程"""
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), write_only=True)
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all(), write_only=True)
 
+    class Meta:
+        model = Course
+        fields = ['order', 'project']
+
+    def validate(self, attrs):
+        order = attrs['order']
+        project = attrs['project']
+        if not ShoppingChart.objects.filter(orderchartrelation__order=order, project=project):
+            raise serializers.ValidationError('订单id : %s 不存在项目id : %s 的项目' % (order.id, project.id))
+        return attrs
+
+
+class UserCourseSerializer(serializers.ModelSerializer):
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all(), write_only=True)
     course_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
@@ -224,6 +238,27 @@ class UserCourseSerializer(serializers.ModelSerializer):
         return user_courses[0]
 
 
+class CourseConfirmSerializer(serializers.ModelSerializer):
+    credit_switch_status = VerboseChoiceField(UserCourse.CREDIT_SWITCH_STATUS)
+    status = VerboseChoiceField(UserCourse.STATUS)
+
+    class Meta:
+        model = UserCourse
+        fields = ['id', 'course_id', 'credit_switch_status', 'order_id', 'status',
+                  'post_datetime', 'post_channel', 'post_number', 'switch_img']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['name'] = instance.course.name
+        data['chart'] = ShoppingChart.objects.filter(orderchartrelation__order=instance.order).values('id').first()
+        data['course_code'] = instance.course.course_code
+        data['project'] = {
+            'id': instance.project.id,
+            'name': instance.project.name
+        }
+        return data
+
+
 class CommonImgUploadSerializer(serializers.ModelSerializer):
     """学生审课"""
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
@@ -231,11 +266,10 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
     confirm_img = Base64ImageField(required=False)
     switch_img = Base64ImageField(required=False)
-    credit_switch_status = VerboseChoiceField(choices=UserCourse.CREDIT_SWITCH_STATUS, required=False)
 
     class Meta:
         model = UserCourse
-        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'switch_img', 'credit_switch_status']
+        fields = ['id', 'chart', 'course', 'order', 'confirm_img', 'confirm_remark', 'switch_img', 'switch_remark']
 
     def validate(self, attrs):
         if self.context.get('api_key') == 'student_confirm_course' and not attrs.get('confirm_img'):
@@ -244,13 +278,10 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
         if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('switch_img'):
             raise serializers.ValidationError('学分转换证明图片为必传参数')
 
-        if self.context.get('api_key') == 'course_credit_switch' and not attrs.get('credit_switch_status'):
-            raise serializers.ValidationError('学分转换状态为必填参数')
-
         chart = attrs['chart']
         attrs['project'] = chart.project
         user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
-                                                order=attrs['order']).first()
+                                                order=attrs['order'], course=attrs['course']).first()
         if not user_course:
             raise serializers.ValidationError('未找到用户所选课程，请检查传入参数')
 
@@ -262,9 +293,10 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
             if user_course.status != 'PASS':
                 raise serializers.ValidationError('审课尚未完成, 不能上传学分转换图片')
 
-            if user_course.credit_switch_status in ['SUCCESS', 'FAILURE']:
+            if user_course.credit_switch_status == 'SWITCHED':
                 raise serializers.ValidationError('已上传学分转换图片，状态为: %s' %
-                                                  dict(UserCourse.CREDIT_SWITCH_STATUS).get(user_course.credit_switch_status))
+                                                  dict(UserCourse.CREDIT_SWITCH_STATUS).get(
+                                                      user_course.credit_switch_status))
 
             if user_course.credit_switch_status == 'PRE_POSTED':
                 raise serializers.ValidationError('成绩单尚未寄出')
@@ -290,7 +322,6 @@ class ProjectCourseSerializer(serializers.ModelSerializer):
 
 
 class CourseFilterElementsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Campus
         fields = ['id', 'name', 'info', 'create_time']
@@ -303,6 +334,7 @@ class CourseFilterElementsSerializer(serializers.ModelSerializer):
 
 class CourseProjectSerializer(serializers.ModelSerializer):
     """课程项目关联"""
+
     class Meta:
         model = CourseProject
         fields = ['id', 'course', 'project', 'create_time', 'professor', 'start_time', 'end_time', 'address']

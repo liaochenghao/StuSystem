@@ -13,7 +13,7 @@ class BaseHttpServer:
         except:
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
-            raise exceptions.ValidationError('微服务发生错误，返回非200类消息')
+            raise exceptions.ValidationError('微服务发生错误，status code: %d' % res.status_code)
         if res.json()['code'] != 0:
             raise exceptions.ValidationError('验证错误: %s' % res.json()['msg'])
         return res.json()['data']

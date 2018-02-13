@@ -8,9 +8,9 @@
 **请求参数**:
 ```
 {
-    "chart_ids":   list     项目id,
-    "currency":  varchar
-    "payment":   varchar
+    "chart_ids":   list     购物车id,
+    "currency":  varchar    选填
+    "payment":   varchar    选填
     "coupon_list": list  选填  优惠券列表
 }
 ```
@@ -47,6 +47,7 @@
             "id": 14,
             "name": "anni"
         },
+        "order_number": "2018012217443323"
         "charts": [
             {
                 "id": 2,
@@ -91,15 +92,6 @@
                 "course_num": 1,
                 "course_fee": 23120,
                 "create_time": "2017-11-15T07:06:14Z",
-                "stu_score_detail": {
-                    "id": 10,
-                    "user": 2,
-                    "department": "材料科学与工程学院",
-                    "phone": "18608146540",
-                    "country": "美国",
-                    "post_code": "021878768687",
-                    "address": "纽约市布鲁克林区布鲁克林大道58号"
-                }
             },
         "remark": ""            订单备注
         "payment_info": {

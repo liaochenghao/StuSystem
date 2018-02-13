@@ -45,7 +45,10 @@
 
 **通用接口**:
 - [获取全局的enums](docs/common/global_enums.md)
+- [获取付款帐号信息](docs/common/order_currency_payment.md)
 - [管理后台导航菜单栏](docs/common/desktop_navigation.md)
+- [通知消息接口](docs/common/message_auto_notice.md)
+- [更新消息已读](docs/common/message_auto_notice_read.md)
 
 **管理后台接口文档**:
 - [管理后台接口文档](docs/admin.md)
@@ -79,6 +82,7 @@
 - [购物车项目详情](docs/shopping_chart/shopping_chart_detail.md)
 - [购物车项目更新](docs/shopping_chart/shopping_chart_update.md)
 - [购物车项目删除](docs/shopping_chart/shopping_chart_delete.md)
+- [清空购物车](docs/shopping_chart/shopping_chart_clear.md)
 
 
 **校区模块**:
@@ -101,7 +105,6 @@
 - [新建课程关联时允许关联的课程列表](docs/project/available_courses.md)
 - [创建项目与课程的关联](docs/project/create_course_project.md)
 - [取消项目与课程间的关联关系](docs/project/project_course_cancel.md)
-- [根据学生订单，项目获取允许选课列表](docs/project/student_available_courses.md)
 
 **课程模块**:
 - [创建课程](docs/course/course_create.md)
@@ -118,6 +121,8 @@
 - [我的成绩](docs/user_course/my_scores.md)
 - [学生审课](docs/user_course/student_course_confirm.md)
 - [学分转换](docs/user_course/course_credit_switch.md)
+- [学分转换操作详情](docs/user_course/course_credit_switch_detail.md)
+- [根据学生订单，项目获取允许选课列表](docs/project/student_available_courses.md)
 
 
 **订单模块**:

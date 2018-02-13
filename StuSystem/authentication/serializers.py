@@ -97,12 +97,12 @@ class AssignSalesManSerializer(serializers.Serializer):
         user.save()
         UserInfo.objects.update_or_create(defaults={'openid': res['openid']},
                                           **{
-                                               "user": user,
-                                               "unionid": weixin_info.get('unionid'),
-                                               "headimgurl": weixin_info['headimgurl'],
-                                               "openid": res['openid'],
-                                               "wx_name": weixin_info['nickname']
-                                           })
+                                              "user": user,
+                                              "unionid": weixin_info.get('unionid'),
+                                              "headimgurl": weixin_info['headimgurl'],
+                                              "openid": res['openid'],
+                                              "wx_name": weixin_info['nickname']
+                                          })
         sales_man_info = auto_assign_sales_man(user)
         return {'sales_man': sales_man_info, 'ticket': ticket}
 
@@ -117,76 +117,46 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs.get('wcampus'):
-            attrs['wcampus'] = json.dumps(attrs['wcampus'])
-        return attrs
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
-        return data
-
-
-# 兼容微信小程序客户端
-class CustomUserInfoSerializer(serializers.ModelSerializer):
-    wcampus = serializers.ListField()
-
-    class Meta:
-        model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
-        read_only_fields = ['headimgurl']
-
-    def validate(self, attrs):
-        try:
-            if attrs.get('wcampus'):
-                # attrs['wcampus'] = json.dumps(attrs['wcampus'][0].split(','))
+            try:
                 attrs['wcampus'] = json.dumps(attrs['wcampus'])
-        except Exception as e:
-            raise serializers.ValidationError('wcampus验证错误: %s' % e)
+            except Exception as e:
+                raise serializers.ValidationError('wcampus验证错误: %s' % e)
         return attrs
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
-        return data
-
-
-class ListUserInfoSerializer(serializers.ModelSerializer):
-    last_login = serializers.DateTimeField(source='user.last_login')
-
-    class Meta:
-        model = UserInfo
-        fields = ['user_id', 'name', 'email', 'cschool', 'last_login']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        personal_file = any([instance.first_name, instance.last_name, instance.gender, instance.id_number,
-                             instance.major, instance.graduate_year, instance.gpa])     # 判断用户是否已建档
-        data['personal_file'] = '已建档' if personal_file else '未建档'
         return data
 
 
 class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
-    # todo 暂时将grade, birth_date, phone 设置为非必要参数
-    grade = VerboseChoiceField(choices=UserInfo.GRADE, required=False)
-    birth_date = serializers.DateField(required=False)
-    phone = serializers.CharField(required=False)
+    grade = VerboseChoiceField(choices=UserInfo.GRADE)
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'cschool', 'first_name', 'last_name', 'gender', 'id_number',
-                  'major', 'graduate_year', 'gpa', 'birth_date', 'grade', 'phone']
-        read_only_fields = ['id', 'name', 'email', 'wechat', 'cschool']
+        fields = ['id', 'name', 'english_name', 'email', 'first_language', 'ielts_scores', 'wechat', 'gender',
+                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa']
+        read_only_fields = ['headimgurl']
+
+    def validate(self, attrs):
+        gpa = attrs.get('gpa',-1)
+        if gpa > 4 or gpa < 0:
+            raise serializers.ValidationError('GPA参数错误')
+        return attrs
 
 
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'department', 'phone', 'country', 'post_code', 'address']
+        fields = ['id', 'user', 'province_post_code', 'university', 'department', 'transfer_department',
+                  'transfer_office', 'address', 'teacher_name', 'phone', 'email']
         read_only_fields = ['user']
 
     def create(self, validated_data):
+        if StudentScoreDetail.objects.filter(user=self.context['request'].user).exists():
+            raise serializers.ValidationError('成绩单邮寄信息已经存在，不能创建')
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 

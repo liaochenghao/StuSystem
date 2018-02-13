@@ -1,16 +1,17 @@
 # coding: utf-8
+import datetime
 import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo, StudentScoreDetail
+from authentication.models import UserInfo
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
+from order.functions import order_auto_notice_message
 from source.models import ProjectCourseFee, Course
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from authentication.serializers import StudentScoreDetailSerializer
 from source.serializers import ProjectSerializer
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart, OrderChartRelation
 from utils.serializer_fields import VerboseChoiceField
@@ -28,8 +29,8 @@ class PaymentAccountInfoSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     """订单的serializer"""
-    currency = VerboseChoiceField(choices=Order.CURRENCY)
-    payment = VerboseChoiceField(choices=Order.PAYMENT)
+    currency = VerboseChoiceField(choices=Order.CURRENCY, required=False)
+    payment = VerboseChoiceField(choices=Order.PAYMENT, required=False)
     status = VerboseChoiceField(choices=Order.STATUS, required=False)
     coupon_list = serializers.ListField(write_only=True, required=False)
     chart_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
@@ -37,12 +38,14 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'chart_ids', 'currency', 'payment', 'create_time', 'modified_time', 'status',
-                  'standard_fee', 'pay_fee', 'remark', 'coupon_list']
-        read_only_fields = ['user', 'pay_fee', 'standard_fee']
+                  'standard_fee', 'pay_fee', 'remark', 'coupon_list', 'order_number']
+        read_only_fields = ['user', 'pay_fee', 'standard_fee', 'order_number']
 
     def validate(self, attrs):
         if not self.instance:
             chart_ids = attrs['chart_ids']
+            if not chart_ids:
+                raise serializers.ValidationError('请传入chart_ids参数')
             for chart_id in chart_ids:
                 if not ShoppingChart.objects.filter(id=chart_id, status='NEW').exists():
                     raise serializers.ValidationError('无效的chart_id: %s，请检查传入参数' % chart_id)
@@ -69,12 +72,13 @@ class OrderSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('管理员已确认订单支付认证失败，不能进行任何更新操作')
         return attrs
 
-    def create(self, validated_data):
-        coupon_list = validated_data.pop('coupon_list', None)
-        chart_ids = validated_data.pop('chart_ids')
-        user = self.context['request'].user
+    def validated_data_additional(self, validated_data, chart_ids, coupon_list, user):
+        """对validated_data参数进行补充"""
         standard_fee = sum([item.course_fee for item in ShoppingChart.objects.filter(
             id__in=chart_ids, status='NEW')])
+        order_count = Order.objects.all().count()
+        order_number = '%s%s%s' % (datetime.datetime.now().strftime('%Y%m%d%H%M%S'), user.id, order_count)
+        validated_data['order_number'] = order_number
         validated_data['standard_fee'] = standard_fee
         validated_data['pay_fee'] = standard_fee
         validated_data['user'] = user
@@ -82,12 +86,26 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['coupon_list'] = json.dumps(coupon_list)
             # 计算优惠券费用
             coupon_list_fee = 0
-            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount', flat=True)
+            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount',
+                                                                                                      flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
             validated_data['pay_fee'] = standard_fee - coupon_list_fee if \
                 (validated_data['standard_fee'] - coupon_list_fee) >= 0 else 0
+        return validated_data
+
+    def create(self, validated_data):
+        coupon_list = validated_data.pop('coupon_list', None)
+        chart_ids = validated_data.pop('chart_ids')
+        user = self.context['request'].user
+        validated_data = self.validated_data_additional(validated_data, chart_ids, coupon_list, user)
         order = super().create(validated_data)
+
+        self.additional_order_update(order, coupon_list, chart_ids, user)
+        return order
+
+    def additional_order_update(self, order, coupon_list, chart_ids, user):
+        """订单创建后，更新与订单相关信息"""
         if coupon_list:
             # 更新优惠券状态
             for coupon_id in coupon_list:
@@ -104,7 +122,8 @@ class OrderSerializer(serializers.ModelSerializer):
         # 操作记录
         HistoryFactory.create_record(operator=self.context['request'].user, source=order, key='CREATE', remark='创建了订单',
                                      source_type='ORDER')
-        return order
+        order_auto_notice_message(order=order, user=user)
+        return
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
@@ -194,17 +213,31 @@ class UserOrderCourseSerializer(serializers.ModelSerializer):
 
 class OrderPaymentSerializer(serializers.ModelSerializer):
     img = Base64ImageField()
+    payment = VerboseChoiceField(choices=Order.PAYMENT, write_only=True)
+    currency = VerboseChoiceField(choices=Order.CURRENCY, write_only=True)
 
     class Meta:
         model = OrderPayment
-        fields = ['id', 'order', 'account_number', 'account_name', 'opening_bank', 'pay_date', 'img', 'amount']
+        fields = ['id', 'img', 'order', 'payment', 'remark', 'currency']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        order = attrs['order']
+        if order.user.id != user.id:
+            raise serializers.ValidationError('您无权限操作他人的订单')
+        if OrderPayment.objects.filter(order=order).exists():
+            raise serializers.ValidationError('当前订单已经上传过支付信息')
+        return attrs
 
     def create(self, validated_data):
-        validated_data['order'].status = 'TO_CONFIRM'
-        validated_data['order'].save()
+        order = validated_data['order']
+        order.status = 'TO_CONFIRM'
+        order.currency = validated_data.pop('currency')
+        order.payment = validated_data.pop('payment')
+        order.save(update_fields=['status', 'currency', 'payment'])
         instance = super().create(validated_data)
-        HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE', remark='上传了订单支付信息',
-                                     source_type='ORDER')
+        HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE',
+                                     remark='上传了订单支付信息', source_type='ORDER')
         return instance
 
     def to_representation(self, instance):
@@ -215,12 +248,10 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
 
 class ShoppingChartSerializer(serializers.ModelSerializer):
     """购物车"""
-    stu_score_detail = serializers.PrimaryKeyRelatedField(queryset=StudentScoreDetail.objects.filter(is_active=True),
-                                                          required=False)
 
     class Meta:
         model = ShoppingChart
-        fields = ['id', 'project', 'course_num', 'course_fee', 'create_time', 'stu_score_detail']
+        fields = ['id', 'project', 'course_num', 'course_fee', 'create_time']
         read_only_fields = ['course_fee']
 
     def validate(self, attrs):
@@ -236,5 +267,4 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project'] = ProjectSerializer(instance.project).data
-        data['stu_score_detail'] = StudentScoreDetailSerializer(instance.stu_score_detail).data
         return data

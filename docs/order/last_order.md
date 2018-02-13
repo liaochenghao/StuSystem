@@ -18,95 +18,121 @@
     "code": 0,
     "msg": "请求成功",
     "data": {
-        "id": 33,
+        "id": 4,
         "user": {
             "id": 2,
-            "name": "Mary"
-        },
-        "project": {
-            "id": 1,
-            "campus": {
-                "id": 3,
-                "name": "南京校区",
-                "campus_type": {
-                    "id": 1,
-                    "title": "北美暑校",
-                    "create_time": "2017-07-04T00:00:00Z"
-                },
-                "info": "123",
-                "create_time": "2017-06-14T23:41:05Z"
-            },
-            "name": "北京校区测试项目",
-            "start_date": "2017-06-20",
-            "end_date": "2017-07-01",
-            "address": "长城路二段99号",
-            "info": "这是项目须知，详情联系18608146540",
-            "create_time": "2017-06-19T14:09:43Z",
-            "apply_fee": 2000.0,
-            "course_num": 3,
-            "project_course_fee": [
-                {
-                    "id": 1,
-                    "course_number": 1,
-                    "course_fee": 1000.0,
-                    "course_info": "1门"
-                },
-                {
-                    "id": 2,
-                    "course_number": 2,
-                    "course_fee": 1800.0,
-                    "course_info": "2门"
-                },
-                {
-                    "id": 3,
-                    "course_number": 3,
-                    "course_fee": 2700.0,
-                    "course_info": "3门"
-                }
-            ]
+            "name": "潘思童"
         },
         "currency": {
-            "key": "DOLLAR",
-            "verbose": "美金"
+            "key": "FOREIGN_CURRENCY",
+            "verbose": "外币"
         },
         "payment": {
             "key": "ALI_PAY",
             "verbose": "支付宝转账"
         },
-        "create_time": "2017-07-06T15:51:37Z",
+        "create_time": "2018-01-22T09:45:16Z",
+        "modified_time": "2018-01-22T09:45:16Z",
         "status": {
-            "key": "TO_PAY",
-            "verbose": "待支付"
+            "key": "TO_CONFIRM",
+            "verbose": "待确认"
         },
-        "course_num": 3,
-        "standard_fee": 4700.0,
-        "pay_fee": null,
-        "sales_man": {       # 销售人员
-            "id": 14,
-            "name": "anni"
-        },
+        "standard_fee": 30120,
+        "pay_fee": 30120,
+        "remark": null,
+        "order_number": "2018012217443323",
+        "charts": [
+            {
+                "id": 3,
+                "project": {
+                    "id": 1,
+                    "campus": {
+                        "id": 1,
+                        "name": "北京校区",
+                        "info": "上课地点：北京外国语大学",
+                        "create_time": "2018-01-15T12:22:05Z",
+                        "network_course": false
+                    },
+                    "name": "北京校区五周项目",
+                    "start_date": "2018-06-04",
+                    "end_date": "2018-07-06",
+                    "address": "北京外国语大学",
+                    "info": null,
+                    "create_time": "2018-01-15T12:22:19Z",
+                    "apply_fee": 2000,
+                    "course_num": null,
+                    "project_course_fee": [
+                        {
+                            "id": 482,
+                            "course_number": 1,
+                            "course_fee": 23120,
+                            "course_info": "1门"
+                        },
+                        {
+                            "id": 483,
+                            "course_number": 2,
+                            "course_fee": 23120,
+                            "course_info": "2门"
+                        },
+                        {
+                            "id": 484,
+                            "course_number": 3,
+                            "course_fee": 28120,
+                            "course_info": "3门"
+                        },
+                        {
+                            "id": 485,
+                            "course_number": 4,
+                            "course_fee": 33120,
+                            "course_info": "4门"
+                        }
+                    ],
+                    "applyed_number": 1,
+                    "payed_number": 0
+                },
+                "course_num": 3,
+                "course_fee": 30120,
+                "create_time": "2018-01-22T03:48:19Z"
+            }
+        ],
         "payment_info": {
-            "id": 1,
-            "account_number": "896275756@qq.com",
-            "account_name": "邱雷",
+            "id": 3,
+            "account_number": "scc@iauss.org",
+            "account_name": "贝壳联投(武汉科技有限公司)",
             "opening_bank": null,
             "payment": {
                 "key": "ALI_PAY",
                 "verbose": "支付宝转账"
-            }
-        }
-        "course_to_select": True   是否需要跳转到选课页面
+            },
+            "currency": {
+                "key": "RMB",
+                "verbose": "人民币"
+            },
+            "swift_code": null
+        },
+        "order_payed_info": {
+            "id": 4,
+            "img": "http://42.51.8.152:8002/media/order/order_payment/微信图片_20170620150723.jpg",
+            "order": 4,
+            "remark": null
+        },
+        "sales_man": {
+            "id": 18,
+            "name": "Amy"
+        },
+        "course_to_select": false
     },
     "field_name": ""
 }
 
-
 无未完成订单时返回：
 
 {
-    "code": 100,        100code值有点特殊，为了和有未完成订单时code值做个区分
-    "msg": "没有未完成的订单，可以创建",
-    "data": {},
+    "code": 0,
+    "msg": "请求成功",
+    "data": {
+        "course_to_select": false
+    },
     "field_name": ""
 }
 

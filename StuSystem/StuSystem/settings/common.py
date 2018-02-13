@@ -186,11 +186,33 @@ LOGGING = {
             'filename': '%s/error.log' % LOG_ROOT,
             'formatter': 'simple'
         },
+        'message_auto_notice': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '%s/message_auto_notice.log' % LOG_ROOT,
+            'formatter': 'simple'
+        },
+        'tcp_server': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '%s/tcp_server.log' % LOG_ROOT,
+            'formatter': 'simple'
+        }
     },
     'loggers': {
         'django': {
             'handlers': ['error'],
             'level': 'ERROR',
+            'propagate': True
+        },
+        'message_auto_notice': {
+            'handlers': ['error'],
+            'level': 'INFO',
+            'propagate': True
+        },
+        'tcp_server': {
+            'handlers': ['error'],
+            'level': 'INFO',
             'propagate': True
         }
     }

@@ -20,7 +20,9 @@
             "current_course_num": 1,    # 已选课程数
             "project": {                # 项目信息
                 "id": 10,
-                "name": "冬季课程"
+                "name": "冬季课程",
+                "start_time": "2018-07-02",
+                "end_time": "2018-08-03"                
             },
             "order": {                  # 订单信息
                 "id": 118

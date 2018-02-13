@@ -18,28 +18,52 @@
     "data": [
         {
             "project": {
-                "id": 11,
-                "name": "暑期课程第一期"
+                "id": 4,
+                "name": "成都校区五周项目",
+                "start_time": "2018-07-02",
+                "end_time": "2018-08-03"
             },
             "order": {
-                "id": 118
+                "id": 1
             },
-            "chart": 3,
+            "chart": 1,
             "current_courses": [
                 {
-                    "id": 15,
-                    "course_code": "ART 12",
-                    "name": "Western Art: Renaissance to the Present 西方艺术：文艺复兴时期至今",
-                    "professor": "Steven Curry",
-                    "start_time": "2017-11-16",
-                    "end_time": "2017-11-16",
-                    "address": "???????",
-                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/test2_TdFjewg.png"
+                    "id": 17,
+                    "course_id": 1,
+                    "course_code": "1",
+                    "name": "Financial Accounting",
+                    "professor": "aass",
+                    "start_time": "2018-02-07T17:43:34Z",
+                    "end_time": "2018-02-07T19:43:38Z",
+                    "address": "西南财经大学",
                     "credit_switch_status": {
                         "key": "PRE_POSTED",
                         "verbose": "成绩待寄出"
-                    }
+                    },
+                    "post_datetime": "2018-02-02T11:12:52Z",
+                    "post_channel": "123456",
+                    "post_number": "dfda",
+                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/70277236478236737.jpg"
                 },
+                {
+                    "id": 1,
+                    "course_id": 2,
+                    "course_code": "2",
+                    "name": "Managerial Accounting",
+                    "professor": "asd",
+                    "start_time": "2018-02-07T07:00:00Z",
+                    "end_time": "2018-02-07T11:00:00Z",
+                    "address": "西南财经大学",
+                    "credit_switch_status": {
+                        "key": "PRE_POSTED",
+                        "verbose": "成绩待寄出"
+                    },
+                    "post_datetime": "2018-02-02T11:12:52Z",
+                    "post_channel": "123456",
+                    "post_number": "dfda",
+                    "switch_img": "http://42.51.8.152:8002/media/project/result/photo/70277236478236737.jpg"
+                }
             ]
         },
     ],
@@ -66,7 +90,7 @@
     "order": int    必填  订单id
     "course": int   必填  课程id
     "switch_img": base64位字符串  必填 审课图片,
-    "credit_switch_status": str 必填  SUCCESS--学分转换成功，FAILURE--学分转换失败
+    "switch_remark":   选填  转学分备注
 }
 ```
 

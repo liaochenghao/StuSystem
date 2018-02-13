@@ -18,19 +18,20 @@
     "data": {
         "id": 1,
         "name": "yirantai",                     str   用户姓名
+        "english_name": "flyer"                 str   英文名
         "email": "896275756@qq.com",            str   email
+        "first_language": null,                 str    母语        --选填
+        "ielts_scores": null,                   str    雅思成绩      --选填
         "wechat": "flyerweixin",                str   微信号
-        "cschool": "北京大学",                   str   所在学校
-        "first_name": null,                     str
-        "last_name": null,                      str
         "gender": null,                         dict   性别
         "id_number": null,                      str    身份证号／护照号
-        "major": null,                          str    专业
-        "graduate_year": null,                  str    预计毕业年份
-        "gpa": null                             int    GPA值
         "birth_date":                           date    出生日期
         "grade":                                dict     所在年级
         "phone":                                str     phone
+        "cschool": "加州大学",                  str   所在学校
+        "major": "计算机科学",                   str    专业
+        "gpa": 4.3                              float    GPA值
+        }
     },
     "field_name": ""
 }

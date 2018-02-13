@@ -19,8 +19,6 @@
         "user_id": 6,
         "name": "杨骐彰",
         "email": "yqz0203@hotmail.com",
-        "first_name": "Yang",
-        "last_name": "Qizhang",
         "gender": {
             "key": "MALE",
             "verbose": "男"

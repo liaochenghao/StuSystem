@@ -45,7 +45,7 @@ class OrderViewSet(mixins.CreateModelMixin,
             courses_to_select_count = sum([order_chart.chart.course_num for order_chart in order_chart_relations])
             course_current_selected_count = instance.usercourse_set.all().count()
             data['course_to_select'] = True if instance.status == 'CONFIRMED' \
-                                           and courses_to_select_count != course_current_selected_count else False
+                                               and courses_to_select_count != course_current_selected_count else False
         else:
             data = {
                 "course_to_select": False
@@ -64,8 +64,8 @@ class OrderViewSet(mixins.CreateModelMixin,
         """订单币种及支付方式"""
         data = [
             {
-                'key': 'DOLLAR',
-                'verbose': dict(Order.CURRENCY).get('DOLLAR'),
+                'key': 'FOREIGN_CURRENCY',
+                'verbose': dict(Order.CURRENCY).get('FOREIGN_CURRENCY'),
                 'payment': [
                     {
                         'key': 'BANK',
@@ -119,7 +119,6 @@ class OrderViewSet(mixins.CreateModelMixin,
     @list_route()
     def user_order_list(self, request):
         """用户订单列表"""
-        # todo 暂时不实现下拉翻页功能，待时机成熟再实现
         user = request.user
         status = self.request.query_params.get('status')
         none_canceled_order = self.request.query_params.get('none_canceled_order', True)
@@ -161,3 +160,8 @@ class ShoppingChartViewSet(mixins.ListModelMixin,
     def perform_destroy(self, instance):
         instance.status = 'DELETED'
         instance.save()
+
+    @list_route(['DELETE'])
+    def shopping_chart_clear(self, request):
+        self.get_queryset().update(status='DELETED')
+        return Response({'msg': '请求成功'})
