@@ -46,7 +46,7 @@ if not os.path.isdir(MEDIA_ROOT):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '42.51.8.152']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '42.51.8.152', 'apply.chinasummer.org']
 
 # 不需要校验权限, 免登陆
 LOGIN_EXEMPT_URLS = [
