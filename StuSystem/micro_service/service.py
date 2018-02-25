@@ -11,7 +11,7 @@ class BaseHttpServer:
         try:
             res = requests.get(url=url, params=params)
         except:
-            logging.info('Get: %s | By Param: %s' % (url, params))
+            logging.error('Get: %s | By Param: %s' % (url, params))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
             raise exceptions.ValidationError('微服务发生错误，status code: %d' % res.status_code)
@@ -24,7 +24,7 @@ class BaseHttpServer:
         try:
             res = requests.post(url=url, json=json_data)
         except:
-            logging.info('Post: %s | By Param: %s' % (url, json_data))
+            logging.error('Post: %s | By Param: %s' % (url, json_data))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
             raise exceptions.ValidationError('微服务发生错误，返回非200类消息')
