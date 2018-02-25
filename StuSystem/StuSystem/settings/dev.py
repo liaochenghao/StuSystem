@@ -8,9 +8,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stu_system',
         'USER': 'root',
-        'PASSWORD': 'qwe896275756',
+        'PASSWORD': 'root',
         'HOST': '42.51.8.152',
-        'PORT': 3306,
+        'PORT': '1q2w3e4r!Q',
         'CHARSET': 'UTF-8',
         'ATOMIC_REQUESTS': True
     }
