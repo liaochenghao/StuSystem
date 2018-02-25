@@ -2,15 +2,16 @@
 from StuSystem.settings import micro_service_domain
 from rest_framework import exceptions
 import requests
+import logging
 
 
 class BaseHttpServer:
-
     @staticmethod
     def get(url, params):
         try:
             res = requests.get(url=url, params=params)
         except:
+            logging.info('Get: %s | By Param: %s' % (url, params))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
             raise exceptions.ValidationError('微服务发生错误，status code: %d' % res.status_code)
@@ -23,6 +24,7 @@ class BaseHttpServer:
         try:
             res = requests.post(url=url, json=json_data)
         except:
+            logging.info('Post: %s | By Param: %s' % (url, json_data))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
             raise exceptions.ValidationError('微服务发生错误，返回非200类消息')
@@ -110,7 +112,7 @@ class WeixinServer:
         return data
 
     @staticmethod
-    def get_temporary_qr_code(action_name, scene_id, expired_time=7*24*60*60):
+    def get_temporary_qr_code(action_name, scene_id, expired_time=7 * 24 * 60 * 60):
         """获取临时二维码"""
         url = "%s/api/weixin/service_center/temporary_qr_code/" % micro_service_domain
         json_data = {
@@ -131,5 +133,3 @@ class WeixinServer:
         }
         data = BaseHttpServer.post(url, json_data)
         return data['qr_img_url']
-
-
