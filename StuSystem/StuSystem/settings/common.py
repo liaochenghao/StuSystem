@@ -202,7 +202,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['error'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True
         },
         'message_auto_notice': {
