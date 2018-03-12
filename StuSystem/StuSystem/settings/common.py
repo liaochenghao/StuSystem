@@ -181,7 +181,7 @@ LOGGING = {
     },
     'handlers': {
         'error': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': '%s/error.log' % LOG_ROOT,
             'formatter': 'simple'
