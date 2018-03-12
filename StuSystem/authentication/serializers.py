@@ -9,6 +9,7 @@ from rest_framework import serializers
 from authentication.models import User, UserInfo, StudentScoreDetail
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
+import logging
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,6 +47,7 @@ class CreateAccountSerializer(serializers.Serializer):
                 'valid_sales_man': True if student_info.valid_sales_man else False}
 
     def weixin_authorize(self, validated_data):
+        logging.info('--->'+str(datetime.datetime.now()))
         res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
@@ -74,6 +76,7 @@ class CreateAccountSerializer(serializers.Serializer):
         student_info.headimgurl = user_info['headimgurl']
         student_info.wx_name = user_info['nickname']
         student_info.save()
+        logging.info('--->' + str(datetime.datetime.now()))
         return user, student_info, ticket
 
 
@@ -141,7 +144,7 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
-        gpa = attrs.get('gpa',-1)
+        gpa = attrs.get('gpa', -1)
         if gpa > 4 or gpa < 0:
             raise serializers.ValidationError('GPA参数错误')
         return attrs
