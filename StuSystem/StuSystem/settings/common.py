@@ -181,9 +181,9 @@ LOGGING = {
     },
     'handlers': {
         'error': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '%s/error.log' % LOG_ROOT,
+            'filename': '%s/log.log' % LOG_ROOT,
             'formatter': 'simple'
         },
         'console': {
@@ -191,40 +191,18 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
-        'message_auto_notice': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '%s/message_auto_notice.log' % LOG_ROOT,
-            'formatter': 'simple'
-        },
-        'tcp_server': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '%s/tcp_server.log' % LOG_ROOT,
-            'formatter': 'simple'
-        }
     },
     'loggers': {
         'django': {
-            'handlers': ['error'],
+            'handlers': ['error', 'console'],
             'level': 'INFO',
             'propagate': True
         },
         'django.db.backends': {
             'handlers': ['error', 'console'],
             'propagate': True,
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
-        'message_auto_notice': {
-            'handlers': ['error'],
-            'level': 'INFO',
-            'propagate': True
-        },
-        'tcp_server': {
-            'handlers': ['error'],
-            'level': 'INFO',
-            'propagate': True
-        }
     }
 }
 
