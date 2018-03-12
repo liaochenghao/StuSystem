@@ -25,13 +25,13 @@ class UserViewSet(mixins.ListModelMixin,
 
     @list_route(['POST'], serializer_class=LoginSerializer)
     def login(self, request):
-        logging.error(str(datetime.now()) + '----------------------'+'login')
+        logging.error(str(datetime.now()) + '-------------------28---'+'login')
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         res = serializer.create_ticket()
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
-        logging.error(str(datetime.now()) + '----------------------'+'login')
+        logging.error(str(datetime.now()) + '-------------34---------'+'login')
         return response
 
     @list_route(['GET'], serializer_class=ClientAuthorizeSerializer)
