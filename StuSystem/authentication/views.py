@@ -1,4 +1,5 @@
 # coding: utf-8
+from datetime import datetime
 
 from authentication.functions import auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
@@ -12,7 +13,7 @@ from rest_framework.response import Response
 from micro_service.service import AuthorizeServer, WeixinServer
 from authentication.models import User, UserInfo, StudentScoreDetail
 from micro_service.wx_smart_functions import WxSmartProgram
-
+import logging
 
 class UserViewSet(mixins.ListModelMixin,
                   viewsets.GenericViewSet):
@@ -21,22 +22,27 @@ class UserViewSet(mixins.ListModelMixin,
 
     @list_route(['POST'], serializer_class=LoginSerializer)
     def login(self, request):
+        logging.info(str(datetime.now())+'----------------------')
+        print(str(datetime.now())+'----------------------')
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         res = serializer.create_ticket()
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
+        print(str(datetime.now()) + '----------------------')
         return response
 
     @list_route(['GET'], serializer_class=ClientAuthorizeSerializer)
     def authorize(self, request):
         """客户端登录获取授权"""
+        print(str(datetime.now()) + '-------------789-')
         serializer = self.serializer_class(data=self.request.query_params)
         serializer.is_valid(raise_exception=True)
         code = serializer.validated_data['code']
         res = WxSmartProgram.code_authorize(code)
         response = Response(res)
         response.set_cookie('ticket', res['ticket'])
+        print(str(datetime.now()) + '--------------78--------')
         return response
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
