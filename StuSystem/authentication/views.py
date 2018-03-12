@@ -15,6 +15,9 @@ from authentication.models import User, UserInfo, StudentScoreDetail
 from micro_service.wx_smart_functions import WxSmartProgram
 import logging
 
+logger = logging.getLogger("django")
+
+
 class UserViewSet(mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.filter()
@@ -22,8 +25,8 @@ class UserViewSet(mixins.ListModelMixin,
 
     @list_route(['POST'], serializer_class=LoginSerializer)
     def login(self, request):
-        logging.info(str(datetime.now())+'----------------------')
-        print(str(datetime.now())+'----------------------')
+        logging.info(str(datetime.now()) + '----------------------')
+        print(str(datetime.now()) + '----------------------')
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         res = serializer.create_ticket()
@@ -118,7 +121,7 @@ class UserViewSet(mixins.ListModelMixin,
     def sharing_qrcode(self, request):
         """用户分享自己的二维码"""
         user = request.user
-        valid_time = 2*60*60
+        valid_time = 2 * 60 * 60
         qr_img_url = WeixinServer.get_temporary_qr_code(action_name='QR_STR_SCENE',
                                                         scene_id='recommend_user_id_%s' % user.id,
                                                         expired_time=valid_time)
