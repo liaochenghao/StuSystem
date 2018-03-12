@@ -3,7 +3,7 @@ import json
 from re import compile
 
 import time
-
+import logging
 import datetime
 from django.conf import settings
 from django.http.response import HttpResponse
@@ -12,6 +12,7 @@ from authentication.models import User
 from utils.mongodb import stu_db
 from micro_service.service import AuthorizeServer
 
+logger = logging.getLogger("django")
 EXEMPT_URLS = []
 if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
     EXEMPT_URLS += [compile(expr) for expr in settings.LOGIN_EXEMPT_URLS]
@@ -35,7 +36,9 @@ class MiddlewareMixin(object):
 
 class AuthorizeRequiredMiddleWare(MiddlewareMixin):
     """用户认证中间件"""
+
     def process_request(self, request):
+        logging.info('Auth Url : %s' % request.path)
         path = request.path_info.lstrip('/')
         for m in EXEMPT_URLS:
             if m.match(path):
@@ -54,11 +57,13 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
             return HttpResponse(content=json.dumps(dict(code=401, msg=err_msg)),
                                 content_type='application/json')
         user = User.objects.get(id=auth_res['user_id'])
+        logging.info('Get User : %s' % auth_res['user_id'])
         request.user = user
 
 
 class BackendAPIRequestMiddleWare(MiddlewareMixin):
     """管理后台接口访问限制中间件"""
+
     def process_request(self, request):
         path = request.path_info.lstrip('')
         if path.split('/')[1] == 'admin' and request.user.role == 'STUDENT':
