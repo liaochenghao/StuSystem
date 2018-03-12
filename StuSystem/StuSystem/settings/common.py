@@ -186,6 +186,11 @@ LOGGING = {
             'filename': '%s/error.log' % LOG_ROOT,
             'formatter': 'simple'
         },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
         'message_auto_notice': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -204,6 +209,11 @@ LOGGING = {
             'handlers': ['error'],
             'level': 'INFO',
             'propagate': True
+        },
+        'django.db.backends': {
+            'handlers': ['error', 'console'],
+            'propagate': True,
+            'level': 'INFO',
         },
         'message_auto_notice': {
             'handlers': ['error'],
