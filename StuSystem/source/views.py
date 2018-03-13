@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from datetime import datetime
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
@@ -11,6 +11,9 @@ from source.serializers import ProjectSerializer, CampusSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer, \
     CourseConfirmSerializer
 from order.models import Order, UserCourse, ShoppingChart
+import logging
+
+logging = logging.getLogger("django")
 
 
 class BaseViewSet(mixins.CreateModelMixin,
@@ -41,8 +44,10 @@ class CampusViewSet(BaseViewSet):
 
     @detail_route()
     def all_projects(self, request, pk):
+        logging.info('all_projects start ' + str(datetime.now()))
         instance = self.get_object()
         serializer = self.serializer_class(instance=instance, context={'api_key': 'all_projects'})
+        logging.info('all_projects end ' + str(datetime.now()))
         return Response(serializer.data)
 
 

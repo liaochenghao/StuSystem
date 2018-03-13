@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 
+from datetime import datetime
 from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
@@ -11,6 +12,10 @@ from operate_history.models import OrderOperateHistory
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart
 from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, \
     ShoppingChartSerializer, SimpleUserOrderSerializer
+
+import logging
+
+logging = logging.getLogger("django")
 
 
 class OrderViewSet(mixins.CreateModelMixin,
@@ -54,9 +59,11 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def check_order(self, request):
+        logging.info('check_order start ' + str(datetime.now()))
         if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
             order_to = self.get_queryset().filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).first()
             return Response(self.serializer_class(order_to).data)
+        logging.info('check_order end ' + str(datetime.now()))
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
