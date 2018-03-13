@@ -179,7 +179,7 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': '%s/log.log' % LOG_ROOT,
             'formatter': 'simple'
         },
@@ -193,7 +193,7 @@ LOGGING = {
         'django': {
             'handlers': ['file', 'console'],
             'level': 'INFO',
-            'propagate': True
+            'propagate': False
         },
         'django.request': {
             'handlers': ['file', 'console'],
@@ -202,7 +202,7 @@ LOGGING = {
         },
         'django.db': {
             'handlers': ['file', 'console'],
-            'propagate': True,
+            'propagate': False,
             'level': 'DEBUG',
         },
     }
