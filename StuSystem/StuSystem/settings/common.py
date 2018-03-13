@@ -16,7 +16,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -46,7 +45,7 @@ if not os.path.isdir(MEDIA_ROOT):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '42.51.8.152', 'apply.chinasummer.org']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '42.51.8.152', 'apply.chinasummer.org', '*']
 
 # 不需要校验权限, 免登陆
 LOGIN_EXEMPT_URLS = [
@@ -70,7 +69,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'admin',
     'authentication',
-	'corsheaders',
+    'corsheaders',
     'common',
     'source',
     'coupon',
@@ -79,7 +78,6 @@ INSTALLED_APPS = [
     'gunicorn',
     'operate_history'
 ]
-
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -165,7 +163,6 @@ LOG_ROOT = os.path.join(BASE_DIR, '../../logs')
 
 if not os.path.isdir(LOG_ROOT):
     os.makedirs(LOG_ROOT)
-
 
 # 日志系统
 LOGGING = {
