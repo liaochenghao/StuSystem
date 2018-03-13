@@ -38,6 +38,7 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
     """用户认证中间件"""
 
     def process_request(self, request):
+        print('print Auth Url : %s' % request.path)
         logging.info('Auth Url : %s' % request.path)
         path = request.path_info.lstrip('/')
         for m in EXEMPT_URLS:
