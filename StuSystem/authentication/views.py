@@ -25,31 +25,32 @@ class UserViewSet(mixins.ListModelMixin,
 
     @list_route(['POST'], serializer_class=LoginSerializer)
     def login(self, request):
-        logging.error(str(datetime.now()) + '-------------------28---'+'login')
+        logging.info('login start ' + str(datetime.now()))
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         res = serializer.create_ticket()
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
-        logging.error(str(datetime.now()) + '-------------34---------'+'login')
+        logging.info('login end ' + str(datetime.now()))
         return response
 
     @list_route(['GET'], serializer_class=ClientAuthorizeSerializer)
     def authorize(self, request):
         """客户端登录获取授权"""
-        print(str(datetime.now()) + '-------------789-')
+        logging.info('authorize start ' + str(datetime.now()))
         serializer = self.serializer_class(data=self.request.query_params)
         serializer.is_valid(raise_exception=True)
         code = serializer.validated_data['code']
         res = WxSmartProgram.code_authorize(code)
         response = Response(res)
         response.set_cookie('ticket', res['ticket'])
-        print(str(datetime.now()) + '--------------78--------')
+        logging.info('authorize end ' + str(datetime.now()))
         return response
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
         # 检查账户信息
+        logging.info('check_account start' + str(datetime.now()))
         data = self.request.query_params.dict()
         ticket = request.COOKIES.get('ticket')
         if not ticket:
@@ -60,6 +61,7 @@ class UserViewSet(mixins.ListModelMixin,
         res = serializer.check_account(serializer.validated_data)
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
+        logging.info('check_account end' + str(datetime.now()))
         return response
 
     @list_route()

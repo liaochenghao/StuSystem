@@ -40,9 +40,8 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
     """用户认证中间件"""
 
     def process_request(self, request):
-        print('print Auth Url : %s' % request.path)
         logging.info('info Auth Url : %s' % request.path)
-        logging.debug('debug Auth Url : %s' % request.path)
+        logging.info('middleware start '+str(datetime.datetime.now()))
         path = request.path_info.lstrip('/')
         for m in EXEMPT_URLS:
             if m.match(path):
@@ -61,7 +60,8 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
             return HttpResponse(content=json.dumps(dict(code=401, msg=err_msg)),
                                 content_type='application/json')
         user = User.objects.get(id=auth_res['user_id'])
-        logging.info('Get User : %s' % auth_res['user_id'])
+        logging.info('Get User Id : %s' % auth_res['user_id'])
+        logging.info('middleware end ' + str(datetime.datetime.now()))
         request.user = user
 
 
