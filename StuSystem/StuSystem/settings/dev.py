@@ -39,7 +39,7 @@ TEMPLATES = [
 
 # mongodb配置
 MONGODB_CONFIG = {
-    'host': '47.92.115.126',
+    'host': '42.51.8.152',
     'port': 50001,
     'user': 'stu_system',
     'password': 'qwe=-00.3690'
