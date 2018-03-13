@@ -43,7 +43,7 @@ if not os.path.isdir(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '42.51.8.152', 'apply.chinasummer.org', '*']
 
