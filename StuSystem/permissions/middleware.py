@@ -3,7 +3,7 @@ import json
 from re import compile
 
 import time
-import logging
+
 import datetime
 from django.conf import settings
 from django.http.response import HttpResponse
@@ -11,7 +11,9 @@ from django.http.response import HttpResponse
 from authentication.models import User
 from utils.mongodb import stu_db
 from micro_service.service import AuthorizeServer
+import logging
 
+logging = logging.getLogger("django")
 
 EXEMPT_URLS = []
 if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
