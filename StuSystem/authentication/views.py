@@ -15,7 +15,7 @@ from authentication.models import User, UserInfo, StudentScoreDetail
 from micro_service.wx_smart_functions import WxSmartProgram
 import logging
 
-logger = logging.getLogger("django")
+logging = logging.getLogger("django")
 
 
 class UserViewSet(mixins.ListModelMixin,
@@ -44,7 +44,7 @@ class UserViewSet(mixins.ListModelMixin,
         res = WxSmartProgram.code_authorize(code)
         response = Response(res)
         response.set_cookie('ticket', res['ticket'])
-        logging.info('authorize end ' + str(datetime.now()))
+        logging.info('authorize start ' + str(datetime.now()))
         return response
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
