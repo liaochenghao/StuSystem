@@ -92,7 +92,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'permissions.middleware.AuthorizeRequiredMiddleWare',
-    'permissions.middleware.AccessRecordMiddleWare',
+    # 'permissions.middleware.AccessRecordMiddleWare',
     'permissions.middleware.BackendAPIRequestMiddleWare'
 ]
 
