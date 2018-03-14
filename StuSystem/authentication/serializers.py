@@ -128,7 +128,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['wcampus'] = json.loads(instance.wcampus) if instance.wcampus else []
+        data['wcampus'] = json.dumps(instance.wcampus) if instance.wcampus else []
         return data
 
 
