@@ -11,10 +11,12 @@ DATABASES = {
         'PASSWORD': '1q2w3e4r!Q',
         'HOST': '120.79.36.26',
         'PORT': 3306,
-        'CHARSET': 'UTF-8',
+        # 'CHARSET': 'UTF-8',
+        'OPTIONS': {'charset': 'utf8mb4'},
         'ATOMIC_REQUESTS': True
     }
 }
+
 
 REDIS_CONFIG = {
     'host': '120.79.36.26',
