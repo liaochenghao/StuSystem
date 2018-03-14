@@ -24,7 +24,7 @@ REDIS_CONFIG = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/root/workspace/StuSystem/summer-web'],
+        'DIRS': ['/root/workspace/StuSystem/summer-web/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
