@@ -45,8 +45,8 @@ MONGODB_CONFIG = {
     'password': 'qwe=-00.3690'
 }
 
-micro_service_domain = 'http://47.92.115.126:7070'
-DOMAIN = 'http://47.92.115.126:8002'
+micro_service_domain = 'http://42.51.8.152:7070'
+DOMAIN = 'http://42.51.8.152:8002'
 BASE_MEDIA_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 MEDIA_ROOT = '%s/media' % BASE_MEDIA_ROOT
 
