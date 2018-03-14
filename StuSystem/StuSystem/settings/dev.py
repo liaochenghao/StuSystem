@@ -46,7 +46,7 @@ MONGODB_CONFIG = {
 }
 
 micro_service_domain = 'http://47.92.115.126:7070'
-DOMAIN = 'http://47.92.115.126:8002'
+DOMAIN = 'http://120.79.36.26:9002'
 BASE_MEDIA_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 MEDIA_ROOT = '%s/media' % BASE_MEDIA_ROOT
 
