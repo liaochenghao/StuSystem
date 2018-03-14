@@ -113,7 +113,7 @@ class OrderPayment(models.Model):
     account_number = models.CharField('支付账号', max_length=60, null=True)
     account_name = models.CharField('支付姓名', max_length=60, null=True)
     opening_bank = models.CharField('开户银行', max_length=60, null=True)
-    pay_date = models.DateField('支付日期')
+    pay_date = models.DateField('支付日期', auto_now_add=True, null=True)
     img = models.ImageField(upload_to='order/order_payment')
     remark = models.CharField(max_length=255, blank=True, null=True)
     create_time = models.DateTimeField(auto_now_add=True)
