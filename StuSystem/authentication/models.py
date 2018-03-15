@@ -126,15 +126,15 @@ class UserInfoRemark(models.Model):
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    province_post_code = models.CharField('具体的州/省的邮编', max_length=30)
-    university = models.CharField('大学名称', max_length=30)
-    department = models.CharField('院系名称', max_length=30, default=None)
-    transfer_department = models.CharField('转学分部门/办公楼', max_length=30)
-    transfer_office = models.CharField('具体办公室', max_length=30)
-    address = models.CharField('详细地址', max_length=60, default=None)
-    teacher_name = models.CharField('收件老师姓名', max_length=30, default=None)
-    phone = models.CharField('联系电话', max_length=30)
-    email = models.CharField('邮箱', max_length=30, default=None)
+    province_post_code = models.CharField('具体的州/省的邮编', max_length=30, null=True)
+    university = models.CharField('大学名称', max_length=30, null=True)
+    department = models.CharField('院系名称', max_length=30, default=None, null=True)
+    transfer_department = models.CharField('转学分部门/办公楼', max_length=30, null=True)
+    transfer_office = models.CharField('具体办公室', max_length=30, null=True)
+    address = models.CharField('详细地址', max_length=60, default=None, null=True)
+    teacher_name = models.CharField('收件老师姓名', max_length=30, default=None, null=True)
+    phone = models.CharField('联系电话', max_length=30, null=True)
+    email = models.CharField('邮箱', max_length=30, default=None, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
