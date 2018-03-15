@@ -1,6 +1,9 @@
 # coding: utf-8
 import time
 import datetime
+import logging
+
+logger = logging.getLogger("django")
 
 
 def get_key_verbose_data(data: dict):
@@ -26,12 +29,15 @@ def timestamp_to_datetime(int_time: int):
 
 def handle_mongodb_cursor_data(mongo_cursor):
     """将mongodb查询出的cursor转换为list数据的data"""
+    logger.info('Deal with Mongodb Method(handle_mongodb_cursor_data) start : %s' % str(datetime.datetime.now()))
     try:
         cursor_data = list(mongo_cursor)
         for item in cursor_data:
             item['id'] = str(item.pop('_id'))
             if item.get('create_time'):
                 item['create_time'] = timestamp_to_datetime(item.pop('create_time'))
-    except TypeError:
+    except Exception as e:
+        logger.info('Mongodb Error: %s' % str(e))
         cursor_data = None
+    logger.info('Deal with Mongodb Method(handle_mongodb_cursor_data) end : %s' % str(datetime.datetime.now()))
     return cursor_data
