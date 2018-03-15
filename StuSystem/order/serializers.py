@@ -4,7 +4,7 @@ import json
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
-from authentication.models import UserInfo
+from authentication.models import UserInfo, StudentScoreDetail
 from common.models import SalesMan
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
@@ -238,6 +238,7 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE',
                                      remark='上传了订单支付信息', source_type='ORDER')
+        StudentScoreDetail.objects.create(user=order.user)
         return instance
 
     def to_representation(self, instance):
