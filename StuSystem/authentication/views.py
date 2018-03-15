@@ -173,6 +173,7 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             instance = self.get_object()
+        logging.info('personal_file :$s ' % self.get_serializer(instance).data)
         return Response(self.get_serializer(instance).data)
 
     @list_route(['GET'])
