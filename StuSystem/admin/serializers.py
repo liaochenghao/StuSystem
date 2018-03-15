@@ -19,6 +19,9 @@ from order.models import UserCourse, Order, ShoppingChart
 from order.serializers import OrderSerializer
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import WeixinServer
+import logging
+
+logger = logging.getLogger('django')
 
 
 class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
@@ -348,7 +351,6 @@ class ChildUserSerializer(serializers.ModelSerializer):
 
 
 class AdminOrderSerializer(OrderSerializer):
-
     def notice_to_user(self, instance, confirm_status, confirm_remark):
         openid = instance.user.username
         user_info = UserInfo.objects.filter(user=instance.user).first()
@@ -394,7 +396,9 @@ class AdminOrderSerializer(OrderSerializer):
         return instance
 
     def to_representation(self, instance):
+        logger.info('admin serializer: %s' % instance.__repr__())
         data = super().to_representation(instance)
+        logger.info('admin serializer to_representation: %s' % data)
         data['operation_history'] = HistoryFactory.read_records(source=instance, source_type='ORDER')
         for chart in data['charts']:
             current_course_num = instance.usercourse_set.all().filter(
