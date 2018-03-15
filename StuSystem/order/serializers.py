@@ -15,6 +15,9 @@ from rest_framework import serializers
 from source.serializers import ProjectSerializer
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart, OrderChartRelation
 from utils.serializer_fields import VerboseChoiceField
+import logging
+
+logger = logging.getLogger('django')
 
 
 class PaymentAccountInfoSerializer(serializers.ModelSerializer):
@@ -51,7 +54,8 @@ class OrderSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError('无效的chart_id: %s，请检查传入参数' % chart_id)
             if attrs.get('coupon_list'):
                 for coupon_id in attrs['coupon_list']:
-                    if not UserCoupon.objects.filter(user=self.context['request'].user, coupon_id=coupon_id, status='TO_USE').exists():
+                    if not UserCoupon.objects.filter(user=self.context['request'].user, coupon_id=coupon_id,
+                                                     status='TO_USE').exists():
                         raise serializers.ValidationError('无效的优惠券, coupon_id: %s' % coupon_id)
 
             if Order.objects.filter(user=self.context['request'].user,
@@ -147,6 +151,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order_payment = OrderPayment.objects.filter(order=instance).last()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
         user_info = UserInfo.objects.get(user=instance.user)
+        logger.info('user_info: %s' % user_info)
         data['user'] = {
             'id': instance.user.id,
             'name': user_info.name
@@ -173,6 +178,7 @@ class SimpleUserOrderSerializer(serializers.ModelSerializer):
 
 class OrderCourseSerializer(serializers.ModelSerializer):
     """用于用户关联订单的审课"""
+
     class Meta:
         model = Course
         fields = ['id', 'course_code', 'name', 'max_num', 'credit', 'professor', 'start_time', 'end_time',
