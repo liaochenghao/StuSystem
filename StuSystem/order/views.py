@@ -59,12 +59,9 @@ class OrderViewSet(mixins.CreateModelMixin,
 
     @list_route()
     def check_order(self, request):
-        logging.info('check_order start ' + str(datetime.now()))
         if self.queryset.filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
             order_to = self.get_queryset().filter(user=self.request.user, status__in=['TO_PAY', 'TO_CONFIRM']).first()
-            logging.info('order_to: %s' % order_to)
             return Response(self.serializer_class(order_to).data)
-        logging.info('check_order end ' + str(datetime.now()))
         return Response({'code': 100, 'msg': '没有未完成的订单，可以创建'})
 
     @list_route()
