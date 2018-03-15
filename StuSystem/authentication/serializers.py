@@ -7,6 +7,7 @@ from common.models import SalesManUser, SalesMan
 from rest_framework import serializers
 
 from authentication.models import User, UserInfo, StudentScoreDetail
+from order.models import Order
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
 import logging
@@ -43,11 +44,13 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = True
         else:
             need_complete_stu_info = False
+        order_status = Order.objects.filter(user=user,
+                                            status__in=['TO_CONFIRM', 'CONFIRMED', 'CONFIRM_FAILED']).exists()
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
-                'valid_sales_man': True if student_info.valid_sales_man else False}
+                'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status}
 
     def weixin_authorize(self, validated_data):
-        logging.info('--->'+str(datetime.datetime.now()))
+        logging.info('--->' + str(datetime.datetime.now()))
         res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
