@@ -396,7 +396,7 @@ class AdminOrderSerializer(OrderSerializer):
         return instance
 
     def to_representation(self, instance):
-        logger.info('instance ======================%s'% instance)
+        logger.info('instance ======================%s' % instance.__str__())
         data = super().to_representation(instance)
         data['operation_history'] = HistoryFactory.read_records(source=instance, source_type='ORDER')
         for chart in data['charts']:
