@@ -11,11 +11,13 @@ class BaseHttpServer:
         try:
             res = requests.get(url=url, params=params)
         except:
-            logging.error('Get: %s | By Param: %s' % (url, params))
+            logging.info('Get: %s | By Param: %s' % (url, params))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
+            logging.info('微服务发生错误，返回非200类消息: %s' % res.content)
             raise exceptions.ValidationError('微服务发生错误，status code: %d' % res.status_code)
         if res.json()['code'] != 0:
+            logging.info('验证错误: %s' % res.json()['msg'])
             raise exceptions.ValidationError('验证错误: %s' % res.json()['msg'])
         return res.json()['data']
 
@@ -24,11 +26,13 @@ class BaseHttpServer:
         try:
             res = requests.post(url=url, json=json_data)
         except:
-            logging.error('Post: %s | By Param: %s' % (url, json_data))
+            logging.info('Post: %s | By Param: %s' % (url, json_data))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
+            logging.info('微服务发生错误，返回非200类消息: %s' % res.content)
             raise exceptions.ValidationError('微服务发生错误，返回非200类消息')
         if res.json()['code'] != 0:
+            logging.info('验证错误: %s' % res.json()['msg'])
             raise exceptions.ValidationError('验证错误: %s' % res.json()['msg'])
         return res.json()['data']
 
