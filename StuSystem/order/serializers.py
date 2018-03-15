@@ -151,7 +151,8 @@ class OrderSerializer(serializers.ModelSerializer):
         order_payment = OrderPayment.objects.filter(order=instance).last()
         data['order_payed_info'] = OrderPaymentSerializer(order_payment).data if order_payment else None
         logger.info('user_info id: %s' % instance.user.id)
-        user_info = UserInfo.objects.get(user=instance.user)
+        user_info = UserInfo.objects.filter(user=instance.user).first()
+        logger.info('----------------user_info: %s' % user_info)
         logger.info('user_info: %s' % user_info.name)
         data['user'] = {
             'id': instance.user.id,
