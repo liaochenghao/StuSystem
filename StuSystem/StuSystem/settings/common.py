@@ -33,7 +33,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/')
 ]
 
-DOMAIN = 'http://apply.chinasummer.org'
+# DOMAIN = 'http://apply.chinasummer.org'
 
 MEDIA_URL = '/media/'
 
