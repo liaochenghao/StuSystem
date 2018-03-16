@@ -41,7 +41,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'user', 'chart_ids', 'currency', 'payment', 'create_time', 'modified_time', 'status',
-                  'standard_fee', 'pay_fee', 'remark', 'coupon_list', 'order_number', 'check_remark']
+                  'standard_fee', 'pay_fee', 'remark', 'coupon_list', 'order_number']
         read_only_fields = ['user', 'pay_fee', 'standard_fee', 'order_number']
 
     def validate(self, attrs):
