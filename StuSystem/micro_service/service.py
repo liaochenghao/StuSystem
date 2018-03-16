@@ -31,7 +31,7 @@ class BaseHttpServer:
             logger.info('Post: %s | By Param: %s' % (url, json_data))
             raise exceptions.ValidationError('微服务发生错误')
         if not res.status_code == 200:
-            logger.info('微服务发生错误，返回非200类消息: %s' % res.content)
+            logger.info('微服务发生错误，返回非200类消息: %s' % res.__dict__)
             raise exceptions.ValidationError('微服务发生错误，返回非200类消息')
         if res.json()['code'] != 0:
             logger.info('验证错误: %s' % res.json()['msg'])
