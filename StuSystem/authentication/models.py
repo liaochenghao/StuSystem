@@ -105,7 +105,7 @@ class UserInfo(models.Model):
         elif Order.objects.filter(user=self.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
             student_status = 'SUPPLY_ORDER'
         elif all([self.english_name, self.gender, self.id_number, self.major,
-                  self.graduate_year, self.gpa]):
+                  self.phone, self.gpa]):
             student_status = 'PERSONAL_FILE'
         else:
             student_status = 'NEW'
