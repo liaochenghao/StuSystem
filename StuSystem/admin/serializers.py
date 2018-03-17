@@ -328,7 +328,7 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'province_post_code', 'university', 'department', 'transfer_department',
+        fields = ['id', 'province_post_code', 'country', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
 
 
