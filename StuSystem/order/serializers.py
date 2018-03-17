@@ -6,7 +6,7 @@ from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail
 from common.models import SalesMan
-from coupon.models import UserCoupon
+from coupon.models import UserCoupon, Coupon
 from operate_history.functions import HistoryFactory
 from order.functions import order_auto_notice_message
 from source.models import ProjectCourseFee, Course
@@ -172,6 +172,13 @@ class SimpleUserOrderSerializer(serializers.ModelSerializer):
         charts = ShoppingChartSerializer(ShoppingChart.objects.filter(orderchartrelation__order=instance),
                                          many=True).data
         data['charts'] = charts
+        discount_amount = 0
+        if instance.coupon_list:
+            coupons_amount = Coupon.objects.filter(usercoupon__in=json.loads(instance.coupon_list)).values_list(
+                'amount')
+            for coupon in coupons_amount:
+                discount_amount += int(coupon[0])
+            data['coupon'] = discount_amount
         return data
 
 
