@@ -7,7 +7,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from authentication.models import User
-from coupon.models import UserCoupon
+from coupon.models import UserCoupon, Coupon
 from operate_history.models import OrderOperateHistory
 from order.models import Order, OrderPayment, UserCourse, ShoppingChart
 from order.serializers import OrderSerializer, OrderPaymentSerializer, UserOrderCourseSerializer, \
@@ -55,6 +55,13 @@ class OrderViewSet(mixins.CreateModelMixin,
             data = {
                 "course_to_select": False
             }
+        discount_amount = 0
+        if instance.coupon_list:
+            coupons_amount = Coupon.objects.filter(usercoupon__in=json.loads(instance.coupon_list)).values_list(
+                'amount')
+            for coupon in coupons_amount:
+                discount_amount += int(coupon[0])
+        data['coupon'] = discount_amount
         return Response(data)
 
     @list_route()
