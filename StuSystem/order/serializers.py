@@ -54,7 +54,7 @@ class OrderSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError('无效的chart_id: %s，请检查传入参数' % chart_id)
             if attrs.get('coupon_list'):
                 for coupon_id in attrs['coupon_list']:
-                    if not UserCoupon.objects.filter(user=self.context['request'].user, coupon_id=coupon_id,
+                    if not UserCoupon.objects.filter(user=self.context['request'].user, id=coupon_id,
                                                      status='TO_USE').exists():
                         raise serializers.ValidationError('无效的优惠券, coupon_id: %s' % coupon_id)
 
@@ -90,7 +90,7 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['coupon_list'] = json.dumps(coupon_list)
             # 计算优惠券费用
             coupon_list_fee = 0
-            coupon_list_fee_values = UserCoupon.objects.filter(coupon_id__in=coupon_list).values_list('coupon__amount',
+            coupon_list_fee_values = UserCoupon.objects.filter(id__in=coupon_list).values_list('coupon__amount',
                                                                                                       flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
@@ -113,8 +113,8 @@ class OrderSerializer(serializers.ModelSerializer):
         if coupon_list:
             # 更新优惠券状态
             for coupon_id in coupon_list:
-                if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
-                    UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
+                if UserCoupon.objects.filter(user=user, id=coupon_id, status='TO_USE').exists():
+                    UserCoupon.objects.filter(user=user, id=coupon_id, status='TO_USE').update(status='LOCKED')
         # 创建订单与商品关系
         order_chart = []
         for chart_id in chart_ids:
@@ -133,12 +133,12 @@ class OrderSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         if instance.status in ['CONFIRMED', 'CONFIRM_FAILED'] and instance.coupon_list:
             coupon_list = json.loads(instance.coupon_list)
-            if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
-                UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='USED')
+            if UserCoupon.objects.filter(user=instance.user, id__in=coupon_list).exists():
+                UserCoupon.objects.filter(user=instance.user, id__in=coupon_list).update(status='USED')
         if instance.status == 'CANCELED' and instance.coupon_list:
             coupon_list = json.loads(instance.coupon_list)
-            if UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).exists():
-                UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='TO_USE')
+            if UserCoupon.objects.filter(user=instance.user, id__in=coupon_list).exists():
+                UserCoupon.objects.filter(user=instance.user, id__in=coupon_list).update(status='TO_USE')
         return instance
 
     def to_representation(self, instance):
