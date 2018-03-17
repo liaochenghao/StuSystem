@@ -126,6 +126,7 @@ class UserInfoRemark(models.Model):
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    country = models.CharField('国家', max_length=60)
     province_post_code = models.CharField('具体的州/省的邮编', max_length=30, null=True)
     university = models.CharField('大学名称', max_length=30, null=True)
     department = models.CharField('院系名称', max_length=30, default=None, null=True)

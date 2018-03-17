@@ -118,7 +118,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ['id', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
+        fields = ['id', 'birth_date', 'name', 'email', 'wechat', 'wcampus', 'cschool', 'headimgurl', 'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):
@@ -156,7 +156,7 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
 class StudentScoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentScoreDetail
-        fields = ['id', 'user', 'province_post_code', 'university', 'department', 'transfer_department',
+        fields = ['id', 'user', 'country', 'province_post_code', 'university', 'department', 'transfer_department',
                   'transfer_office', 'address', 'teacher_name', 'phone', 'email']
         read_only_fields = ['user']
 
