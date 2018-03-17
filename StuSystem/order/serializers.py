@@ -243,7 +243,8 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         HistoryFactory.create_record(operator=self.context['request'].user, source=instance.order, key='UPDATE',
                                      remark='上传了订单支付信息', source_type='ORDER')
-        StudentScoreDetail.objects.create(user=order.user)
+        if not StudentScoreDetail.objects.filter(user=order.user).exists():
+            StudentScoreDetail.objects.create(user=order.user)
         return instance
 
     def to_representation(self, instance):
