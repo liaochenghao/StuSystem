@@ -387,7 +387,7 @@ class AdminOrderSerializer(OrderSerializer):
         if instance.coupon_list:
             # 如果使用了优惠券，更新优惠券的状态
             coupon_list = json.loads(instance.coupon_list)
-            UserCoupon.objects.filter(user=instance.user, coupon__id__in=coupon_list).update(
+            UserCoupon.objects.filter(user=instance.user, id__in=coupon_list).update(
                 status='USED' if status == 'CONFIRMED' else 'TO_USE')
         self.notice_to_user(instance, confirm_status, confirm_remark)
         HistoryFactory.create_record(operator=self.context['request'].user, source=instance, key='UPDATE',
