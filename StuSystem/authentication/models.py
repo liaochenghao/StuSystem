@@ -106,7 +106,7 @@ class UserInfo(models.Model):
             student_status = 'SUPPLY_ORDER'
         elif all([self.english_name, self.gender, self.id_number, self.major,
                   self.graduate_year, self.gpa]):
-            student_status = 'PERSONAL_FILED'
+            student_status = 'PERSONAL_FILE'
         else:
             student_status = 'NEW'
 
