@@ -16,8 +16,12 @@ def message_auto_notice(message_auto_notice: MessageAutoNotice):
         'msg': message_auto_notice.msg,
         'create_time': int(time.time())
     }
-    logger.info('message_auto_notice insert data:', insert_data)
-    stu_db.insert(collection_name='message_auto_notice', insert_data=insert_data)
+    try:
+        logger.info('message_auto_notice insert data: %s' % insert_data)
+        stu_db.insert(collection_name='message_auto_notice', insert_data=insert_data)
+    except Exception as e:
+        logger.info('message_auto_notice exception e:')
+        raise e
 
 
 def subscribe():
