@@ -178,7 +178,7 @@ class SimpleUserOrderSerializer(serializers.ModelSerializer):
                 'amount')
             for coupon in coupons_amount:
                 discount_amount += int(coupon[0])
-            data['coupon'] = discount_amount
+        data['coupon'] = discount_amount
         return data
 
 
