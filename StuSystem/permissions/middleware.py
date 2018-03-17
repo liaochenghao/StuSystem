@@ -41,12 +41,10 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
 
     def process_request(self, request):
         logging.info('info Auth Url : %s' % request.path)
-        logging.info('middleware start '+str(datetime.datetime.now()))
         path = request.path_info.lstrip('/')
         for m in EXEMPT_URLS:
             if m.match(path):
                 return
-
         ticket = request.COOKIES.get('ticket')
         if not ticket:
             ticket = request.GET.get('ticket')
@@ -61,7 +59,6 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
                                 content_type='application/json')
         user = User.objects.get(id=auth_res['user_id'])
         logging.info('Get User Id : %s' % auth_res['user_id'])
-        logging.info('middleware end ' + str(datetime.datetime.now()))
         request.user = user
 
 
