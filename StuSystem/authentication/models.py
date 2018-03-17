@@ -44,7 +44,7 @@ class UserInfo(models.Model):
         ('GRADE_FOUR', '大四'),
         ('GRADE_FIVE', '大五')
     )
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     name = models.CharField('学生姓名', max_length=30, null=True)
     english_name = models.CharField('英文名称', max_length=30, null=True)
     first_language = models.CharField('母语', max_length=30, null=True)
@@ -115,7 +115,7 @@ class UserInfo(models.Model):
 
 class UserInfoRemark(models.Model):
     """用户信息备注"""
-    user_info = models.ForeignKey(UserInfo, related_name='user_info_remark',on_delete=models.DO_NOTHING)
+    user_info = models.ForeignKey(UserInfo, related_name='user_info_remark', on_delete=models.DO_NOTHING)
     remark = models.CharField('备注', max_length=255)
     create_time = models.DateTimeField(auto_now_add=True)
 
@@ -125,8 +125,8 @@ class UserInfoRemark(models.Model):
 
 class StudentScoreDetail(models.Model):
     """用户成绩邮寄信息"""
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    country = models.CharField('国家', max_length=60)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    country = models.CharField('国家', max_length=60, null=True)
     province_post_code = models.CharField('具体的州/省的邮编', max_length=30, null=True)
     university = models.CharField('大学名称', max_length=30, null=True)
     department = models.CharField('院系名称', max_length=30, default=None, null=True)
