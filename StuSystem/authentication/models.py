@@ -116,6 +116,7 @@ class UserInfo(models.Model):
 class UserInfoRemark(models.Model):
     """用户信息备注"""
     user_info = models.ForeignKey(UserInfo, related_name='user_info_remark', on_delete=models.DO_NOTHING)
+    remark_by = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     remark = models.CharField('备注', max_length=255)
     create_time = models.DateTimeField(auto_now_add=True)
 
