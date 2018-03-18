@@ -62,7 +62,7 @@ class CreateAccountSerializer(serializers.Serializer):
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
         user = User.objects.filter(username=user_info.get('unionid')).first()
-        logging.info('----------------------user', user.__dict__)
+        logging.info('----------------------user', user)
         if not user:
             user = User.objects.create(**{
                 'channel_id': validated_data.get('channel_id', 1),
