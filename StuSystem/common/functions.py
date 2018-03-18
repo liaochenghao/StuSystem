@@ -17,8 +17,9 @@ def message_auto_notice(message_auto_notice: MessageAutoNotice):
         'create_time': int(time.time())
     }
     try:
-        logger.info('message_auto_notice insert data: %s' % insert_data)
-        stu_db.insert(collection_name='message_auto_notice', insert_data=insert_data)
+        logger.info('message_auto_notice insert data start: %s' % insert_data)
+        stu_db.insert_one(collection_name='message_auto_notice', insert_data=insert_data)
+        logger.info('message_auto_notice insert data end: %s' % insert_data)
     except Exception as e:
         logger.info('message_auto_notice exception e:')
         raise e
