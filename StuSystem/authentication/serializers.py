@@ -12,7 +12,7 @@ from order.models import Order
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
 import logging
-
+logger = logging.getLogger('django')
 
 class UserSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField()
@@ -58,7 +58,10 @@ class CreateAccountSerializer(serializers.Serializer):
         try:
             user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
         except:
-            WeixinServer.get_user_union_id(access_token=res['access_token'], openid=res['openid'])
+            user_info = WeixinServer.get_user_union_id(access_token=res['access_token'], openid=res['openid'])
+        print(user_info)
+        logger.info(user_info)
+        logger.info('======================',)
         if user_info.get('errorcode', 0) != 0:
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
