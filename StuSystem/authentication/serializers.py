@@ -13,6 +13,8 @@ from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
 import logging
 
+logger = logging.getLogger('django')
+
 
 class UserSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField()
@@ -20,6 +22,20 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['password', 'is_active']
+
+
+class GetUserInfoSerializer(serializers.Serializer):
+    def get_user_info(self, request):
+        res = WeixinServer.code_authorize(request.query_params.get('code'))
+        user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
+        if user_info.get('errorcode', 0) != 0:
+            raise serializers.ValidationError('user info 获取错误')
+        user = User.objects.filter(username=res['openid']).first()
+        student_info = UserInfo.objects.filter(user=user).first()
+        student_info.unionid = user_info.get('unionid')
+        student_info.headimgurl = user_info['headimgurl']
+        student_info.wx_name = user_info['nickname']
+        student_info.save()
 
 
 class CreateAccountSerializer(serializers.Serializer):
@@ -47,23 +63,36 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = False
         order_status = Order.objects.filter(user=user,
                                             status__in=['TO_CONFIRM', 'CONFIRMED', 'CONFIRM_FAILED']).exists()
+
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
-                'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status}
+                'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status,
+                'check_user_info': student_info.unionid}
 
     def weixin_authorize(self, validated_data):
         logging.info('--->' + str(datetime.datetime.now()))
         res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
-        user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
+        try:
+            user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
+        except:
+            user_info = None
         if user_info.get('errorcode', 0) != 0:
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
-        user = User.objects.filter(username=user_info.get('unionid')).first()
-        if not user:
+        user = User.objects.filter(username=res['openid']).first()
+        if not user and not user_info:
             user = User.objects.create(**{
                 'channel_id': validated_data.get('channel_id', 1),
-                'username': user_info.get('unionid'),
+                'username': res['openid'],
+                'role': 'STUDENT',
+                'openid': res['openid'],
+                # 'unionid': user_info.get('unionid')
+            })
+        elif not user:
+            user = User.objects.create(**{
+                'channel_id': validated_data.get('channel_id', 1),
+                'username': res['openid'],
                 'role': 'STUDENT',
                 'openid': res['openid'],
                 'unionid': user_info.get('unionid')
@@ -77,10 +106,12 @@ class CreateAccountSerializer(serializers.Serializer):
         student_info = UserInfo.objects.filter(user=user).first()
         if not student_info:
             student_info = UserInfo.objects.create(user=user)
-        student_info.unionid = user_info.get('unionid')
+        if user_info.get('unionid'):
+            student_info.unionid = user_info.get('unionid')
+            student_info.headimgurl = user_info['headimgurl']
+            student_info.wx_name = user_info['nickname']
+
         student_info.openid = res['openid']
-        student_info.headimgurl = user_info['headimgurl']
-        student_info.wx_name = user_info['nickname']
         student_info.save()
         logging.info('--->' + str(datetime.datetime.now()))
         return user, student_info, ticket
