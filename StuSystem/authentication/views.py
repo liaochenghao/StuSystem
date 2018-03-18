@@ -63,7 +63,7 @@ class UserViewSet(mixins.ListModelMixin,
         data['ticket'] = ticket
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
-        res = serializer.check_account(serializer.validated_data)
+        res = serializer.check_account(serializer.validated_data,)
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
         return response

@@ -74,6 +74,9 @@ class ProjectViewSet(BaseViewSet):
         related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
         courses = Course.objects.filter(id__in=related_course_ids).exclude(id__in=current_course_ids)
         course_list = CourseSerializer(courses, many=True).data
+        for course in course_list:
+            count = UserCourse.objects.filter(course_id=course['id'], project=instance).count()
+            course['choose_number'] = count
         return Response({
             'chart': ShoppingChart.objects.filter(orderchartrelation__order_id=order, project=pk).values('id').first(),
             'course_list': course_list
