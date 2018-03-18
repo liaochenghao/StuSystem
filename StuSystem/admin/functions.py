@@ -27,8 +27,9 @@ def get_channel_info(user_instance):
 
 
 def make_qrcode(channel_id):
+    auth_domain = 'http://su.chinasummer.org'
     # https://open.weixin.qq.com/connect/oauth2/authorize?appid=xxxxxxx&redirect_uri=XXXXX&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect
-    redirect_uri = parse.quote('%s?channel_id=%s' % (DOMAIN, channel_id))
+    redirect_uri = parse.quote('%s?channel_id=%s' % (auth_domain, channel_id))
 
     channel_img = qrcode.make(
         'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
