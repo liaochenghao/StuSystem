@@ -53,7 +53,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserInfoRemarkSerializer(serializers.ModelSerializer):
     """添加用户信息备注Serializer"""
     user_info = serializers.PrimaryKeyRelatedField(queryset=UserInfo.objects.all(), write_only=True)
-    remark_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    remark_by = serializers.ReadOnlyField(queryset=User.objects.all(), write_only=True)
 
     class Meta:
         model = UserInfoRemark
