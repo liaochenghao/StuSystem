@@ -32,6 +32,7 @@ def handle_mongodb_cursor_data(mongo_cursor):
     logger.info('Deal with Mongodb Method(handle_mongodb_cursor_data) start : %s' % str(datetime.datetime.now()))
     try:
         cursor_data = list(mongo_cursor)
+        logger.info('----------------------cursor_data:%s' % cursor_data)
         for item in cursor_data:
             item['id'] = str(item.pop('_id'))
             if item.get('create_time'):
