@@ -6,6 +6,7 @@ from StuSystem import settings
 from admin.functions import get_channel_info, order_confirmed_template_message, create_course_template_message
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
+from authentication.serializers import UserSerializer
 from common.models import SalesMan, FirstLevel, SecondLevel, SalesManUser
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
@@ -53,7 +54,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserInfoRemarkSerializer(serializers.ModelSerializer):
     """添加用户信息备注Serializer"""
     user_info = serializers.PrimaryKeyRelatedField(queryset=UserInfo.objects.all(), write_only=True)
-    remark_by = serializers.ReadOnlyField(queryset=User.objects.all(), write_only=True)
+    remark_by = UserSerializer()
 
     class Meta:
         model = UserInfoRemark
