@@ -31,6 +31,7 @@ def handle_mongodb_cursor_data(mongo_cursor):
     """将mongodb查询出的cursor转换为list数据的data"""
     logger.info('Deal with Mongodb Method(handle_mongodb_cursor_data) start : %s' % str(datetime.datetime.now()))
     try:
+        logger.info('----------------------88888888888:%s' % mongo_cursor.__dict__)
         logger.info('----------------------mongo_cursor:%s' % mongo_cursor)
         cursor_data = list(mongo_cursor)
         logger.info('----------------------cursor_data:%s' % cursor_data)
