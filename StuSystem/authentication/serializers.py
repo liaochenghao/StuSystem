@@ -12,7 +12,9 @@ from order.models import Order
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
 import logging
+
 logger = logging.getLogger('django')
+
 
 class UserSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField()
@@ -23,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class GetUserInfoSerializer(serializers.Serializer):
-    def get_user_info(self,request):
+    def get_user_info(self, request):
         res = WeixinServer.code_authorize(request.query_params.get('code'))
         user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
         if user_info.get('errorcode', 0) != 0:
@@ -61,8 +63,10 @@ class CreateAccountSerializer(serializers.Serializer):
             need_complete_stu_info = False
         order_status = Order.objects.filter(user=user,
                                             status__in=['TO_CONFIRM', 'CONFIRMED', 'CONFIRM_FAILED']).exists()
+
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
-                'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status}
+                'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status,
+                'check_user_info': student_info.unionid}
 
     def weixin_authorize(self, validated_data):
         logging.info('--->' + str(datetime.datetime.now()))
