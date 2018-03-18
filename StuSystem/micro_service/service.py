@@ -118,6 +118,13 @@ class WeixinServer:
         return data
 
     @staticmethod
+    def get_user_union_id(openid,access_token):
+        uurl = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN'%(access_token,openid)
+        url = 'https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN'%()
+        data = BaseHttpServer.get(url, {'openid': openid, 'access_token': access_token})
+        return data
+
+    @staticmethod
     def get_temporary_qr_code(action_name, scene_id, expired_time=7 * 24 * 60 * 60):
         """获取临时二维码"""
         url = "%s/api/weixin/service_center/temporary_qr_code/" % micro_service_domain
