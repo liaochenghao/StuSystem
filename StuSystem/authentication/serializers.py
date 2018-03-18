@@ -7,6 +7,7 @@ from common.models import SalesManUser, SalesMan
 from rest_framework import serializers
 
 from authentication.models import User, UserInfo, StudentScoreDetail
+from market.models import UserChannel
 from order.models import Order
 from utils.serializer_fields import VerboseChoiceField
 from micro_service.service import AuthorizeServer, WeixinServer
@@ -61,6 +62,7 @@ class CreateAccountSerializer(serializers.Serializer):
         user = User.objects.filter(username=user_info.get('unionid')).first()
         if not user:
             user = User.objects.create(**{
+                'channel_id': validated_data['channel_id'],
                 'username': user_info.get('unionid'),
                 'role': 'STUDENT',
                 'openid': res['openid'],
@@ -69,6 +71,7 @@ class CreateAccountSerializer(serializers.Serializer):
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
+        UserChannel.objects.create(channel_id=validated_data.get('channel_id'),user=user)
 
         # 创建用户信息
         student_info = UserInfo.objects.filter(user=user).first()

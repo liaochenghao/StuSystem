@@ -24,12 +24,10 @@ class Channel(models.Model):
         return self.name
 
 
-# class UserChannel(models.Model):
-#     openid = models.CharField('微信openid', max_length=255)
-#     user = models.ForeignKey(User)
-#     channel = models.ForeignKey(Channel)
-#     create_time = models.DateTimeField(auto_now_add=True)
-#     modified_time = models.DateTimeField(auto_now=True)
-#
-#     class Meta:
-#         db_table = 'user_channel'
+class UserChannel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    channel = models.ForeignKey(Channel, on_delete=models.DO_NOTHING)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_channel'
