@@ -160,8 +160,8 @@ class CourseSerializer(serializers.ModelSerializer):
                                                                many=True).data
         else:
             project_id = self.context.get('request').query_params.get('project')
-            if project_id:
-                data['choose_number'] = UserCourse.objects.filter(course=instance,project_id=project_id).count()
+            if project_id and project_id != '0':
+                data['choose_number'] = UserCourse.objects.filter(course=instance, project_id=project_id).count()
             else:
                 data['choose_number'] = UserCourse.objects.filter(course=instance).count()
         return data
