@@ -66,7 +66,7 @@ class CreateAccountSerializer(serializers.Serializer):
                 'username': user_info.get('unionid'),
                 'role': 'STUDENT',
                 'openid': res['openid'],
-                'unionid': user_info.get('unionid')
+                'unionid': user_info.get('unionid', None)
             })
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
