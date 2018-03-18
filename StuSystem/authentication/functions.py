@@ -33,7 +33,7 @@ def auto_assign_sales_man(user):
                 sales_man = sales_man_all[rand_int - 1]
         else:
             rand_int = random.randint(1, len(sales_man_all))
-            sales_man = sales_man_all[rand_int-1]
+            sales_man = sales_man_all[rand_int - 1]
 
         if DOMAIN in sales_man.qr_code.path:
             qr_code = sales_man.qr_code.path

@@ -1,9 +1,9 @@
 # coding: utf-8
 from rest_framework import serializers
 
+from admin.functions import make_qrcode
 from common.models import SalesMan
 from market.models import Channel
-from micro_service.service import WeixinServer
 
 
 class SalesManSerializer(serializers.ModelSerializer):
@@ -23,8 +23,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = super().create(validated_data)
-        instance.qr_code = WeixinServer.get_forever_qr_code(action_name='QR_LIMIT_SCENE',
-                                                            scene_id='channel_id_%s' % instance.id)
+        instance.qr_code = make_qrcode(instance.id)
         instance.save()
         return instance
 

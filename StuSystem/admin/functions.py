@@ -1,6 +1,9 @@
 # coding: utf-8
 import datetime
+import qrcode
+from urllib import parse
 
+from StuSystem.settings import DOMAIN, MEDIA_ROOT, MEDIA_URL, WX_SMART_PROGRAM
 from market.models import Channel
 from order.models import UserCourse, Order
 from utils.future_help import run_on_executor
@@ -21,6 +24,19 @@ def get_channel_info(user_instance):
         channel = None
 
     return channel
+
+
+def make_qrcode(channel_id):
+    # https://open.weixin.qq.com/connect/oauth2/authorize?appid=xxxxxxx&redirect_uri=XXXXX&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect
+    redirect_uri = parse.quote('%s?channel_id=%s' % (DOMAIN, channel_id))
+
+    channel_img = qrcode.make(
+        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
+            WX_SMART_PROGRAM['APP_ID'], redirect_uri))
+    qr_code_save_path = '%s%s%s%s' % (MEDIA_ROOT, '/common/channel/channel_', channel_id, '.jpg')
+    qr_code_url = '%s%s%s%s%s' % (DOMAIN, MEDIA_URL, 'common/channel/channel_', channel_id, '.jpg')
+    channel_img.save(qr_code_save_path)
+    return qr_code_url
 
 
 @run_on_executor
