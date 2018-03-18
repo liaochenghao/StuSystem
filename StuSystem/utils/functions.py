@@ -32,7 +32,9 @@ def handle_mongodb_cursor_data(mongo_cursor):
     logger.info('Deal with Mongodb Method(handle_mongodb_cursor_data) start : %s' % str(datetime.datetime.now()))
     try:
         logger.info('----------------------88888888888:%s' % mongo_cursor.__dict__)
-        logger.info('----------------------mongo_cursor:%s' % mongo_cursor)
+        logger.info('----------------------88888888888:%s' % mongo_cursor.__dict__)
+        hello = dict(mongo_cursor)
+        print('hhhhhhhhhhhhhhhh', hello)
         cursor_data = list(mongo_cursor)
         logger.info('----------------------cursor_data:%s' % cursor_data)
         for item in cursor_data:
