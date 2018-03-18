@@ -108,7 +108,7 @@ class StatisticsViewSet(mixins.ListModelMixin,
                                                  id_number__isnull=False,
                                                  major__isnull=False,
                                                  gpa__isnull=False).count()
-        students_applyed = len(set(Order.objects.all().values_list('user_id', flat=True)))
+        students_applyed = len(set(Order.objects.filter(status__in=['TO_PAY', 'TO_CONFIRM','CONFIRMED', 'CONFIRM_FAILED']).values_list('user_id', flat=True)))
         students_payed = len(set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True)))
         res = {
             'students_num': students_num,
