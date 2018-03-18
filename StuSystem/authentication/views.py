@@ -50,7 +50,6 @@ class UserViewSet(mixins.ListModelMixin,
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
         # 检查账户信息
-        logging.info('check_account start' + str(datetime.now()))
         data = self.request.query_params.dict()
         ticket = request.COOKIES.get('ticket')
         if not ticket:
@@ -61,7 +60,6 @@ class UserViewSet(mixins.ListModelMixin,
         res = serializer.check_account(serializer.validated_data)
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
-        logging.info('check_account end' + str(datetime.now()))
         return response
 
     @list_route()
