@@ -22,6 +22,20 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ['password', 'is_active']
 
 
+class GetUserInfoSerializer(serializers.Serializer):
+    def get_user_info(self,request):
+        res = WeixinServer.code_authorize(request.query_params.get('code'))
+        user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
+        if user_info.get('errorcode', 0) != 0:
+            raise serializers.ValidationError('user info 获取错误')
+        user = User.objects.filter(username=res['openid']).first()
+        student_info = UserInfo.objects.filter(user=user).first()
+        student_info.unionid = user_info.get('unionid')
+        student_info.headimgurl = user_info['headimgurl']
+        student_info.wx_name = user_info['nickname']
+        student_info.save()
+
+
 class CreateAccountSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=100)
     ticket = serializers.CharField(required=False, allow_null=True)
@@ -58,18 +72,23 @@ class CreateAccountSerializer(serializers.Serializer):
         try:
             user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
         except:
-            user_info = WeixinServer.get_user_union_id(access_token=res['access_token'], openid=res['openid'])
-        print(user_info)
-        logger.info(user_info)
-        logger.info('======================',)
+            user_info = None
         if user_info.get('errorcode', 0) != 0:
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
-        user = User.objects.filter(username=user_info.get('unionid')).first()
-        if not user:
+        user = User.objects.filter(username=res['openid']).first()
+        if not user and not user_info:
             user = User.objects.create(**{
                 'channel_id': validated_data.get('channel_id', 1),
-                'username': user_info.get('unionid'),
+                'username': res['openid'],
+                'role': 'STUDENT',
+                'openid': res['openid'],
+                # 'unionid': user_info.get('unionid')
+            })
+        else:
+            user = User.objects.create(**{
+                'channel_id': validated_data.get('channel_id', 1),
+                'username': res['openid'],
                 'role': 'STUDENT',
                 'openid': res['openid'],
                 'unionid': user_info.get('unionid')
@@ -83,10 +102,12 @@ class CreateAccountSerializer(serializers.Serializer):
         student_info = UserInfo.objects.filter(user=user).first()
         if not student_info:
             student_info = UserInfo.objects.create(user=user)
-        student_info.unionid = user_info.get('unionid')
+        if user_info:
+            student_info.unionid = user_info.get('unionid')
+            student_info.headimgurl = user_info['headimgurl']
+            student_info.wx_name = user_info['nickname']
+
         student_info.openid = res['openid']
-        student_info.headimgurl = user_info['headimgurl']
-        student_info.wx_name = user_info['nickname']
         student_info.save()
         logging.info('--->' + str(datetime.datetime.now()))
         return user, student_info, ticket

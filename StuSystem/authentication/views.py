@@ -4,7 +4,7 @@ from datetime import datetime
 from authentication.functions import auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
-    AssignSalesManSerializer, ClientAuthorizeSerializer
+    AssignSalesManSerializer, ClientAuthorizeSerializer, GetUserInfoSerializer
 from coupon.models import Coupon
 from rest_framework import exceptions
 from rest_framework import viewsets, mixins
@@ -46,6 +46,12 @@ class UserViewSet(mixins.ListModelMixin,
         response.set_cookie('ticket', res['ticket'])
         logging.info('authorize start ' + str(datetime.now()))
         return response
+
+    @list_route(['GET'],serializer_class=GetUserInfoSerializer)
+    def take_user_info(self,request):
+        serializer = self.serializer_class()
+        serializer.get_user_info(request)
+        return Response('信息已经补全')
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
