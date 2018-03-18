@@ -53,11 +53,16 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserInfoRemarkSerializer(serializers.ModelSerializer):
     """添加用户信息备注Serializer"""
     user_info = serializers.PrimaryKeyRelatedField(queryset=UserInfo.objects.all(), write_only=True)
-    remark_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    remark_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = UserInfoRemark
         fields = ['id', 'remark', 'user_info', 'create_time', 'remark_by']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['remark_by'] = User.objects.filter(id=data.get('remark_by')).values('name').first().get('name')
+        return data
 
 
 class RetrieveUserInfoSerializer(serializers.ModelSerializer):
