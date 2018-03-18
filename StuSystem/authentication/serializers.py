@@ -102,7 +102,7 @@ class CreateAccountSerializer(serializers.Serializer):
         student_info = UserInfo.objects.filter(user=user).first()
         if not student_info:
             student_info = UserInfo.objects.create(user=user)
-        if user_info:
+        if user_info.get('unionid'):
             student_info.unionid = user_info.get('unionid')
             student_info.headimgurl = user_info['headimgurl']
             student_info.wx_name = user_info['nickname']
