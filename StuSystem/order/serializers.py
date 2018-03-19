@@ -93,7 +93,7 @@ class OrderSerializer(serializers.ModelSerializer):
             # 计算优惠券费用
             coupon_list_fee = 0
             coupon_list_fee_values = UserCoupon.objects.filter(id__in=coupon_list).values_list('coupon__amount',
-                                                                                                      flat=True)
+                                                                                               flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
             validated_data['pay_fee'] = standard_fee - coupon_list_fee if \
@@ -284,13 +284,14 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
         project = validated_data.get('project')
         course_num = validated_data.get('course_num')
         user = validated_data.get('user')
-        project_max_num = ProjectCourseFee.objects.filter(project=project).values_list('course_number').annotate(Max('course_number'))
-        instance =ShoppingChart.objects.filter(project=project,user=user).first()
+        project_max_num = ProjectCourseFee.objects.filter(project=project).values_list('course_number').annotate(
+            Max('course_number'))
+        instance = ShoppingChart.objects.filter(project=project, user=user, status='NEW').first()
         if instance:
             current_course_num = instance.course_num
-            instance.course_num = current_course_num+course_num
+            instance.course_num = current_course_num + course_num
             if instance.course_num > max(project_max_num)[0]:
-                raise serializers.ValidationError('项目课程数量超过最大可选值，请重新选择')
+                raise serializers.ValidationError('项目课程数量最大可选%s,已选择%s门' % (project_max_num, current_course_num))
             instance.save()
         else:
             instance = super().create(validated_data)
