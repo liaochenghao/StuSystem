@@ -2,6 +2,8 @@
 import datetime
 import json
 
+from django.db.models import Max
+
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail
@@ -277,6 +279,22 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
         attrs['course_fee'] = project_course_fee.course_fee + project.apply_fee
         attrs['user'] = self.context['request'].user
         return attrs
+
+    def create(self, validated_data):
+        project = validated_data.get('project')
+        course_num = validated_data.get('course_num')
+        user = validated_data.get('user')
+        project_max_num = ProjectCourseFee.objects.filter(project=project).annotate(Max('course_number'))
+        instance =ShoppingChart.objects.filter(project=project,user=user).first()
+        if instance:
+            current_course_num = instance.course_num
+            instance.course_num = current_course_num+course_num
+            if instance.course_num > project_max_num:
+                raise serializers.ValidationError('项目课程数量超过最大可选值，请重新选择')
+            instance.save()
+        else:
+            instance = super().create(validated_data)
+        return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
