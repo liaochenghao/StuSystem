@@ -213,7 +213,7 @@ class UserCourseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('传入的chart或订单号有误')
 
         current_course_num = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
-                                                       order=attrs['order'], order__orderchartrelation__chart=chart).count()
+                                                       order=attrs['order'], order__orderchartrelation__chart_id=chart).count()
 
         if len(attrs['course_ids']) > (chart.course_num - current_course_num):
             raise serializers.ValidationError('当前剩余可选课程为：%d门，传入了%d门课程' %
