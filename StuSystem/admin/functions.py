@@ -32,7 +32,7 @@ def make_qrcode(channel_id):
     redirect_uri = parse.quote('%s?channel_id=%s' % (auth_domain, channel_id))
 
     channel_img = qrcode.make(
-        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect' % (
+        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
             WX_SMART_PROGRAM['APP_ID'], redirect_uri))
     qr_code_save_path = '%s%s%s%s' % (MEDIA_ROOT, '/common/channel/channel_', channel_id, '.jpg')
     qr_code_url = '%s%s%s%s%s' % (DOMAIN, MEDIA_URL, 'common/channel/channel_', channel_id, '.jpg')
