@@ -291,7 +291,7 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
             current_course_num = instance.course_num
             instance.course_num = current_course_num + course_num
             if instance.course_num > max(project_max_num)[0]:
-                raise serializers.ValidationError('项目课程数量最大可选%s,已选择%s门' % (project_max_num, current_course_num))
+                raise serializers.ValidationError('项目课程数量最大可选%s门,已选择%s门' % (max(project_max_num)[0], current_course_num))
             instance.save()
         else:
             instance = super().create(validated_data)
