@@ -72,7 +72,7 @@ class CreateAccountSerializer(serializers.Serializer):
 
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
                 'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status,
-                'check_user_info': student_info.unionid}
+                'check_user_info': student_info.unionid, 'sale_man_status':student_info.valid_sales_man}
 
     def weixin_authorize(self, validated_data):
         logging.info('--->' + str(datetime.datetime.now()))
@@ -178,11 +178,12 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     """用户档案Serializer"""
     gender = VerboseChoiceField(choices=UserInfo.GENDER)
     grade = VerboseChoiceField(choices=UserInfo.GRADE)
+    valid_sales_man = serializers.BooleanField()
 
     class Meta:
         model = UserInfo
         fields = ['id', 'name', 'english_name', 'email', 'first_language', 'ielts_scores', 'wechat', 'gender',
-                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa']
+                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa', 'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):

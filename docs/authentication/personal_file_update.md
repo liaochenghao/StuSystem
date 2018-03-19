@@ -21,40 +21,42 @@
         "ielts_scores": str     所在年级
         "cshool":       str     学校
         "phone":        str     phone
+        "valid_sales_man":  bool  判断是否添加顾问
     }
 ```
 
 **成功返回**：
 ```
-    {
-        "code": 0,
-        "msg": "请求成功",
-        "data": {
-            "id": 2,
-            "name": "阮国栋",
-            "english_name": "Steve Curr",
-            "email": "pst123@qq.com",
-            "first_language": "Chinese",
-            "ielts_scores": null,
-            "wechat": "pst123",
-            "gender": {
-                "key": "MALE",
-                "verbose": "男"
-            },
-            "id_number": "2",
-            "birth_date": "1991-05-10",
-            "grade": {
-                "key": "GRADE_FOUR",
-                "verbose": "大四"
-            },
-            "phone": "1860814654",
-            "headimgurl": "http://wx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELozW1bvmf0U9tGnXmOs3DLrCCmRibCOnOGYkR8NwvexCN5gvFellRqet9U3IhqsUv9dtc4SXNQ55Q/132",
-            "cschool": "武汉理工大学",
-            "gpa": 3.3,
-            "major": "软件工程"
+ {
+    "code": 0,
+    "msg": "请求成功",
+    "data": {
+        "id": 110,
+        "name": "13444",
+        "english_name": null,
+        "email": "40987879@qq.com",
+        "first_language": null,
+        "ielts_scores": null,
+        "wechat": "48484848",
+        "gender": {
+            "key": "MALE",
+            "verbose": "男"
         },
-        "field_name": ""
-    }
+        "id_number": null,
+        "birth_date": null,
+        "grade": {
+            "key": "GRADE_ONE",
+            "verbose": "大一"
+        },
+        "phone": null,
+        "headimgurl": "http://thirdwx.qlogo.cn/mmopen/vi_32/nVMLr1AgPVPqCvgGl1CbPuqLfODkjZibTiaxQBwHp0StPt9lvTiaStxA3m1QRF9iap1j38f4qX61BiaRCf6q3a6EbDQ/132",
+        "cschool": "武汉理工大学",
+        "major": "软件工程",
+        "gpa": 0,
+        "valid_sales_man": false
+    },
+    "field_name": ""
+}
 
 ```
 备注：gender为dict的key-verbose结构：
