@@ -69,7 +69,7 @@ class UserViewSet(mixins.ListModelMixin,
         serializer.is_valid(raise_exception=True)
         logging.info('check_account test start')
         res = serializer.check_account(serializer.validated_data)
-        logging.info('check_account end: ' % str(res))
+        logging.info('check_account end: %s' % str(res))
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
         return response
