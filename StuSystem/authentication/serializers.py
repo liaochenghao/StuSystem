@@ -87,7 +87,6 @@ class CreateAccountSerializer(serializers.Serializer):
                 'username': res['openid'],
                 'role': 'STUDENT',
                 'openid': res['openid'],
-                # 'unionid': user_info.get('unionid')
             })
         elif not user:
             user = User.objects.create(**{
