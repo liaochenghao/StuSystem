@@ -47,8 +47,8 @@ class UserViewSet(mixins.ListModelMixin,
         logging.info('authorize start ' + str(datetime.now()))
         return response
 
-    @list_route(['GET'],serializer_class=GetUserInfoSerializer)
-    def take_user_info(self,request):
+    @list_route(['GET'], serializer_class=GetUserInfoSerializer)
+    def take_user_info(self, request):
         print('++++++++++++++++++++++++++++++++++++++')
         logging.info('+++++++++++++++++++++++++++++++++++++++')
         serializer = self.serializer_class()
@@ -67,7 +67,9 @@ class UserViewSet(mixins.ListModelMixin,
         data['ticket'] = ticket
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
-        res = serializer.check_account(serializer.validated_data,)
+        logging.info('check_account test start')
+        res = serializer.check_account(serializer.validated_data)
+        logging.info('check_account end: %s' % str(res))
         response = Response(res)
         response.set_cookie('ticket', res.get('ticket'))
         return response
