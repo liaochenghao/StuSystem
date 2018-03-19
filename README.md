@@ -57,6 +57,7 @@
 - [登录接口](docs/authentication/user_login.md)
 - [检查用户账户信息](docs/authentication/check_account.md)
 - [获取用户信息](docs/authentication/user_info.md)
+- [补全用户信息](docs/authentication/take_user_info.md)
 - [更新用户信息](docs/authentication/user_info_update.md)
 - [获取用户档案信息](docs/authentication/user_personal_file.md)
 - [更新用户档案信息](docs/authentication/personal_file_update.md)

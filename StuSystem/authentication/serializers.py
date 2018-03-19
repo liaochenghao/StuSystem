@@ -27,6 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
 class GetUserInfoSerializer(serializers.Serializer):
     def get_user_info(self, request):
         res = WeixinServer.code_authorize(request.query_params.get('code'))
+        if not res:
+            raise serializers.ValidationError('无效的code值, 微信网页认证失败')
         user_info = WeixinServer.get_web_user_info(access_token=res['access_token'], openid=res['openid'])
         if user_info.get('errorcode', 0) != 0:
             raise serializers.ValidationError('user info 获取错误')
