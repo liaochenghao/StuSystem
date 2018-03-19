@@ -51,7 +51,7 @@ class UserViewSet(mixins.ListModelMixin,
     def take_user_info(self,request):
         serializer = self.serializer_class()
         serializer.get_user_info(request)
-        return Response('信息已经补全')
+        return Response('信息已经补全 ')
 
     @list_route(['GET'], serializer_class=CreateAccountSerializer)
     def check_account(self, request):
