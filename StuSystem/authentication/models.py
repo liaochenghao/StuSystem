@@ -68,6 +68,7 @@ class UserInfo(models.Model):
     gpa = models.FloatField('GPA', null=True)
     birth_date = models.DateField('出生日期', null=True)
     grade = models.CharField(choices=GRADE, default='grade_one', max_length=10, null=True)
+    sales_man = models.CharField('销售顾问', max_length=60, null=True)
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
 
     class Meta:
