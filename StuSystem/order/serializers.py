@@ -284,15 +284,13 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
         project = validated_data.get('project')
         course_num = validated_data.get('course_num')
         user = validated_data.get('user')
-        project_max_num = ProjectCourseFee.objects.filter(project=project).values_list('course_number').annotate(
-            Max('course_number'))
+        project_num = ProjectCourseFee.objects.filter(project=project).values_list('course_number')
         instance = ShoppingChart.objects.filter(project=project, user=user, status='NEW').first()
         if instance:
             current_course_num = instance.course_num
             instance.course_num = current_course_num + course_num
-
-            if instance.course_num > max(project_max_num)[0]:
-                raise serializers.ValidationError('项目课程数量最大可选%s门,已选择%s门' % (max(project_max_num)[0], current_course_num))
+            if instance.course_num > max(project_num)[0]:
+                raise serializers.ValidationError('项目课程数量最大可选%s门,已选择%s门' % (max(project_num)[0], current_course_num))
             course_fee = ProjectCourseFee.objects.filter(project=project,course_number=instance.course_num).values_list('course_fee').filter()[0]
             instance.course_fee = course_fee
             instance.save()
