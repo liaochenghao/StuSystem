@@ -2,6 +2,7 @@
 
 import random
 
+from authentication.models import UserInfo
 from common.models import SalesManUser, SalesMan
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
@@ -40,6 +41,9 @@ def auto_assign_sales_man(user):
         else:
             qr_code = '%s%s%s' % (DOMAIN, MEDIA_URL, str(sales_man.qr_code))
         SalesManUser.objects.create(user=user, sales_man=sales_man)
+        instance = UserInfo.objects.filter(user=user).first()
+        instance.sales_man = sales_man.name
+        instance.save()
         res = {'id': sales_man.id, 'name': sales_man.name, 'email': sales_man.email,
                'qr_code': qr_code, 'wechat': sales_man.wechat}
     else:
