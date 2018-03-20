@@ -19,7 +19,7 @@ class PaymentAccountInfo(models.Model):
     account_number = models.CharField('账号', max_length=30)
     account_name = models.CharField('账户姓名(beneficiary company name)', max_length=60)
     opening_bank = models.CharField('开户行地址(bank address)', max_length=60, null=True)
-    payment = models.CharField(choices=PAYMENT, max_length=30, unique=True)
+    payment = models.CharField(choices=PAYMENT, max_length=30)
     create_time = models.DateTimeField(auto_now_add=True)
     company_address = models.CharField('公司地址(pay_pal)', max_length=60, null=True)
     routing_number_paper = models.CharField('routing number paper & electronic(pay_pal)', max_length=30, null=True)
