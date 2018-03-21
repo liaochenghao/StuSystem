@@ -104,7 +104,6 @@ class CreateAccountSerializer(serializers.Serializer):
                     'openid': res['openid'],
                     'unionid': user_info.get('unionid')
                 })
-            change_student_status(user.id, 'NEW')
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
@@ -114,6 +113,7 @@ class CreateAccountSerializer(serializers.Serializer):
         student_info = UserInfo.objects.filter(user=user).first()
         if not student_info:
             student_info = UserInfo.objects.create(user=user)
+            change_student_status(user.id, 'NEW')
         if user_info.get('unionid'):
             student_info.unionid = user_info.get('unionid')
             student_info.headimgurl = user_info['headimgurl']
