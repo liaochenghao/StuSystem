@@ -103,7 +103,8 @@ class UserViewSet(mixins.ListModelMixin,
         :return:
         """
         user = request.user
-        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").values(
+        current_time = datetime.now()
+        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").exclude(end_time__lt=current_time).values(
             'id', 'coupon_code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 
