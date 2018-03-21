@@ -184,7 +184,8 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             self.perform_update(serializer)
             instance = self.get_object()
         if request.method == 'PATCH':
-            change_student_status(pk,'ADDED_CC')
+            if UserInfo.objects.filter(user_id=pk,student_status='PERSONAL_FILE'):
+                change_student_status(pk,'ADDED_CC')
         return Response(self.get_serializer(instance).data)
 
     @list_route(['GET'])
