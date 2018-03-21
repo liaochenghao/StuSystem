@@ -4,6 +4,7 @@ from rest_framework import mixins, viewsets, exceptions
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
+from admin.functions import change_student_status
 from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
@@ -208,12 +209,14 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     def student_confirm_course(self, request):
         """学生审课"""
         res = self.common_handle(request, 'student_confirm_course')
+        change_student_status(request.user.id, 'TO_CONFIRMED')
         return Response(res)
 
     @list_route(methods=['PUT', 'GET'], serializer_class=CommonImgUploadSerializer)
     def course_credit_switch(self, request):
         """学分转换证明"""
         res = self.common_handle(request, 'course_credit_switch')
+        change_student_status(request.user.id, 'SWITCHED_COURSE')
         return Response(res)
 
     def common_handle(self, request, api_key):

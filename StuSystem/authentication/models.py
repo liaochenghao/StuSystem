@@ -4,6 +4,14 @@ from django.contrib.auth.models import AbstractBaseUser
 
 
 class User(AbstractBaseUser):
+    ROLE = (
+        ('STUDENT', '学生'),
+        ('ADMIN', '管理员'),
+        ('MARKET', '市场部'),
+        ('PRODUCT', '产品部'),
+        ('FINANCE', '财务部'),
+        ('SALES', '销售部')
+    )
     name = models.CharField('姓名', max_length=100, null=True)
     password = models.CharField(max_length=128, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
@@ -14,14 +22,6 @@ class User(AbstractBaseUser):
     unionid = models.CharField('微信unionid', max_length=255, null=True)
     openid = models.CharField('微信openid', max_length=255, null=True)
     s_openid = models.CharField('署校联盟小程序openid', max_length=255, null=True)
-    ROLE = (
-        ('STUDENT', '学生'),
-        ('ADMIN', '管理员'),
-        ('MARKET', '市场部'),
-        ('PRODUCT', '产品部'),
-        ('FINANCE', '财务部'),
-        ('SALES', '销售部')
-    )
     role = models.CharField(choices=ROLE, max_length=30)
     USERNAME_FIELD = 'username'
     qr_code = models.CharField('二维码', max_length=255, null=True)
@@ -43,6 +43,20 @@ class UserInfo(models.Model):
         ('GRADE_THREE', '大三'),
         ('GRADE_FOUR', '大四'),
         ('GRADE_FIVE', '大五')
+    )
+    STUDENT_STATUS = (
+        ('NEW', '新建用户'),
+        ('PERSONAL_FILE', '已建档'),
+        ('ADDED_CC', '已添加CC'),
+        ('SUPPLY_ORDER', '已提交订单'),
+        ('PAYMENT_CONFIRM', '待缴费确认'),
+        ('TO_CHOOSE_COURSE', '待选课'),
+        ('PICKUP_COURSE', '已选课'),
+        ('TO_CONFIRMED', '待审课确认'),
+        ('CONFIRMED_COURSE', '已审课'),
+        ('AFTER_SCORE', '已出成绩'),
+        ('SWITCH_CREDIT', '学分转换中'),
+        ('SWITCHED_COURSE', '已学分转换')
     )
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     name = models.CharField('学生姓名', max_length=30, null=True)
@@ -67,9 +81,10 @@ class UserInfo(models.Model):
     graduate_year = models.CharField('毕业年份', max_length=30, null=True)
     gpa = models.FloatField('GPA', null=True)
     birth_date = models.DateField('出生日期', null=True)
-    grade = models.CharField(choices=GRADE, default='grade_one', max_length=10, null=True)
+    grade = models.CharField(choices=GRADE, default='GRADE_ONE', max_length=10, null=True)
     sales_man = models.CharField('销售顾问', max_length=60, null=True)
     valid_sales_man = models.BooleanField('是否添加销售顾问微信', default=False)
+    student_status = models.CharField(choices=STUDENT_STATUS, default='NEW', max_length=60, null=True)
 
     class Meta:
         db_table = 'student_info'
@@ -83,41 +98,11 @@ class UserInfo(models.Model):
             'gpa': self.gpa
         }
 
-    @property
-    def student_status(self):
-        from order.models import UserCourse, Order
-        STUDENT_STATUS = (
-            ('NEW', '新建用户'),
-            ('PERSONAL_FILE', '已建档'),
-            ('SUPPLY_ORDER', '已提交订单'),
-            ('PAYED_ORDER', '订单已支付'),
-            ('PICKUP_COURSE', '已选课'),
-            ('CONFIRMED_COURSE', '已审课'),
-            ('SWITCHED_COURSE', '已学分转换')
-        )
-        if UserCourse.objects.filter(user=self.user, switch_img__isnull=False).exists():
-            student_status = 'SWITCHED_COURSE'
-        elif UserCourse.objects.filter(user=self.user, confirm_img__isnull=False).exists():
-            student_status = 'CONFIRMED_COURSE'
-        elif UserCourse.objects.filter(user=self.user).exists():
-            student_status = 'PICKUP_COURSE'
-        elif Order.objects.filter(user=self.user, status='CONFIRMED').exists():
-            student_status = 'PAYED_ORDER'
-        elif Order.objects.filter(user=self.user, status__in=['TO_PAY', 'TO_CONFIRM']).exists():
-            student_status = 'SUPPLY_ORDER'
-        elif all([self.english_name, self.gender, self.id_number, self.major,
-                  self.phone, self.gpa]):
-            student_status = 'PERSONAL_FILE'
-        else:
-            student_status = 'NEW'
-
-        return {'key': student_status, 'verbose': dict(STUDENT_STATUS).get(student_status)}
-
 
 class UserInfoRemark(models.Model):
     """用户信息备注"""
     user_info = models.ForeignKey(UserInfo, related_name='user_info_remark', on_delete=models.DO_NOTHING)
-    remark_by = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    remark_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     remark = models.CharField('备注', max_length=255)
     create_time = models.DateTimeField(auto_now_add=True)
 

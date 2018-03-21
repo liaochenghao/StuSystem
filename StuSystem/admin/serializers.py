@@ -3,7 +3,8 @@ import datetime
 import json
 
 from StuSystem import settings
-from admin.functions import get_channel_info, order_confirmed_template_message, create_course_template_message
+from admin.functions import get_channel_info, order_confirmed_template_message, create_course_template_message, \
+    change_student_status
 from admin.models import PaymentAccountInfo
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesMan, FirstLevel, SecondLevel, SalesManUser
@@ -38,11 +39,11 @@ class AdminPaymentAccountInfoSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     """UserInfo列表Serializer"""
     last_login = serializers.DateTimeField(source='user.last_login')
-    status = serializers.DictField(source='student_status')
+    student_status = VerboseChoiceField(choices=UserInfo.STUDENT_STATUS)
 
     class Meta:
         model = UserInfo
-        fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat', 'status', 'sales_man']
+        fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat', 'student_status', 'sales_man']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -81,7 +82,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         if UserCoupon.objects.filter(user=instance.user).exists():
             user_coupon = UserCoupon.objects.filter(user=instance.user).values(
                 'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code',
-                'coupon__amount','status')
+                'coupon__amount', 'status')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
                 item['info'] = item.pop('coupon__info')
@@ -268,6 +269,14 @@ class AdminCreateUserCourseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = super().create(validated_data)
         self.create_course_notice(validated_data)
+        user_all_course = UserCourse.objects.filter(user=instance.user).count()
+        user_max_course = Order.objects.filter(user=instance.user, status='CONFIRMED').values_list(
+            'orderchartrelation__chart__course_num')
+        user_info = UserInfo.objects.filter(user=instance.user,
+                                            student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC', 'SUPPLY_ORDER',
+                                                                'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE']).exists()
+        if user_info and user_all_course == sum([number[0] for number in user_max_course]):
+            change_student_status(instance.user.id, 'PICKUP_COURSE')
         return instance
 
 
@@ -377,6 +386,11 @@ class AdminOrderSerializer(OrderSerializer):
             remark = '订单支付成功，已确认'
             confirm_status = '订单支付成功'
             confirm_remark = '您的订单审核成功，请联系您的课程顾问，开始选课吧！'
+            user_info = UserInfo.objects.filter(user=instance.user,
+                                                student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC', 'SUPPLY_ORDER',
+                                                                    'PAYMENT_CONFIRM']).exists()
+            if user_info:
+                change_student_status(self.context['request'].user.id, 'TO_CHOOSE_COURSE')
 
         elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'

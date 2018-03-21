@@ -3,6 +3,8 @@ import json
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from admin.functions import change_student_status
+from authentication.models import UserInfo
 from source.models import Project, ProjectCourseFee, Campus, Course, CourseProject
 from order.models import Order, UserCourse, ShoppingChart, OrderChartRelation
 from utils.serializer_fields import VerboseChoiceField
@@ -103,7 +105,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                                                                                            course__is_active=True,
                                                                                            project__is_active=True),
                                                               context={'api_key': 'related_courses'}, many=True).data
-        data['name'] = data['campus']['name']+'-'+data['name']
+        data['name'] = data['campus']['name'] + '-' + data['name']
         return data
 
 
@@ -214,7 +216,8 @@ class UserCourseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('传入的chart或订单号有误')
 
         current_course_num = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
-                                                       order=attrs['order'], order__orderchartrelation__chart_id=chart).count()
+                                                       order=attrs['order'],
+                                                       order__orderchartrelation__chart_id=chart).count()
 
         if len(attrs['course_ids']) > (chart.course_num - current_course_num):
             raise serializers.ValidationError('当前剩余可选课程为：%d门，传入了%d门课程' %
@@ -242,6 +245,14 @@ class UserCourseSerializer(serializers.ModelSerializer):
                                           )
                                )
         user_courses = UserCourse.objects.bulk_create(user_course)
+        user_all_course = UserCourse.objects.filter(user=self.context['request'].user).count()
+        user_max_course = Order.objects.filter(user=self.context['request'].user, status='CONFIRMED').values_list(
+            'orderchartrelation__chart__course_num')
+        user_info = UserInfo.objects.filter(user=self.context['request'].user,
+                                            student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC', 'SUPPLY_ORDER',
+                                                                'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE' ]).exists()
+        if user_info and user_all_course == sum([number[0] for number in user_max_course]):
+            change_student_status(self.context['request'].user.id, 'PICKUP_COURSE')
         return user_courses[0]
 
 

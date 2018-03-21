@@ -12,7 +12,7 @@
         "info":   str      优惠说明
         "start_time":      开始时间
         "end_time":        结束时间
-        "max_num":         最大数量
+        "number":         数量
         "is_active":       是否启用, 若不传该参数则默认为启用
     }
 ```

@@ -4,6 +4,7 @@ import qrcode
 from urllib import parse
 
 from StuSystem.settings import DOMAIN, MEDIA_ROOT, MEDIA_URL, WX_SMART_PROGRAM
+from authentication.models import UserInfo
 from market.models import Channel
 from order.models import UserCourse, Order
 from utils.future_help import run_on_executor
@@ -25,6 +26,12 @@ def get_channel_info(user_instance):
 
     return channel
 
+
+def change_student_status(user_id,status):
+    student_instance = UserInfo.objects.filter(user_id=user_id).first()
+    student_instance.student_status = status
+    student_instance.save()
+    return
 
 def make_qrcode(channel_id):
     auth_domain = 'http://apply.chinasummer.org'

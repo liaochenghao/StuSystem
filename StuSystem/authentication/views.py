@@ -1,6 +1,7 @@
 # coding: utf-8
 from datetime import datetime
 
+from admin.functions import change_student_status
 from authentication.functions import auto_assign_sales_man
 from authentication.serializers import UserSerializer, LoginSerializer, CreateAccountSerializer, \
     UserInfoSerializer, PersonalFIleUserInfoSerializer, StudentScoreDetailSerializer, SalesManUserSerializer, \
@@ -104,7 +105,8 @@ class UserViewSet(mixins.ListModelMixin,
         """
         user = request.user
         current_time = datetime.now()
-        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").exclude(end_time__lt=current_time).values(
+        res = Coupon.objects.filter(usercoupon__user=user, usercoupon__status="TO_USE").exclude(
+            end_time__lt=current_time).values(
             'id', 'coupon_code', 'amount', 'info', 'start_time', 'end_time')
         return Response(res)
 
@@ -116,6 +118,7 @@ class UserViewSet(mixins.ListModelMixin,
         user = request.user
         if request.method == 'GET':
             res = auto_assign_sales_man(user)
+            change_student_status(user.id, 'PERSONAL_FILE')
             return Response(res)
         else:
             data = request.data
@@ -123,6 +126,7 @@ class UserViewSet(mixins.ListModelMixin,
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+            change_student_status(user.id, 'ADDED_CC')
             return Response({'msg': '操作成功'})
 
     @list_route()
@@ -159,6 +163,10 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             raise exceptions.ValidationError('暂未找到该用户的用户信息。')
         instance = self.queryset.get(user=user)
         return instance
+
+    def update(self, request, *args, **kwargs):
+        change_student_status()
+        return super().update(request, *args, **kwargs)
 
     @detail_route(['PUT', 'PATCH'])
     def user_info(self, request, pk):

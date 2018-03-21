@@ -2,6 +2,7 @@
 import datetime
 import json
 
+from admin.functions import change_student_status
 from authentication.functions import auto_assign_sales_man
 from common.models import SalesManUser, SalesMan
 from rest_framework import serializers
@@ -72,7 +73,7 @@ class CreateAccountSerializer(serializers.Serializer):
 
         return {'need_complete_student_info': need_complete_stu_info, 'user_id': user.id, 'ticket': ticket,
                 'valid_sales_man': True if student_info.valid_sales_man else False, 'order_status': order_status,
-                'check_user_info': student_info.unionid, 'sale_man_status':student_info.valid_sales_man}
+                'check_user_info': student_info.unionid, 'sale_man_status': student_info.valid_sales_man}
 
     def weixin_authorize(self, validated_data):
         logging.info('--->' + str(datetime.datetime.now()))
@@ -87,21 +88,23 @@ class CreateAccountSerializer(serializers.Serializer):
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
         user = User.objects.filter(username=res['openid']).first()
-        if not user and not user_info:
-            user = User.objects.create(**{
-                'channel_id': validated_data.get('channel_id', 1),
-                'username': res['openid'],
-                'role': 'STUDENT',
-                'openid': res['openid'],
-            })
-        elif not user:
-            user = User.objects.create(**{
-                'channel_id': validated_data.get('channel_id', 1),
-                'username': res['openid'],
-                'role': 'STUDENT',
-                'openid': res['openid'],
-                'unionid': user_info.get('unionid')
-            })
+        if not user:
+            if not user_info:
+                user = User.objects.create(**{
+                    'channel_id': validated_data.get('channel_id', 1),
+                    'username': res['openid'],
+                    'role': 'STUDENT',
+                    'openid': res['openid'],
+                })
+            else:
+                user = User.objects.create(**{
+                    'channel_id': validated_data.get('channel_id', 1),
+                    'username': res['openid'],
+                    'role': 'STUDENT',
+                    'openid': res['openid'],
+                    'unionid': user_info.get('unionid')
+                })
+            change_student_status(user.id, 'NEW')
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
@@ -183,7 +186,8 @@ class PersonalFIleUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['id', 'name', 'english_name', 'email', 'first_language', 'ielts_scores', 'wechat', 'gender',
-                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa', 'valid_sales_man']
+                  'id_number', 'birth_date', 'grade', 'phone', 'headimgurl', 'cschool', 'major', 'gpa',
+                  'valid_sales_man']
         read_only_fields = ['headimgurl']
 
     def validate(self, attrs):

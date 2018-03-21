@@ -5,6 +5,7 @@ import json
 from django.db.models import Max
 
 from StuSystem.settings import DOMAIN, MEDIA_URL
+from admin.functions import change_student_status
 from admin.models import PaymentAccountInfo
 from authentication.models import UserInfo, StudentScoreDetail
 from common.models import SalesMan
@@ -129,6 +130,9 @@ class OrderSerializer(serializers.ModelSerializer):
         HistoryFactory.create_record(operator=self.context['request'].user, source=order, key='CREATE', remark='创建了订单',
                                      source_type='ORDER')
         order_auto_notice_message(order=order, user=user)
+        user_info = UserInfo.objects.filter(user=user, student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC']).exists()
+        if user_info:
+            change_student_status(user.id, 'SUPPLY_ORDER')
         return
 
     def update(self, instance, validated_data):
@@ -254,6 +258,11 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
                                      remark='上传了订单支付信息', source_type='ORDER')
         if not StudentScoreDetail.objects.filter(user=order.user).exists():
             StudentScoreDetail.objects.create(user=order.user)
+        user_info = UserInfo.objects.filter(user=self.context['request'].user,
+                                            student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC',
+                                                                'SUPPLY_ORDER']).exists()
+        if user_info:
+            change_student_status(self.context['request'].user.id, 'PAYMENT_CONFIRM')
         return instance
 
     def to_representation(self, instance):
@@ -291,7 +300,9 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
             instance.course_num = current_course_num + course_num
             if instance.course_num > max(project_num)[0]:
                 raise serializers.ValidationError('项目课程数量最大可选%s门,已选择%s门' % (max(project_num)[0], current_course_num))
-            course_fee = ProjectCourseFee.objects.filter(project=project,course_number=instance.course_num).values_list('course_fee').filter()[0]
+            course_fee = \
+                ProjectCourseFee.objects.filter(project=project, course_number=instance.course_num).values_list(
+                    'course_fee').filter()[0]
             instance.course_fee = course_fee
             instance.save()
         else:

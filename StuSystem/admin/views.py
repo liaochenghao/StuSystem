@@ -1,8 +1,8 @@
 # coding: utf-8
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
-from admin.functions import order_auto_notice_message,course_auto_notice_message, confirm_auto_notice_message, \
-    score_auto_notice_message, switch_auto_notice_message
+from admin.functions import order_auto_notice_message, course_auto_notice_message, confirm_auto_notice_message, \
+    score_auto_notice_message, switch_auto_notice_message, change_student_status
 from authentication.models import UserInfo, StudentScoreDetail, User
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
@@ -108,7 +108,9 @@ class StatisticsViewSet(mixins.ListModelMixin,
                                                  id_number__isnull=False,
                                                  major__isnull=False,
                                                  gpa__isnull=False).count()
-        students_applyed = len(set(Order.objects.filter(status__in=['TO_PAY', 'TO_CONFIRM','CONFIRMED', 'CONFIRM_FAILED']).values_list('user_id', flat=True)))
+        students_applyed = len(set(
+            Order.objects.filter(status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED', 'CONFIRM_FAILED']).values_list(
+                'user_id', flat=True)))
         students_payed = len(set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True)))
         res = {
             'students_num': students_num,
@@ -168,6 +170,16 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
                                  project=data['project'], order=data['order']).update(status=data['status'])
             instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
             confirm_auto_notice_message(usercourse=instance, user=data['user'])
+            userinfo_status = UserInfo.objects.filter(user=data['user'],
+                                                      student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC',
+                                                                          'SUPPLY_ORDER',
+                                                                          'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE',
+                                                                          'PICKUP_COURSE',
+                                                                          'TO_CONFIRMED'])
+            if userinfo_status.exists():
+                change_student_status(data['user'].id, 'CONFIRMED_COURSE')
+            if userinfo_status.filter(student_status='CONFIRMED_COURSE').exists():
+                change_student_status(data['user'].id, 'AFTER_SCORE')
             return Response(self.get_serializer(instance).data)
 
 
@@ -192,6 +204,8 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         instance = super().update(request, *args, **kwargs)
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
+        if instance.data.get('credit_switch_status') == 'POSTED':
+            change_student_status(instance.data.get('user_info'),'SWITCH_CREDIT')
         return instance
 
 
@@ -246,6 +260,12 @@ class AdminCourseViewSet(mixins.DestroyModelMixin,
     serializer_class = AdminCourseSerializer
     permission_classes = [BaseOperatePermission]
     filter_fields = ['user']
+
+    def destroy(self, request, *args, **kwargs):
+        user_instance = UserCourse.objects.filter(id=kwargs.get('pk')).values('user_id').first()
+        instance = super().destroy(request, *args, **kwargs)
+        change_student_status(user_instance.get('user_id'), 'TO_CHOOSE_COURSE')
+        return instance
 
     @list_route(['POST'], serializer_class=AdminCreateUserCourseSerializer)
     def create_user_course(self, request):
