@@ -71,6 +71,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
     def scores(self, request, pk):
         user = self.get_object().user
         user_course = UserCourse.objects.filter(user=user)
+        change_student_status(user, 'AFTER_SCORE')
         return Response(CourseScoreSerializer(user_course, many=True).data)
 
 
@@ -205,7 +206,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
         if instance.data.get('credit_switch_status') == 'POSTED':
-            change_student_status(instance.data.get('user_info'),'SWITCH_CREDIT')
+            change_student_status(instance.data.get('user_info'), 'SWITCH_CREDIT')
         return instance
 
 
