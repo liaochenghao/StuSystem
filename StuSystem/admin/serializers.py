@@ -390,7 +390,7 @@ class AdminOrderSerializer(OrderSerializer):
                                                 student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC', 'SUPPLY_ORDER',
                                                                     'PAYMENT_CONFIRM']).exists()
             if user_info:
-                change_student_status(self.context['request'].user.id, 'TO_CHOOSE_COURSE')
+                change_student_status(instance.user.id, 'TO_CHOOSE_COURSE')
 
         elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'
