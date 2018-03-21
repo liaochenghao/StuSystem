@@ -58,7 +58,6 @@ class UserInfoRemarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfoRemark
         fields = ['id', 'remark', 'user_info', 'create_time', 'remark_by']
-        ordering = ['-create_time']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

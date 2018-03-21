@@ -123,6 +123,7 @@ class UserInfoRemark(models.Model):
 
     class Meta:
         db_table = 'user_info_remark'
+        ordering = ['-create_time']
 
 
 class StudentScoreDetail(models.Model):
