@@ -205,8 +205,8 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         instance = super().update(request, *args, **kwargs)
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
-        if instance.data.get('credit_switch_status') == 'POSTED':
-            change_student_status(instance.data.get('user_info'), 'SWITCH_CREDIT')
+        # if instance.data.get('credit_switch_status') == 'POSTED':
+        change_student_status(instance.data.get('user_info'), 'SWITCH_CREDIT')
         return instance
 
 
