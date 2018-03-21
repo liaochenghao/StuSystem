@@ -93,7 +93,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
         data['user_coupon'] = user_coupon
         data['channel'] = get_channel_info(instance.user)
         try:
-            data['wcampus'] = Campus.objects.filter(id__in=json.loads(instance.wcampus)). \
+            data['wcampus'] = Campus.objects.filter(name__in=json.loads(instance.wcampus)). \
                 values('id', 'name', 'info', 'create_time')
         except Exception as e:
             data['wcampus'] = None
