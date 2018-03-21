@@ -179,8 +179,8 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
                                                                           'TO_CONFIRMED'])
             if userinfo_status.exists():
                 change_student_status(data['user'].id, 'CONFIRMED_COURSE')
-            if userinfo_status.filter(student_status='CONFIRMED_COURSE').exists():
-                change_student_status(data['user'].id, 'AFTER_SCORE')
+            # if userinfo_status.filter(student_status='CONFIRMED_COURSE').exists():
+            #     change_student_status(data['user'].id, 'AFTER_SCORE')
             return Response(self.get_serializer(instance).data)
 
 
@@ -206,7 +206,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
         # if instance.data.get('credit_switch_status') == 'POSTED':
-        change_student_status(instance.data.get('user_info'), 'SWITCH_CREDIT')
+        change_student_status(instance.data.get('user_info')['id'], 'SWITCH_CREDIT')
         return instance
 
 
