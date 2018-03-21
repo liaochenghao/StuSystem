@@ -15,6 +15,7 @@ class Channel(models.Model):
     plan_payed_student_number = models.IntegerField('预计缴费人数')
     create_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+    channel_url = models.CharField('推广二维码URL', max_length=255, null=True)
     qr_code = models.CharField('推广二维码', max_length=255, null=True)
 
     class Meta:
