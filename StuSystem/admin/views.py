@@ -212,13 +212,12 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
 
     def update(self, request, *args, **kwargs):
         instance = super().update(request, *args, **kwargs)
-        logger.info('=========', instance.__dict__)
+        user_id_dict = UserCourse.objects.filter(id=kwargs.get('pk')).values_list('user_id').first()
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
-        logger.info('-------------', instance.data.get('user_info'))
-        if not UserCourse.objects.filter(user_id=instance.data.get('user_info')['id'],
+        if not UserCourse.objects.filter(user_id=user_id_dict[0],
                                          credit_switch_status='PRE_POSTED').exists():
-            change_student_status(instance.data.get('user_info')['id'], 'SWITCH_CREDIT')
+            change_student_status(user_id_dict[0], 'SWITCH_CREDIT')
         return instance
 
 
