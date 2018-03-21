@@ -212,7 +212,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
 
     def update(self, request, *args, **kwargs):
         instance = super().update(request, *args, **kwargs)
-        logger.info('=========',instance)
+        logger.info('=========', instance.__dict__)
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
         logger.info('-------------', instance.data.get('user_info'))
