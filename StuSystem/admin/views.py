@@ -19,6 +19,9 @@ from admin.serializers import AdminPaymentAccountInfoSerializer, UserInfoSeriali
     AdminCreateUserCourseSerializer, AdminUserCourseAddressSerializer, AdminOrderSerializer, FirstLevelSerializer, \
     AdminAvailableCoursesSerializer
 from order.models import UserCourse, Order
+import logging
+
+logger = logging.getLogger('django')
 
 
 class AccountInfoViewSet(mixins.CreateModelMixin,
@@ -211,6 +214,7 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         instance = super().update(request, *args, **kwargs)
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
+        logger.info('-------------', instance.data.get('user_info').__dict__)
         if not UserCourse.objects.filter(user_id=instance.data.get('user_info')['id'],
                                          credit_switch_status='PRE_POSTED').exists():
             change_student_status(instance.data.get('user_info')['id'], 'SWITCH_CREDIT')
