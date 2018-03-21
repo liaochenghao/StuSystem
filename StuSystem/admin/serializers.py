@@ -121,7 +121,7 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
         course = Course.objects.filter(id=instance.course_id).first()
         data['project'] = {
             'id': project.id,
-            'name': project.name
+            'name': project.campus.name+'-'+project.name
         } if project else None
 
         data['course'] = {
@@ -141,7 +141,7 @@ class CourseScoreSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['course'] = {'id': instance.course.id, 'course_code': instance.course.course_code,
                           'name': instance.course.name}
-        data['project'] = {'id': instance.project.id, 'name': instance.project.name}
+        data['project'] = {'id': instance.project.id, 'name': instance.project.campus.name+'-'+instance.project.name}
         return data
 
 
@@ -335,7 +335,7 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
             settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
-        data['project'] = {'id': instance.project.id, 'name': instance.project.name}
+        data['project'] = {'id': instance.project.id, 'name': instance.project.campus.name+'-'+instance.project.name}
         return data
 
 

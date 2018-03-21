@@ -58,7 +58,7 @@ class AuthorizeRequiredMiddleWare(MiddlewareMixin):
             return HttpResponse(content=json.dumps(dict(code=401, msg=err_msg)),
                                 content_type='application/json')
         user = User.objects.get(id=auth_res['user_id'])
-        logging.info('Get User Id : %s' % auth_res['user_id'])
+        logging.info('Get User : %s' % user.__dict__)
         request.user = user
 
 
