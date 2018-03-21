@@ -103,6 +103,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                                                                                            course__is_active=True,
                                                                                            project__is_active=True),
                                                               context={'api_key': 'related_courses'}, many=True).data
+        data['name'] = data['campus']['name']+'-'+data['name']
         return data
 
 
