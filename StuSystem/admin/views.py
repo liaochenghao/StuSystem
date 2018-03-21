@@ -71,7 +71,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
     def scores(self, request, pk):
         user = self.get_object().user
         user_course = UserCourse.objects.filter(user=user)
-        change_student_status(user, 'AFTER_SCORE')
+        # change_student_status(user, 'AFTER_SCORE')
         return Response(CourseScoreSerializer(user_course, many=True).data)
 
 
@@ -151,6 +151,11 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
     def update(self, request, *args, **kwargs):
         instance = super().update(request, *args, **kwargs)
         score_auto_notice_message(instance.data.get('course'), instance.data.get('user_info'))
+        user_queryset = UserCourse.objects.filter(user_id=instance.data.get('user_info')['user']).values_list(
+            'score_grade')
+        user_scores_status = all([score[0] for score in user_queryset])
+        if user_scores_status:
+            change_student_status(instance.data.get('user_info')['user'], 'AFTER_SCORE')
         return instance
 
     @list_route(['GET', 'PUT'])
@@ -171,13 +176,14 @@ class AdminUserOrderViewSet(mixins.ListModelMixin,
                                  project=data['project'], order=data['order']).update(status=data['status'])
             instance = self.queryset.filter(user=data['user'], course=data['course'], order=data['order']).first()
             confirm_auto_notice_message(usercourse=instance, user=data['user'])
+            course_not_all_pass = UserCourse.objects.filter(user=data['user']).exclude(status='PASS').exists()
             userinfo_status = UserInfo.objects.filter(user=data['user'],
                                                       student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC',
                                                                           'SUPPLY_ORDER',
                                                                           'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE',
                                                                           'PICKUP_COURSE',
                                                                           'TO_CONFIRMED'])
-            if userinfo_status.exists():
+            if userinfo_status.exists() and not course_not_all_pass:
                 change_student_status(data['user'].id, 'CONFIRMED_COURSE')
             # if userinfo_status.filter(student_status='CONFIRMED_COURSE').exists():
             #     change_student_status(data['user'].id, 'AFTER_SCORE')
@@ -205,8 +211,9 @@ class AdminUserCourseCreditSwitchViewSet(mixins.ListModelMixin,
         instance = super().update(request, *args, **kwargs)
         switch_auto_notice_message(instance.data.get('user_info'), instance.data.get('course'),
                                    instance.data.get('credit_switch_status'), )
-        # if instance.data.get('credit_switch_status') == 'POSTED':
-        change_student_status(instance.data.get('user_info')['id'], 'SWITCH_CREDIT')
+        if not UserCourse.objects.filter(user_id=instance.data.get('user_info')['id'],
+                                         credit_switch_status='PRE_POSTED').exists():
+            change_student_status(instance.data.get('user_info')['id'], 'SWITCH_CREDIT')
         return instance
 
 

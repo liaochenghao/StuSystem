@@ -217,7 +217,9 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         """学分转换证明"""
         res = self.common_handle(request, 'course_credit_switch')
         if request.method == 'PUT':
-            change_student_status(request.user.id, 'SWITCHED_COURSE')
+            if not UserCourse.objects.filter(user_id=request.user.id,
+                                             credit_switch_status__in=['POSTED', 'PRE_POSTED']).exists():
+                change_student_status(request.user.id, 'SWITCHED_COURSE')
         return Response(res)
 
     def common_handle(self, request, api_key):
