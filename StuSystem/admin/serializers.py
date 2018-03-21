@@ -326,7 +326,7 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
             settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
-        data['project'] = {'id': instance.project.id, 'name': instance.project.name}
+        data['project'] = {'id': instance.project.id, 'name': instance.project.campus.name+'-'+instance.project.name}
         return data
 
 
