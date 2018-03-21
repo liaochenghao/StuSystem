@@ -78,10 +78,10 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         user_coupon = None
-        if UserCoupon.objects.filter(user=instance.user, status='TO_USE').exists():
-            user_coupon = UserCoupon.objects.filter(user=instance.user, status='TO_USE').values(
+        if UserCoupon.objects.filter(user=instance.user).exists():
+            user_coupon = UserCoupon.objects.filter(user=instance.user).values(
                 'coupon__id', 'user', 'coupon__info', 'coupon__start_time', 'coupon__end_time', 'coupon__coupon_code',
-                'coupon__amount')
+                'coupon__amount','status')
             for item in user_coupon:
                 item['id'] = item.pop('coupon__id')
                 item['info'] = item.pop('coupon__info')
@@ -89,6 +89,7 @@ class RetrieveUserInfoSerializer(serializers.ModelSerializer):
                 item['end_time'] = item.pop('coupon__end_time')
                 item['coupon_code'] = item.pop('coupon__coupon_code')
                 item['amount'] = item.pop('coupon__amount')
+                item['status'] = dict(UserCoupon.STATUS).get(item.pop('status'))
 
         data['user_coupon'] = user_coupon
         data['channel'] = get_channel_info(instance.user)
