@@ -164,10 +164,6 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
         instance = self.queryset.get(user=user)
         return instance
 
-    def update(self, request, *args, **kwargs):
-        change_student_status()
-        return super().update(request, *args, **kwargs)
-
     @detail_route(['PUT', 'PATCH'])
     def user_info(self, request, pk):
         # 兼容微信小程序，提供更新用户信息接口
