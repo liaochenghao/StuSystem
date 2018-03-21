@@ -126,7 +126,6 @@ class UserViewSet(mixins.ListModelMixin,
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            change_student_status(user.id, 'ADDED_CC')
             return Response({'msg': '操作成功'})
 
     @list_route()
@@ -184,6 +183,8 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             instance = self.get_object()
+        if request.method == 'PATCH':
+            change_student_status(pk,'ADDED_CC')
         return Response(self.get_serializer(instance).data)
 
     @list_route(['GET'])
