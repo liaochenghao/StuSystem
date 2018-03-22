@@ -87,7 +87,7 @@ class CreateAccountSerializer(serializers.Serializer):
         if user_info.get('errorcode', 0) != 0:
             raise serializers.ValidationError('user info 获取错误')
         # 创建用户
-        user = User.objects.filter(username=res['openid']).first()
+        user = User.objects.filter(openid=res['openid']).first()
         if not user:
             if not user_info:
                 user = User.objects.create(**{
