@@ -11,10 +11,11 @@ class UserInfoFilterSet(FilterSet):
     email = django_filters.CharFilter(lookup_expr='icontains')
     wechat = django_filters.CharFilter(lookup_expr='icontains')
     sales_man = django_filters.CharFilter(lookup_expr='icontains')
+    student_status = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = UserInfo
-        fields = ['name', 'email', 'wechat', 'sales_man']
+        fields = ['name', 'email', 'wechat', 'sales_man', 'student_status']
 
 
 class UserCourseFilterSet(FilterSet):
