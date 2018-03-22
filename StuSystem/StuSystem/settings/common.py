@@ -212,8 +212,8 @@ micro_service_domain = 'http://127.0.0.1:7070'
 
 # 微信小程序
 WX_SMART_PROGRAM = {
-    'APP_ID': 'wx6cdbbafe0da85703',
-    'APP_SECRET': 'e1e0d098e75a317b3117994075c0bc04'
+    'APP_ID': 'wx622bf44e0bee4f2b',
+    'APP_SECRET': '97d4204adeb370336439e67bab275155'
 }
 
 DEFAULT_CHARSET = 'utf-8'
