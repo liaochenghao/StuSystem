@@ -27,22 +27,23 @@ def get_channel_info(user_instance):
     return channel
 
 
-def change_student_status(user_id,status):
+def change_student_status(user_id, status):
     student_instance = UserInfo.objects.filter(user_id=user_id).first()
     student_instance.student_status = status
     student_instance.save()
     return
 
+
 def make_qrcode(channel_id):
     auth_domain = 'http://apply.chinasummer.org'
     redirect_uri = parse.quote('%s/?channel_id=%s' % (auth_domain, channel_id))
-    channel_img = qrcode.make(
-        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
-            WX_SMART_PROGRAM['APP_ID'], redirect_uri))
+    channel_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
+        WX_SMART_PROGRAM['APP_ID'], redirect_uri)
+    channel_img = qrcode.make(channel_url)
     qr_code_save_path = '%s%s%s%s' % (MEDIA_ROOT, '/common/channel/channel_', channel_id, '.jpg')
     qr_code_url = '%s%s%s%s%s' % (DOMAIN, MEDIA_URL, 'common/channel/channel_', channel_id, '.jpg')
     channel_img.save(qr_code_save_path)
-    return (qr_code_url, '%s/?channel_id=%s' % (auth_domain, channel_id))
+    return (qr_code_url, channel_url)
 
 
 @run_on_executor
