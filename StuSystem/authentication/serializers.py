@@ -46,6 +46,7 @@ class GetUserInfoSerializer(serializers.Serializer):
 
 
 class CreateAccountSerializer(serializers.Serializer):
+    channel_id = serializers.CharField(max_length=100)
     code = serializers.CharField(max_length=100)
     ticket = serializers.CharField(required=False, allow_null=True)
 
@@ -103,9 +104,6 @@ class CreateAccountSerializer(serializers.Serializer):
                     'openid': res['openid'],
                     'unionid': user_info.get('unionid')
                 })
-        logging.info('--->' + str(datetime.datetime.now()),validated_data)
-        logging.info('--->' + str(datetime.datetime.now()),validated_data.get('channel_id'))
-        logging.info('--->' + str(datetime.datetime.now()),validated_data.__dict__)
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
