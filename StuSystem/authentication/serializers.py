@@ -104,9 +104,10 @@ class CreateAccountSerializer(serializers.Serializer):
                     'openid': res['openid'],
                     'unionid': user_info.get('unionid')
                 })
-        logger.info('======================',validated_data)
-        logger.info('======================',validated_data.get('channel_id'))
-        logger.info('======================',validated_data.__dict__)
+        logger.info('999999======================')
+        logger.info(validated_data)
+        logger.info('888888======================')
+        logger.info(validated_data.get('channel_id'))
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
