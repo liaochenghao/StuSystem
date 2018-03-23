@@ -76,7 +76,6 @@ class CreateAccountSerializer(serializers.Serializer):
                 'check_user_info': student_info.unionid, 'sale_man_status': student_info.valid_sales_man}
 
     def weixin_authorize(self, validated_data):
-        logging.info('--->' + str(datetime.datetime.now()))
         res = WeixinServer.code_authorize(validated_data['code'])
         if not (res.get('access_token') and res.get('openid')):
             raise serializers.ValidationError('无效的code值, 微信网页认证失败')
@@ -104,6 +103,9 @@ class CreateAccountSerializer(serializers.Serializer):
                     'openid': res['openid'],
                     'unionid': user_info.get('unionid')
                 })
+        logging.info('--->' + str(datetime.datetime.now()),validated_data)
+        logging.info('--->' + str(datetime.datetime.now()),validated_data.get('channel_id'))
+        logging.info('--->' + str(datetime.datetime.now()),validated_data.__dict__)
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
