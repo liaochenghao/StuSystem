@@ -45,6 +45,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat', 'student_status', 'sales_man']
 
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['channel'] = get_channel_info(instance.user)

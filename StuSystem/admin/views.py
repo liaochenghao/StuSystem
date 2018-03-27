@@ -41,7 +41,7 @@ class UserInfoViewSet(mixins.ListModelMixin,
                       mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
     """用户信息ViewSet"""
-    queryset = UserInfo.objects.all().exclude(user__role='ADMIN').order_by('-create_time')
+    queryset = UserInfo.objects.all().exclude(user__role='ADMIN').order_by('create_time')
     serializer_class = UserInfoSerializer
     filter_class = UserInfoFilterSet
     permission_classes = [BaseOperatePermission]
