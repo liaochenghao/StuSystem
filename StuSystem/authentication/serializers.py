@@ -96,6 +96,8 @@ class CreateAccountSerializer(serializers.Serializer):
                     'role': 'STUDENT',
                     'openid': res['openid'],
                 })
+                logger.info('--------------------------------------无unionid 创建用户')
+                logger.info(user.id)
             else:
                 user = User.objects.create(**{
                     'channel_id': validated_data.get('channel_id', 1),
@@ -104,10 +106,14 @@ class CreateAccountSerializer(serializers.Serializer):
                     'openid': res['openid'],
                     'unionid': user_info.get('unionid')
                 })
+                logger.info('++++++++++++++++++++++++++++++++++++++有unionid 创建用户')
+                logger.info(user.id)
+
         ticket = AuthorizeServer.create_ticket(user.id)
         user.last_login = datetime.datetime.now()
         user.save()
-        UserChannel.objects.create(channel_id=validated_data.get('channel_id', 1), user=user)
+        if validated_data.get('channel_id'):
+            UserChannel.objects.create(channel_id=validated_data.get('channel_id', 1), user=user)
 
         # 创建用户信息
         student_info = UserInfo.objects.filter(user=user).first()
