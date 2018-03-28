@@ -209,7 +209,10 @@ class UserCourseViewSet(mixins.CreateModelMixin,
     def student_confirm_course(self, request):
         """学生审课"""
         res = self.common_handle(request, 'student_confirm_course')
-        change_student_status(request.user.id, 'TO_CONFIRMED')
+        if request.method == 'PUT':
+            if not UserCourse.objects.filter(user_id=request.user.id,
+                                             status__in=['TO_UPLOAD', 'TO_CONFIRM','NOPASS']).exists():
+                change_student_status(request.user.id, 'TO_CONFIRMED')
         return Response(res)
 
     @list_route(methods=['PUT', 'GET'], serializer_class=CommonImgUploadSerializer)
