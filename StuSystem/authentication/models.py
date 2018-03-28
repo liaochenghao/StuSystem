@@ -67,7 +67,7 @@ class UserInfo(models.Model):
     wechat = models.CharField('微信号', max_length=30, null=True)
     cschool = models.CharField('当前学校', max_length=30, null=True)
     wcampus = models.TextField('意向校区', null=True)
-    create_time = models.DateTimeField('创建时间', auto_now=True)
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
     webid = models.CharField('微信网页登陆返回id', max_length=60, null=True)
     unionid = models.CharField('微信服务号用户unionid', max_length=60, null=True, unique=True)
     openid = models.CharField('微信openid', max_length=60, null=True, unique=True)
