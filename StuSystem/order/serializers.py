@@ -300,9 +300,9 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
             instance.course_num = current_course_num + course_num
             if instance.course_num > max(project_num)[0]:
                 raise serializers.ValidationError('项目课程数量最大可选%s门,已选择%s门' % (max(project_num)[0], current_course_num))
-            course_fee = \
+            course_fee = sum(
                 ProjectCourseFee.objects.filter(project=project, course_number=instance.course_num).values_list(
-                    'course_fee').filter()[0]
+                    'course_fee').filter()[0])
             instance.course_fee = course_fee
             instance.save()
         else:
