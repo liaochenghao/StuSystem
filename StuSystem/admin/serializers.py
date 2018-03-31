@@ -45,7 +45,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         model = UserInfo
         fields = ['user_id', 'name', 'email', 'cschool', 'last_login', 'wechat', 'student_status', 'sales_man']
 
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['channel'] = get_channel_info(instance.user)
@@ -122,7 +121,7 @@ class ConfirmCourseSerializer(serializers.ModelSerializer):
         course = Course.objects.filter(id=instance.course_id).first()
         data['project'] = {
             'id': project.id,
-            'name': project.campus.name+'-'+project.name
+            'name': project.campus.name + '-' + project.name
         } if project else None
 
         data['course'] = {
@@ -142,7 +141,8 @@ class CourseScoreSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['course'] = {'id': instance.course.id, 'course_code': instance.course.course_code,
                           'name': instance.course.name}
-        data['project'] = {'id': instance.project.id, 'name': instance.project.campus.name+'-'+instance.project.name}
+        data['project'] = {'id': instance.project.id,
+                           'name': instance.project.campus.name + '-' + instance.project.name}
         return data
 
 
@@ -336,7 +336,8 @@ class AdminCourseCreditSwitchSerializer(serializers.ModelSerializer):
             settings.DOMAIN, settings.MEDIA_URL, instance.switch_img) if instance.switch_img else None
         data['course'] = {'id': instance.course.id, 'name': instance.course.name,
                           'course_code': instance.course.course_code}
-        data['project'] = {'id': instance.project.id, 'name': instance.project.campus.name+'-'+instance.project.name}
+        data['project'] = {'id': instance.project.id,
+                           'name': instance.project.campus.name + '-' + instance.project.name}
         return data
 
 
@@ -351,7 +352,6 @@ class AdminUserCourseAddressSerializer(serializers.ModelSerializer):
 
 class ChildUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
-    bind_sales_man = serializers.CharField(allow_null=True)
     role = VerboseChoiceField(User.ROLE)
 
     class Meta:
@@ -359,16 +359,15 @@ class ChildUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'password', 'username', 'is_active', 'qr_code', 'role', 'bind_sales_man']
         read_only_fields = ['qr_code']
 
-    # def update(self, instance, validated_data):
-    #     if validated_data.get('bind_sales_man') =='sales_manager':
-    #         validated_data['bind_sales_man'] = None
-    #     return super().update(instance, validated_data)
-
+    def update(self, instance, validated_data):
+        if validated_data.get('bind_sales_man') == 'sales_manager':
+            validated_data['bind_sales_man'] = None
+        return super().update(instance, validated_data)
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
-        # if validated_data.get('bind_sales_man') =='sales_manager':
-        #     validated_data['bind_sales_man'] = None
+        if validated_data.get('bind_sales_man') == 'sales_manager':
+            validated_data['bind_sales_man'] = None
         instance = super().create(validated_data)
         qr_code = WeixinServer.get_forever_qr_code(action_name='QR_LIMIT_SCENE', scene_id='child_user_%s' % instance.id)
         instance.qr_code = qr_code
