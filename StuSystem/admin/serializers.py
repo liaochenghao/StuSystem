@@ -355,7 +355,7 @@ class ChildUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'password', 'username', 'is_active', 'qr_code', 'role']
+        fields = ['id', 'name', 'password', 'username', 'is_active', 'qr_code', 'role', 'bind_sales_man']
         read_only_fields = ['qr_code']
 
     def create(self, validated_data):

@@ -13,6 +13,7 @@
         "username": str  用户名  必填
         "is_active": boolean    是否启用  默认启用
         "role": str  角色  必填
+        "bind_sales_man": str  绑定CC  选填
     }
 ```
 

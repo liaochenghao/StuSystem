@@ -27,6 +27,7 @@ class User(AbstractBaseUser):
     qr_code = models.CharField('二维码', max_length=255, null=True)
     channel_id = models.IntegerField(verbose_name='用户渠道信息', null=True)
     recommend_user = models.ForeignKey('self', verbose_name='推荐的用户', null=True)
+    bind_sales_man = models.CharField('绑定CC', max_length=50, null=True)
 
     class Meta:
         db_table = 'user'
@@ -88,6 +89,7 @@ class UserInfo(models.Model):
 
     class Meta:
         db_table = 'student_info'
+        ordering = ['-create_time']
 
     @property
     def school_info(self):

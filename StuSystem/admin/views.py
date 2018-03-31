@@ -51,6 +51,14 @@ class UserInfoViewSet(mixins.ListModelMixin,
             return UserInfoSerializer(*args, **kwargs)
         return RetrieveUserInfoSerializer(*args, **kwargs)
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.bind_sales_man:
+            self.queryset = UserInfo.objects.filter(sales_man=user.bind_sales_man).exclude(user__role='ADMIN')
+        else:
+            self.queryset = UserInfo.objects.all().exclude(user__role='ADMIN')
+        return self.queryset
+
     def get_object(self):
         # pk 传过来的是user_id，需要转换为user_info
         user_id = self.kwargs.get('pk')
