@@ -16,18 +16,22 @@
     "code": 0,
     "msg": "请求成功",
     "data": {
-        "id": 3,
-        "name": "西南财大9月推广第一期",          渠道名称
-        "plan_date": "2017-08-21",             计划推广日期
+        "id": 1,
+        "name": "暑校联盟服务中心公众号",
+        "plan_date": "2018-03-22",
         "sales_man": {
-            "id": 1,
-            "name": "zhangsan"
+            "id": 22,
+            "name": "Ethan"
         },
-        "plan_student_number": 200,            计划参加人数
-        "plan_file_student_number": 100,       计划建档人数
-        "plan_payed_student_number": 50,       计划缴费人数
-        "create_time": "2017-08-20T14:14:57.775431Z",
-        "qr_code": "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQEJ8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyY1AxSnhBMEdjMGoxMDAwMGcwM2MAAgQupHxZAwQAAAAA"    推广二维码
+        "plan_student_number": 0,
+        "plan_file_student_number": 0,
+        "plan_payed_student_number": 0,
+        "create_time": "2018-03-22T16:20:53",
+        "channel_url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx622bf44e0bee4f2b&redirect_uri=http%3A//apply.chinasummer.org/%3Fchannel_id%3D1&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect",
+        "qr_code": "http://shell.chinasummer.org/media/common/channel/channel_1.jpg",
+        "all_stu_number": 50,
+        "file_stu_number": 10,
+        "payed_stu_number": 0
     },
     "field_name": ""
 }

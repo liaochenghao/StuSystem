@@ -12,6 +12,9 @@
         "name":     str 用户姓名
         "email":    str 邮件
         "wechat":   str 微信号
+        "sales_man":   str 销售
+        "student_status":   str 状态
+        "create_year":   str 年限
    }
 ```
 
