@@ -2,6 +2,7 @@
 from rest_framework import serializers
 
 from admin.functions import make_qrcode
+from authentication.models import User, UserInfo
 from common.models import SalesMan
 from market.models import Channel
 
@@ -28,4 +29,8 @@ class ChannelSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['sales_man'] = SalesManSerializer(instance=instance.sales_man).data
+        query_set = UserInfo.objects.filter(user__channel_id=instance.id)
+        data['all_stu_number'] = query_set.count()
+        data['file_stu_number'] = query_set.filter(student_status='PERSONAL_FILE').count()
+        data['payed_stu_number'] = query_set.filter(student_status='TO_CHOOSE_COURSE').count()
         return data

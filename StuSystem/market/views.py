@@ -3,6 +3,7 @@ from market.serializers import ChannelSerializer
 from rest_framework import mixins, viewsets
 
 from market.models import Channel
+from permissions.base_permissions import BaseOperatePermission
 
 
 class ChannelViewSet(mixins.CreateModelMixin,
@@ -13,3 +14,4 @@ class ChannelViewSet(mixins.CreateModelMixin,
                      viewsets.GenericViewSet):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
+    permission_classes = [BaseOperatePermission]
