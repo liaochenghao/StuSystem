@@ -141,8 +141,12 @@ class StatisticsViewSet(mixins.ListModelMixin,
                 'verbose': value,
                 'number': query_set.filter(student_status=key).count()
             })
-        data = [{'all_number': query_set.count(), 'data': student_status_dict}]
-        return Response(data)
+        student_status_dict.append({
+                'key': 'ALL_STUDENTS',
+                'verbose': '全部学生',
+                'number': query_set.count()
+            })
+        return Response(student_status_dict)
 
     @list_route()
     def campus_overview(self, request):
