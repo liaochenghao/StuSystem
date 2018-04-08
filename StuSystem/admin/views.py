@@ -134,17 +134,12 @@ class StatisticsViewSet(mixins.ListModelMixin,
         filter_year = request.query_params.get('year')
         query_set = UserInfo.objects.all()
         query_set = query_set if not filter_year else query_set.filter(create_time__year=filter_year)
-        student_status_dict = []
+        student_status_dict = [{'key': 'ALL_STUDENTS', 'verbose': '全部学生', 'number': query_set.count()}]
         for key, value in student_status.items():
             student_status_dict.append({
                 'key': key,
                 'verbose': value,
                 'number': query_set.filter(student_status=key).count()
-            })
-        student_status_dict.append({
-                'key': 'ALL_STUDENTS',
-                'verbose': '全部学生',
-                'number': query_set.count()
             })
         return Response(student_status_dict)
 
