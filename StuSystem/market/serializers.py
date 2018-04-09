@@ -31,6 +31,8 @@ class ChannelSerializer(serializers.ModelSerializer):
         data['sales_man'] = SalesManSerializer(instance=instance.sales_man).data
         query_set = UserInfo.objects.filter(user__channel_id=instance.id)
         data['all_stu_number'] = query_set.count()
-        data['file_stu_number'] = query_set.filter(student_status='PERSONAL_FILE').count()
-        data['payed_stu_number'] = query_set.filter(student_status='TO_CHOOSE_COURSE').count()
+        data['file_stu_number'] = query_set.exclude(student_status='NEW').count()
+        data['payed_stu_number'] = query_set.filter(
+            student_status__in=['TO_CHOOSE_COURSE', 'PICKUP_COURSE', 'TO_CONFIRMED', 'CONFIRMED_COURSE', 'AFTER_SCORE',
+                                'SWITCH_CREDIT', 'SWITCHED_COURSE']).count()
         return data
