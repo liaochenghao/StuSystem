@@ -360,13 +360,13 @@ class ChildUserSerializer(serializers.ModelSerializer):
         read_only_fields = ['qr_code']
 
     def update(self, instance, validated_data):
-        if validated_data.get('bind_sales_man') == 'sales_manager':
+        if validated_data.get('bind_sales_man') == 'sales_manager' or validated_data.get('role') != 'SALES':
             validated_data['bind_sales_man'] = None
         return super().update(instance, validated_data)
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
-        if validated_data.get('bind_sales_man') == 'sales_manager':
+        if validated_data.get('bind_sales_man') == 'sales_manager' or validated_data.get('role') != 'SALES':
             validated_data['bind_sales_man'] = None
         instance = super().create(validated_data)
         qr_code = WeixinServer.get_forever_qr_code(action_name='QR_LIMIT_SCENE', scene_id='child_user_%s' % instance.id)
