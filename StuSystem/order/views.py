@@ -57,7 +57,7 @@ class OrderViewSet(mixins.CreateModelMixin,
             }
         discount_amount = 0
         if instance.coupon_list:
-            coupons_amount = Coupon.objects.filter(usercoupon__in=json.loads(instance.coupon_list)).values_list(
+            coupons_amount = Coupon.objects.filter(id__in=json.loads(instance.coupon_list)).values_list(
                 'amount')
             for coupon in coupons_amount:
                 discount_amount += int(coupon[0])
