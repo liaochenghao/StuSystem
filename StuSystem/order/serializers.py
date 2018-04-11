@@ -93,8 +93,9 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['coupon_list'] = json.dumps(coupon_list)
             # 计算优惠券费用
             coupon_list_fee = 0
-            coupon_list_fee_values = UserCoupon.objects.filter(id__in=coupon_list).values_list('coupon__amount',
-                                                                                               flat=True)
+            coupon_list_fee_values = UserCoupon.objects.filter(user=user, coupon_id__in=coupon_list).values_list(
+                'coupon__amount',
+                flat=True)
             for item in coupon_list_fee_values:
                 coupon_list_fee += item
             validated_data['pay_fee'] = standard_fee - coupon_list_fee if \
@@ -105,7 +106,8 @@ class OrderSerializer(serializers.ModelSerializer):
         # coupon_list = validated_data.pop('coupon_list', None)
         chart_ids = validated_data.pop('chart_ids')
         user = self.context['request'].user
-        coupon_list = [coupon[0] for coupon in UserCoupon.objects.filter(user=user, status='TO_USE').values_list('coupon_id')]
+        coupon_list = [coupon[0] for coupon in
+                       UserCoupon.objects.filter(user=user, status='TO_USE').values_list('coupon_id')]
         validated_data = self.validated_data_additional(validated_data, chart_ids, coupon_list, user)
         order = super().create(validated_data)
         self.additional_order_update(order, coupon_list, chart_ids, user)
