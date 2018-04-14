@@ -112,6 +112,7 @@
 - [课程列表](docs/course/course_list.md)
 - [课程列表--不分页接口](docs/course/course_list_none_pagination.md)
 - [课程详情](docs/course/course_detail.md)
+- [查询当前课程的所有学生](docs/course/course_available_student.md)
 - [课程更新](docs/course/course_update.md)
 - [课程关联项目](docs/course/course_related_projects.md)
 - [新建项目关联时允许操作的项目列表](docs/course/available_projects.md)

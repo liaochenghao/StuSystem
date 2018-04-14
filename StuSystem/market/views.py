@@ -18,5 +18,5 @@ class ChannelViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         if self.request.user.channel_id:
-            self.queryset = self.queryset.filter(id = self.request.user.channel_id)
+            self.queryset = self.queryset.filter(id=self.request.user.channel_id)
         return self.queryset

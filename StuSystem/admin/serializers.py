@@ -375,6 +375,11 @@ class ChildUserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['channel_id'] = instance.channel_id
+        return data
+
 
 class AdminOrderSerializer(OrderSerializer):
     def notice_to_user(self, instance, confirm_status, confirm_remark):
