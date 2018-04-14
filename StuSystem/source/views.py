@@ -5,6 +5,7 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from StuSystem.settings import DOMAIN, MEDIA_URL
 from admin.functions import change_student_status
+from authentication.models import UserInfo
 from permissions.base_permissions import StudentReadOnlyPermission
 from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
@@ -106,6 +107,13 @@ class ProjectViewSet(BaseViewSet):
         serializer.save_project_course_fee(instance, project_fees)
         return Response(ProjectSerializer(instance=instance).data)
 
+    @detail_route()
+    def project_available_student(self, request, pk):
+        course_id = request.query_params.get('course_id')
+        query_set = ShoppingChart.objects.filter(project_id=pk)
+        UserInfo.objects.filter(user__shoppingchart__project_id=pk, student_status__in=[''])
+        return Response()
+
 
 class CourseViewSet(BaseViewSet):
     queryset = Course.objects.filter(is_active=True).prefetch_related('courseproject_set', 'courseproject_set__project')
@@ -134,6 +142,20 @@ class CourseViewSet(BaseViewSet):
         available_projects_ids = instance.courseproject_set.filter(course=instance).values_list('project_id', flat=True)
         projects = Project.objects.exclude(id__in=available_projects_ids)
         return Response(ProjectSerializer(projects, many=True).data)
+
+    @detail_route()
+    def course_available_student(self, request, pk):
+        project_id = request.query_params.get('project_id')
+        filter_dict = {'course_id': pk, 'project_id': project_id} if project_id else {'course_id': pk}
+        query_set = UserCourse.objects.filter(**filter_dict).values(
+            'user__userinfo__name', 'user_id', 'user__userinfo__sales_man', 'user__userinfo__wechat', 'project__name',
+            'project__campus__name', 'create_time')
+        for item in query_set:
+            item['name'] = item.pop('user__userinfo__name')
+            item['sales_man'] = item.pop('user__userinfo__sales_man')
+            item['wechat'] = item.pop('user__userinfo__wechat')
+            item['project'] = item.pop('project__campus__name') + '-' + item.pop('project__name')
+        return Response(query_set)
 
     @detail_route()
     def related_projects(self, request, pk):
@@ -211,7 +233,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         res = self.common_handle(request, 'student_confirm_course')
         if request.method == 'PUT':
             if not UserCourse.objects.filter(user_id=request.user.id,
-                                             status__in=['TO_UPLOAD', 'TO_CONFIRM','NOPASS']).exists():
+                                             status__in=['TO_UPLOAD', 'TO_CONFIRM', 'NOPASS']).exists():
                 change_student_status(request.user.id, 'TO_CONFIRMED')
         return Response(res)
 
@@ -318,7 +340,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
                     res_item = {
                         'project': {
                             'id': chart.project.id,
-                            'name': chart.project.name,
+                            'name': chart.project.campus.name + '-' + chart.project.name,
                             'start_time': chart.project.start_date,
                             'end_time': chart.project.end_date
                         },
