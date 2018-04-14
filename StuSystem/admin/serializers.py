@@ -170,6 +170,7 @@ class CampusOverViewSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project_set'] = ProjectOverViewSerializer(Project.objects.filter(campus=instance), many=True).data
+        data['project_set'][0]['choose_course_number'] = UserCourse.objects.filter(project_id=data['project_set'][0]['id']).count()
         return data
 
 

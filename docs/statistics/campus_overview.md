@@ -27,6 +27,7 @@
                     "name": "北京校区一期项目",
                     "applyed_number": 1,            项目申请人数
                     "payed_number": 1               项目支付人数
+                    "choose_course_number2": 9      已选课人数
                 },
             ]
         },

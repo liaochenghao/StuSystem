@@ -14,6 +14,8 @@
         "plan_student_number"： int  预计参加人数  必填
         "plan_file_student_number"： int  预计建档人数  必填
         "plan_payed_student_number"  int  预计缴费人数   必填
+        "phase_discount"  int      阶段优惠金额   选填
+
     }
 ```
 
