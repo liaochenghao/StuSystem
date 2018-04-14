@@ -15,3 +15,8 @@ class ChannelViewSet(mixins.CreateModelMixin,
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
     permission_classes = [BaseOperatePermission]
+
+    def get_queryset(self):
+        if self.request.user.channel_id:
+            self.queryset = self.queryset.filter(id = self.request.user.channel_id)
+        return self.queryset
