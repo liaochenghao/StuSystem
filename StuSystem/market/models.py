@@ -13,6 +13,7 @@ class Channel(models.Model):
     plan_student_number = models.IntegerField('预计参加人数')
     plan_file_student_number = models.IntegerField('预计建档人数')
     plan_payed_student_number = models.IntegerField('预计缴费人数')
+    phase_discount = models.IntegerField('阶段优惠金额')
     create_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
     channel_url = models.CharField('推广二维码URL', max_length=255, null=True)

@@ -17,7 +17,7 @@ class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
         fields = ['id', 'name', 'plan_date', 'sales_man', 'plan_student_number', 'plan_file_student_number',
-                  'plan_payed_student_number', 'create_time', 'channel_url', 'qr_code']
+                  'plan_payed_student_number', 'create_time', 'channel_url', 'qr_code', 'phase_discount']
         read_only_fields = ['qr_code']
 
     def create(self, validated_data):
