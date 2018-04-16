@@ -11,7 +11,7 @@ from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, CurrentProjectCoursesSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer, \
-    CourseConfirmSerializer
+    CourseConfirmSerializer, ProjectUserInfoSerializer
 from order.models import Order, UserCourse, ShoppingChart
 
 
@@ -107,12 +107,28 @@ class ProjectViewSet(BaseViewSet):
         serializer.save_project_course_fee(instance, project_fees)
         return Response(ProjectSerializer(instance=instance).data)
 
-    @detail_route()
+    @detail_route(serializer_class=ProjectUserInfoSerializer)
     def project_available_student(self, request, pk):
-        course_id = request.query_params.get('course_id')
-        query_set = ShoppingChart.objects.filter(project_id=pk)
-        UserInfo.objects.filter(user__shoppingchart__project_id=pk, student_status__in=[''])
-        return Response()
+        query_set = UserInfo.objects.filter(user__shoppingchart__project_id=pk,
+                                            user__shoppingchart__status__in=['SUPPLY_ORDER', 'PAYED']).exclude(
+            student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC']).values('user_id', 'name', 'wechat', 'email',
+                                                                            'user__studentscoredetail__university',
+                                                                            'sales_man', 'student_status').distinct()
+        filter_status = request.query_params.get('student_status')
+        if filter_status=='payed':
+            query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM','SUPPLY_ORDER'])
+        elif filter_status=='chose':
+            query_set = query_set.exclude(student_status='TO_CHOOSE_COURSE')
+        try:
+            page = int(request.query_params.get('page', 1))
+        except:
+            page = 1
+        count = len(query_set)
+        query_set = query_set[(page - 1) * 15:page * 15]
+        for item in query_set:
+            item['university'] = item.pop('user__studentscoredetail__university')
+        data = {'count':count,'data':query_set}
+        return Response(data)
 
 
 class CourseViewSet(BaseViewSet):
