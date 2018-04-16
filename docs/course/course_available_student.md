@@ -15,32 +15,29 @@
 {
     "code": 0,
     "msg": "请求成功",
-    "data": [
-        {
-            "user_id": 594,
-            "create_time": "2018-04-13T10:53:01.462865",
-            "name": "吴梓恺",
-            "sales_man": "Air",
-            "wechat": "bryanwzk",
-            "project": "杭州-五周项目"
-        },
-        {
-            "user_id": 498,
-            "create_time": "2018-04-14T00:10:02.289412",
-            "name": "黄清龄",
-            "sales_man": "Jack",
-            "wechat": "Qingling1998",
-            "project": "网课-第一期四周项目"
-        },
-        {
-            "user_id": 586,
-            "create_time": "2018-04-14T09:18:12.999681",
-            "name": "王小萌",
-            "sales_man": "Air",
-            "wechat": "wangxiaomeng1997",
-            "project": "网课-第二期四周项目"
-        }
-    ],
+    "data": {
+        "student_list": [
+            {
+                "user_id": 586,
+                "create_time": "2018-04-14T09:18:12.999681",
+                "name": "王小萌",
+                "sales_man": "Air",
+                "wechat": "wangxiaomeng1997",
+                "project": "网课-第二期四周项目"
+            },
+            {
+                "user_id": 1690,
+                "create_time": "2018-04-14T22:34:39.927381",
+                "name": "薛拯",
+                "sales_man": "Air",
+                "wechat": "ayu__xz",
+                "project": "网课-第二期四周项目"
+            }
+        ],
+        "course_name": "Financial Accounting",
+        "max_num": 20,
+        "choose_num": 2
+    },
     "field_name": ""
 }
 ```

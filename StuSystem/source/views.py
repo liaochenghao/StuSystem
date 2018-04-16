@@ -150,12 +150,18 @@ class CourseViewSet(BaseViewSet):
         query_set = UserCourse.objects.filter(**filter_dict).values(
             'user__userinfo__name', 'user_id', 'user__userinfo__sales_man', 'user__userinfo__wechat', 'project__name',
             'project__campus__name', 'create_time')
+        course_obj = Course.objects.filter(id=pk).values('name', 'max_num').first()
+        data = {}
         for item in query_set:
             item['name'] = item.pop('user__userinfo__name')
             item['sales_man'] = item.pop('user__userinfo__sales_man')
             item['wechat'] = item.pop('user__userinfo__wechat')
             item['project'] = item.pop('project__campus__name') + '-' + item.pop('project__name')
-        return Response(query_set)
+        data['student_list'] = query_set
+        data['course_name'] = course_obj.get('name')
+        data['max_num'] = course_obj.get('max_num')
+        data['choose_num'] = len(query_set)
+        return Response(data)
 
     @detail_route()
     def related_projects(self, request, pk):
