@@ -107,7 +107,7 @@ class ProjectViewSet(BaseViewSet):
         serializer.save_project_course_fee(instance, project_fees)
         return Response(ProjectSerializer(instance=instance).data)
 
-    @detail_route(serializer_class=ProjectUserInfoSerializer)
+    @detail_route()
     def project_available_student(self, request, pk):
         query_set = UserInfo.objects.filter(user__shoppingchart__project_id=pk,
                                             user__shoppingchart__status__in=['SUPPLY_ORDER', 'PAYED']).exclude(
