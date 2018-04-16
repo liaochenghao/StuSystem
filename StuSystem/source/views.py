@@ -11,7 +11,7 @@ from source.models import Project, Campus, Course, CourseProject
 from source.serializers import ProjectSerializer, CampusSerializer, \
     CourseSerializer, CommonImgUploadSerializer, CourseFilterElementsSerializer, CurrentProjectCoursesSerializer, \
     UpdateProjectCourseFeeSerializer, CourseProjectSerializer, UserCourseSerializer, StudentAvailableCoursesSerializer, \
-    CourseConfirmSerializer, ProjectUserInfoSerializer
+    CourseConfirmSerializer
 from order.models import Order, UserCourse, ShoppingChart
 
 
