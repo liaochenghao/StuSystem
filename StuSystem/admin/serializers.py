@@ -156,10 +156,11 @@ class StudentScoreDetailSerializer(serializers.ModelSerializer):
 class ProjectOverViewSerializer(serializers.ModelSerializer):
     applyed_number = serializers.IntegerField(source='current_applyed_number')
     payed_number = serializers.IntegerField(source='current_payed_number')
+    choose_course_number = serializers.IntegerField(source='current_choose_number')
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'applyed_number', 'payed_number']
+        fields = ['id', 'name', 'applyed_number', 'payed_number', 'choose_course_number']
 
 
 class CampusOverViewSerializer(serializers.ModelSerializer):
@@ -170,7 +171,6 @@ class CampusOverViewSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['project_set'] = ProjectOverViewSerializer(Project.objects.filter(campus=instance), many=True).data
-        data['project_set'][0]['choose_course_number'] = UserCourse.objects.filter(project_id=data['project_set'][0]['id']).count()
         return data
 
 

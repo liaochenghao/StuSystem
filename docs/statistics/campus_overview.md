@@ -27,10 +27,20 @@
                     "name": "北京校区一期项目",
                     "applyed_number": 1,            项目申请人数
                     "payed_number": 1               项目支付人数
-                    "choose_course_number2": 9      已选课人数
+                    "choose_course_number": 9      已选课人数
                 },
             ]
         },
+        {
+            "all_applyed_number": 338,
+            "all_payed_number": 171,
+            "all_chose_number": 156
+        },
+        {
+            "online_applyed_number": 285,
+            "online_payed_number": 219,
+            "online_chose_number": 138
+        }
     "field_name": ""
 }
 ```

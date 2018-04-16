@@ -146,7 +146,22 @@ class StatisticsViewSet(mixins.ListModelMixin,
     @list_route()
     def campus_overview(self, request):
         campus = Campus.objects.all()
-        return Response(CampusOverViewSerializer(campus, many=True).data)
+        data = CampusOverViewSerializer(campus, many=True).data
+        all_applyed_number = 0
+        all_payed_number = 0
+        all_chose_number = 0
+        for item in data[:-1]:
+            all_applyed_number += sum([project.get('applyed_number') for project in item['project_set']])
+            all_payed_number += sum([project.get('payed_number') for project in item['project_set']])
+            all_chose_number += sum([project.get('choose_course_number') for project in item['project_set']])
+        data.append({'all_applyed_number': all_applyed_number, 'all_payed_number': all_payed_number,
+                     'all_chose_number': all_chose_number})
+        data.append({
+            'online_applyed_number': sum([project.get('applyed_number') for project in data[-2]['project_set']]),
+            'online_payed_number': sum([project.get('payed_number') for project in data[-2]['project_set']]),
+            'online_chose_number': sum([project.get('choose_course_number') for project in data[-2]['project_set']])
+        })
+        return Response(data)
 
 
 class SalesManViewSet(mixins.ListModelMixin,

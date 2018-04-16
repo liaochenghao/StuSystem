@@ -21,7 +21,7 @@ class Campus(models.Model):
 
 class Project(models.Model):
     """项目表"""
-    campus = models.ForeignKey(Campus,on_delete=models.DO_NOTHING)
+    campus = models.ForeignKey(Campus, on_delete=models.DO_NOTHING)
     name = models.CharField('项目名称', max_length=30, null=True)
     start_date = models.DateField('开始时间')
     end_date = models.DateField('结束时间')
@@ -52,10 +52,16 @@ class Project(models.Model):
                                     status__in=['CONFIRMED']).values_list('user_id', flat=True)
         return len(data)
 
+    @property
+    def current_choose_number(self):
+        from order.models import UserCourse
+        data = UserCourse.objects.filter(project=self).count()
+        return data
+
 
 class ProjectCourseFee(models.Model):
     """项目课程费用对应表"""
-    project = models.ForeignKey(Project, related_name='project_course_fee',on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project, related_name='project_course_fee', on_delete=models.DO_NOTHING)
     course_number = models.IntegerField('课程门数')
     course_fee = models.FloatField('课程费用')
 
