@@ -254,8 +254,10 @@ class UserCourseViewSet(mixins.CreateModelMixin,
         """学生审课"""
         res = self.common_handle(request, 'student_confirm_course')
         if request.method == 'PUT':
-            if not UserCourse.objects.filter(user_id=request.user.id,
-                                             status__in=['TO_UPLOAD', 'TO_CONFIRM', 'NOPASS']).exists():
+            queruset = Order.objects.filter(status='CONFIRMED').values('orderchartrelation__chart__course_num')
+            choose_course = sum([order.get('orderchartrelation__chart__course_num') for order in queruset])
+            if choose_course == UserCourse.objects.filter(user_id=request.user.id,
+                                                          statu='TO_CONFIRM').count():
                 change_student_status(request.user.id, 'TO_CONFIRMED')
         return Response(res)
 
