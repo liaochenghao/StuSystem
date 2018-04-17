@@ -257,7 +257,7 @@ class UserCourseViewSet(mixins.CreateModelMixin,
             queruset = Order.objects.filter(status='CONFIRMED').values('orderchartrelation__chart__course_num')
             choose_course = sum([order.get('orderchartrelation__chart__course_num') for order in queruset])
             if choose_course == UserCourse.objects.filter(user_id=request.user.id,
-                                                          statu='TO_CONFIRM').count():
+                                                          status='TO_CONFIRM').count():
                 change_student_status(request.user.id, 'TO_CONFIRMED')
         return Response(res)
 
