@@ -82,8 +82,31 @@ class UserInfoViewSet(mixins.ListModelMixin,
     def scores(self, request, pk):
         user = self.get_object().user
         user_course = UserCourse.objects.filter(user=user)
-        # change_student_status(user, 'AFTER_SCORE')
         return Response(CourseScoreSerializer(user_course, many=True).data)
+
+    @list_route()
+    def insert_user_info(self, request):
+        from . import tools
+        tools.insert_user_info()
+        return Response('ok')
+
+    @list_route()
+    def get_mail(self, request):
+        from . import tools
+        tools.get_mail(r'C:\Users\555\Desktop\学生导入信息\20180413_2\汇总.xlsx')
+        return Response('ok')
+
+    @list_route()
+    def clear_user_info(self, request):
+        user_id = request.query_params.get('id')
+        validate = request.query_params.get('cmd')
+        if not validate == 'clear':
+            raise exceptions.NotAuthenticated('去死吧 ！')
+        if not User.objects.filter(id=user_id).exists():
+            raise exceptions.NotAuthenticated('搞错了 ！')
+        from . import tools
+        tools.clear_user_info(user_id)
+        return Response('o_jb_k !')
 
 
 class StudentScoreDetailViewSet(mixins.ListModelMixin,
@@ -154,13 +177,16 @@ class StatisticsViewSet(mixins.ListModelMixin,
             all_applyed_number += sum([project.get('applyed_number') for project in item['project_set']])
             all_payed_number += sum([project.get('payed_number') for project in item['project_set']])
             all_chose_number += sum([project.get('choose_course_number') for project in item['project_set']])
-        data.append({'all_applyed_number': all_applyed_number, 'all_payed_number': all_payed_number,
-                     'all_chose_number': all_chose_number})
-        data.append({
-            'online_applyed_number': sum([project.get('applyed_number') for project in data[-2]['project_set']]),
-            'online_payed_number': sum([project.get('payed_number') for project in data[-2]['project_set']]),
-            'online_chose_number': sum([project.get('choose_course_number') for project in data[-2]['project_set']])
-        })
+        all_project = {'all_applyed_number': all_applyed_number, 'all_payed_number': all_payed_number,
+                     'all_chose_number': all_chose_number}
+        online_project = {
+            'online_applyed_number': sum([project.get('applyed_number') for project in data[-1]['project_set']]),
+            'online_payed_number': sum([project.get('payed_number') for project in data[-1]['project_set']]),
+            'online_chose_number': sum([project.get('choose_course_number') for project in data[-1]['project_set']])
+        }
+        data={'project_list':data}
+        data.update(all_project)
+        data.update(online_project)
         return Response(data)
 
 
