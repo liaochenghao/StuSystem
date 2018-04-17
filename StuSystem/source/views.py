@@ -115,9 +115,9 @@ class ProjectViewSet(BaseViewSet):
                                                                             'user__studentscoredetail__university',
                                                                             'sales_man', 'student_status').distinct()
         filter_status = request.query_params.get('student_status')
-        if filter_status=='payed':
-            query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM','SUPPLY_ORDER'])
-        elif filter_status=='chose':
+        if filter_status == 'payed':
+            query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
+        elif filter_status == 'chose':
             query_set = query_set.exclude(student_status='TO_CHOOSE_COURSE')
         try:
             page = int(request.query_params.get('page', 1))
@@ -127,7 +127,7 @@ class ProjectViewSet(BaseViewSet):
         query_set = query_set[(page - 1) * 15:page * 15]
         for item in query_set:
             item['university'] = item.pop('user__studentscoredetail__university')
-        data = {'count':count,'data':query_set}
+        data = {'count': count, 'data': query_set}
         return Response(data)
 
 

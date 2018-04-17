@@ -251,7 +251,7 @@ class UserCourseSerializer(serializers.ModelSerializer):
             'orderchartrelation__chart__course_num')
         user_info = UserInfo.objects.filter(user=self.context['request'].user,
                                             student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC', 'SUPPLY_ORDER',
-                                                                'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE' ]).exists()
+                                                                'PAYMENT_CONFIRM', 'TO_CHOOSE_COURSE']).exists()
         if user_info and user_all_course == sum([number[0] for number in user_max_course]):
             change_student_status(self.context['request'].user.id, 'PICKUP_COURSE')
         return user_courses[0]

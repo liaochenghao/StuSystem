@@ -55,7 +55,7 @@ class Project(models.Model):
     @property
     def current_choose_number(self):
         from order.models import UserCourse
-        data = UserCourse.objects.filter(project=self).count()
+        data = UserCourse.objects.filter(project=self).distinct().values('user_id').distinct().count()
         return data
 
 
