@@ -118,7 +118,7 @@ class ProjectViewSet(BaseViewSet):
         if filter_status == 'payed':
             query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
         elif filter_status == 'chose':
-            query_set = query_set.exclude(student_status='TO_CHOOSE_COURSE')
+            query_set = query_set.exclude(student_status__in=['TO_CHOOSE_COURSE', 'PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
         try:
             page = int(request.query_params.get('page', 1))
         except:
@@ -257,9 +257,6 @@ class UserCourseViewSet(mixins.CreateModelMixin,
             queruset = Order.objects.filter(user_id=request.user.id, status='CONFIRMED').values(
                 'orderchartrelation__chart__course_num')
             choose_course = sum([order.get('orderchartrelation__chart__course_num') for order in queruset])
-            print('choose_course', choose_course)
-            print(UserCourse.objects.filter(user_id=request.user.id,
-                                            status='TO_CONFIRM').count())
             if choose_course == UserCourse.objects.filter(user_id=request.user.id,
                                                           status='TO_CONFIRM').count():
                 change_student_status(request.user.id, 'TO_CONFIRMED')

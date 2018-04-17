@@ -8,6 +8,7 @@
 **请求参数**:
 ```
     page   分页
+    student_status  'payed'(已缴费)，'chose'(已选课)
 ```
 
 **成功返回**：
