@@ -21,6 +21,8 @@ class ChannelSerializer(serializers.ModelSerializer):
         read_only_fields = ['qr_code']
 
     def create(self, validated_data):
+        if self.context.get('request').user.channel_id:
+            raise serializers.ValidationError('没有权限进行次操作')
         instance = super().create(validated_data)
         instance.qr_code, instance.channel_url = make_qrcode(instance.id)
         instance.save()
