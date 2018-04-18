@@ -109,11 +109,13 @@ class ProjectViewSet(BaseViewSet):
 
     @detail_route()
     def project_available_student(self, request, pk):
+        project = Project.objects.filter(id=pk).values('campus__name','name').first()
         query_set = UserInfo.objects.filter(user__shoppingchart__project_id=pk,
                                             user__shoppingchart__status__in=['SUPPLY_ORDER', 'PAYED']).exclude(
             student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC']).values('user_id', 'name', 'wechat', 'email',
                                                                             'user__studentscoredetail__university',
-                                                                            'sales_man', 'student_status').distinct()
+                                                                            'sales_man', 'student_status',
+                                                                            'user__last_login').distinct()
         filter_status = request.query_params.get('student_status')
         if filter_status == 'payed':
             query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
@@ -127,7 +129,7 @@ class ProjectViewSet(BaseViewSet):
         query_set = query_set[(page - 1) * 15:page * 15]
         for item in query_set:
             item['university'] = item.pop('user__studentscoredetail__university')
-        data = {'count': count, 'data': query_set}
+        data = {'count': count,'project':project.get('campus__name')+'-'+project.get('name'), 'data': query_set}
         return Response(data)
 
 
