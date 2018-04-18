@@ -391,7 +391,7 @@ class AdminCourseViewSet(mixins.DestroyModelMixin,
     @list_route()
     def course_to_confirm_count(self, request):
         """用户上传凭证待审核数量"""
-        count = UserCourse.objects.filter(status='TO_CONFIRM').count()
+        count = UserCourse.objects.filter(status='TO_CONFIRM').values('user_id').distinct().count()
         return Response({'course_to_confirm_count': count})
 
 
