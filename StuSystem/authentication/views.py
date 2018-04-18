@@ -173,7 +173,7 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
         self.perform_update(serializer)
         return Response(self.serializer_class(instance).data)
 
-    @detail_route(methods=['GET', 'PUT', 'PATCH'],
+    @detail_route(methods=['GET', 'PATCH'],
                   serializer_class=PersonalFIleUserInfoSerializer)
     def personal_file(self, request, pk):
         instance = self.get_object()
@@ -183,7 +183,6 @@ class UserInfoViewSet(mixins.RetrieveModelMixin,
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             instance = self.get_object()
-        if request.method == 'PATCH':
             if UserInfo.objects.filter(user_id=pk,student_status='PERSONAL_FILE'):
                 change_student_status(pk,'ADDED_CC')
         return Response(self.get_serializer(instance).data)

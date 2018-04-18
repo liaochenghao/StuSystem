@@ -136,23 +136,6 @@ class StatisticsViewSet(mixins.ListModelMixin,
 
     @list_route()
     def students_overview(self, request):
-        # students_num = self.queryset.filter(user__role='STUDENT').count()
-        # personal_file_num = self.queryset.filter(english_name__isnull=False,
-        #                                          phone__isnull=False,
-        #                                          gender__isnull=False,
-        #                                          id_number__isnull=False,
-        #                                          major__isnull=False,
-        #                                          gpa__isnull=False).count()
-        # students_applyed = len(set(
-        #     Order.objects.filter(status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED', 'CONFIRM_FAILED']).values_list(
-        #         'user_id', flat=True)))
-        # students_payed = len(set(Order.objects.filter(status='CONFIRMED').values_list('user_id', flat=True)))
-        # res = {
-        #     'students_num': students_num,
-        #     'personal_file_num': personal_file_num,
-        #     'students_applyed': students_applyed,
-        #     'students_payed': students_payed
-        # }
         student_status = dict(UserInfo.STUDENT_STATUS)
         filter_year = request.query_params.get('create_year')
         query_set = UserInfo.objects.all()
