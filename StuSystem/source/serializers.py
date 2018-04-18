@@ -48,10 +48,11 @@ class ProjectSerializer(serializers.ModelSerializer):
     project_fees = serializers.ListField(write_only=True)
     applyed_number = serializers.IntegerField(source='current_applyed_number', read_only=True)
     payed_number = serializers.IntegerField(source='current_payed_number', read_only=True)
+    chose_number = serializers.IntegerField(source='current_choose_number', read_only=True)
 
     class Meta:
         model = Project
-        fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time',
+        fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time','chose_number',
                   'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'applyed_number', 'payed_number']
 
     def validate(self, attrs):
