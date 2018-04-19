@@ -133,7 +133,8 @@ class ProjectViewSet(BaseViewSet):
         count = len(query_set)
         query_set = query_set[(page - 1) * 15:page * 15]
         for item in query_set:
-            item['university'] = item.get('user__studentscoredetail__university')
+            item['student_status'] = dict(UserInfo.STUDENT_STATUS).get(item.pop('student_status'))
+            item['university'] = item.pop('user__studentscoredetail__university')
         data = {'count': count, 'project': project.get('campus__name') + '-' + project.get('name'), 'data': query_set}
         return Response(data)
 
