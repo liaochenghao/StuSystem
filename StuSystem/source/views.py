@@ -109,18 +109,23 @@ class ProjectViewSet(BaseViewSet):
 
     @detail_route()
     def project_available_student(self, request, pk):
-        project = Project.objects.filter(id=pk).values('campus__name','name').first()
-        query_set = UserInfo.objects.filter(user__shoppingchart__project_id=pk,
-                                            user__shoppingchart__status__in=['SUPPLY_ORDER', 'PAYED']).exclude(
-            student_status__in=['NEW', 'PERSONAL_FILE', 'ADDED_CC']).values('user_id', 'name', 'wechat', 'email',
-                                                                            'user__studentscoredetail__university',
-                                                                            'sales_man', 'student_status',
-                                                                            'user__last_login').distinct()
+        project = Project.objects.filter(id=pk).values('campus__name', 'name').first()
+        order_query = Order.objects.filter(orderchartrelation__chart__project_id=pk,
+                                           status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).values_list('user_id',
+                                                                                                         flat=True)
         filter_status = request.query_params.get('student_status')
         if filter_status == 'payed':
-            query_set = query_set.exclude(student_status__in=['PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
-        elif filter_status == 'chose':
-            query_set = query_set.exclude(student_status__in=['TO_CHOOSE_COURSE', 'PAYMENT_CONFIRM', 'SUPPLY_ORDER'])
+            order_query = order_query.filter(status='CONFIRMED')
+        query_set = UserInfo.objects.filter(
+            user_id__in=[user_id for user_id in order_query]).values('user_id', 'name',
+                                                                     'wechat', 'email',
+                                                                     'user__studentscoredetail__university',
+                                                                     'sales_man',
+                                                                     'student_status',
+                                                                     'user__last_login')
+        if filter_status == 'chose':
+            course_query = UserCourse.objects.filter(project_id=pk).values_list('user_id', flat=True).distinct()
+            query_set = query_set.filter(user_id__in=[user_id for user_id in course_query])
         try:
             page = int(request.query_params.get('page', 1))
         except:
@@ -128,8 +133,8 @@ class ProjectViewSet(BaseViewSet):
         count = len(query_set)
         query_set = query_set[(page - 1) * 15:page * 15]
         for item in query_set:
-            item['university'] = item.pop('user__studentscoredetail__university')
-        data = {'count': count,'project':project.get('campus__name')+'-'+project.get('name'), 'data': query_set}
+            item['university'] = item.get('user__studentscoredetail__university')
+        data = {'count': count, 'project': project.get('campus__name') + '-' + project.get('name'), 'data': query_set}
         return Response(data)
 
 

@@ -42,14 +42,15 @@ class Project(models.Model):
     def current_applyed_number(self):
         from order.models import Order
         data = Order.objects.filter(orderchartrelation__chart__project=self,
-                                    status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).values_list('user_id', flat=True)
+                                    status__in=['TO_PAY', 'TO_CONFIRM', 'CONFIRMED']).values_list('user_id',
+                                                                                                  flat=True).distinct()
         return len(data)
 
     @property
     def current_payed_number(self):
         from order.models import Order
         data = Order.objects.filter(orderchartrelation__chart__project=self,
-                                    status__in=['CONFIRMED']).values_list('user_id', flat=True)
+                                    status='CONFIRMED').values_list('user_id', flat=True).distinct()
         return len(data)
 
     @property
