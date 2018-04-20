@@ -52,7 +52,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time','chose_number',
+        fields = ['id', 'campus', 'name', 'start_date', 'end_date', 'address', 'info', 'create_time', 'chose_number',
                   'apply_fee', 'course_num', 'project_course_fee', 'project_fees', 'applyed_number', 'payed_number']
 
     def validate(self, attrs):
@@ -163,12 +163,12 @@ class CourseSerializer(serializers.ModelSerializer):
                                                                                             project__is_active=True),
                                                                context={'api_key': 'related_projects'},
                                                                many=True).data
-        # else:
-        #     project_id = 0
-        #     if project_id and project_id != '0':
-        #         data['choose_number'] = UserCourse.objects.filter(course=instance, project_id=project_id).count()
-        #     else:
-        #         data['choose_number'] = UserCourse.objects.filter(course=instance).count()
+        else:
+            project_id = self.context.get('request').query_params.get('project')
+            if project_id and project_id != '0':
+                data['chose_number'] = UserCourse.objects.filter(course=instance, project_id=project_id).count()
+            else:
+                data['chose_number'] = UserCourse.objects.filter(course=instance).count()
         return data
 
 
