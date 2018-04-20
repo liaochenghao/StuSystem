@@ -30,6 +30,7 @@
                 "max_num": 50,                      int     最大选课人数
                 "credit": 3,                        int     学分
                 "create_time": "2017-06-19T16:07:11Z",
+                "chose_number": 1                   int     选课人数
             }
         ]
     },
