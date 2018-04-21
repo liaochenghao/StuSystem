@@ -366,5 +366,5 @@ class CourseProjectSerializer(serializers.ModelSerializer):
         if self.context.get('api_key') == 'related_projects':
             data['project'] = ProjectSerializer(instance.project).data
         elif self.context.get('api_key') == 'related_courses':
-            data['course'] = CourseSerializer(instance.course).data
+            data['course'] = CourseSerializer(instance.course, context={'api_key': 'related_courses_info'}).data
         return data
