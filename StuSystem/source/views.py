@@ -75,7 +75,7 @@ class ProjectViewSet(BaseViewSet):
                                                        ).values_list('course_id', flat=True)
         related_course_ids = instance.courseproject_set.filter(project=instance).values_list('course_id', flat=True)
         courses = Course.objects.filter(id__in=related_course_ids).exclude(id__in=current_course_ids)
-        course_list = CourseSerializer(courses, many=True).data
+        course_list = CourseSerializer(courses, many=True, context={'api_key': 'related_courses_info'}).data
         for course in course_list:
             count = UserCourse.objects.filter(course_id=course['id'], project=instance).count()
             course['choose_number'] = count
@@ -94,7 +94,7 @@ class ProjectViewSet(BaseViewSet):
     def related_courses_info(self, request, pk):
         """项目关联课程简介"""
         my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
-        res = CourseSerializer(my_course, many=True, context={'api_key': 'related_courses_info'}).data
+        res = CourseSerializer(my_course, many=True).data
         return Response(res)
 
     @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
