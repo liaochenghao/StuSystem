@@ -163,7 +163,7 @@ class CourseSerializer(serializers.ModelSerializer):
                                                                                             project__is_active=True),
                                                                context={'api_key': 'related_projects'},
                                                                many=True).data
-        elif self.context.get('api_key') == 'related_courses_info':
+        elif not self.context.get('request'):
             return data
         else:
             project_id = self.context.get('request').query_params.get('project')
