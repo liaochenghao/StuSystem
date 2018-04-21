@@ -94,7 +94,7 @@ class ProjectViewSet(BaseViewSet):
     def related_courses_info(self, request, pk):
         """项目关联课程简介"""
         my_course = [item.course for item in CourseProject.objects.filter(project=self.get_object())]
-        res = CourseSerializer(my_course, many=True).data
+        res = CourseSerializer(my_course, many=True, context={'api_key': 'related_courses_info'}).data
         return Response(res)
 
     @detail_route(['PUT'], serializer_class=UpdateProjectCourseFeeSerializer)
