@@ -400,6 +400,7 @@ class AdminOrderSerializer(OrderSerializer):
             print('===============', validated_data, '===============')
             status = 'CONFIRMED'
             remark = '订单支付成功：%s' % validated_data.get('remark')
+            pay_fee = validated_data.get('pay_fee')
             confirm_status = '订单支付成功'
             confirm_remark = '您的订单审核成功，请联系您的课程顾问，开始选课吧！'
             user_info = UserInfo.objects.filter(user=instance.user,
@@ -407,6 +408,8 @@ class AdminOrderSerializer(OrderSerializer):
                                                                     'PAYMENT_CONFIRM']).exists()
             if user_info:
                 change_student_status(instance.user.id, 'TO_CHOOSE_COURSE')
+            if pay_fee:
+                instance.pay_fee = pay_fee
 
         elif validated_data.get('status') == 'CONFIRM_FAILED':
             status = 'CONFIRM_FAILED'
