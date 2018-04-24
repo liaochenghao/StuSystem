@@ -118,8 +118,8 @@ class OrderSerializer(serializers.ModelSerializer):
         if coupon_list:
             # 更新优惠券状态
             for coupon_id in coupon_list:
-                if UserCoupon.objects.filter(user=user, id=coupon_id, status='TO_USE').exists():
-                    UserCoupon.objects.filter(user=user, id=coupon_id, status='TO_USE').update(status='LOCKED')
+                if UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').exists():
+                    UserCoupon.objects.filter(user=user, coupon_id=coupon_id, status='TO_USE').update(status='LOCKED')
         # 创建订单与商品关系
         order_chart = []
         for chart_id in chart_ids:
