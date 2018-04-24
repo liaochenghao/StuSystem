@@ -173,7 +173,7 @@ class SimpleUserOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'create_time', 'status', 'standard_fee', 'pay_fee', 'remark']
+        fields = ['id', 'create_time', 'status', 'modified_time', 'standard_fee', 'pay_fee', 'remark']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
