@@ -397,7 +397,6 @@ class AdminOrderSerializer(OrderSerializer):
 
     def update(self, instance, validated_data):
         if validated_data.get('status') == 'CONFIRMED':
-            print('===============', validated_data, '===============')
             status = 'CONFIRMED'
             remark = '订单支付成功：%s' % validated_data.get('remark')
             pay_fee = validated_data.get('pay_fee')
