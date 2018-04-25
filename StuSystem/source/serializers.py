@@ -272,7 +272,8 @@ class CourseConfirmSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['name'] = instance.course.name
-        data['chart'] = ShoppingChart.objects.filter(orderchartrelation__order=instance.order).values('id').first()
+        data['chart'] = ShoppingChart.objects.filter(orderchartrelation__order=instance.order,
+                                                     project=instance.project).values('id').first()
         data['course_code'] = instance.course.course_code
         data['project'] = {
             'id': instance.project.id,
@@ -286,7 +287,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
-    confirm_img = Base64ImageField(required=False)
+    # confirm_img = Base64ImageField(required=False)
+    confirm_img = serializers.ImageField()
     switch_img = Base64ImageField(required=False)
 
     class Meta:
@@ -302,7 +304,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
         chart = attrs['chart']
         attrs['project'] = chart.project
-        print(attrs,'\r\n', '*********************审课*******************')
+        print(attrs, '\r\n', '*********************审课*******************')
         user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
                                                 order=attrs['order'], course=attrs['course']).first()
         if not user_course:
