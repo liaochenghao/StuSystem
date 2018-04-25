@@ -302,6 +302,7 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
 
         chart = attrs['chart']
         attrs['project'] = chart.project
+        print(attrs,'\r\n', '*********************审课*******************')
         user_course = UserCourse.objects.filter(user=self.context['request'].user, project=chart.project,
                                                 order=attrs['order'], course=attrs['course']).first()
         if not user_course:
