@@ -287,8 +287,8 @@ class CommonImgUploadSerializer(serializers.ModelSerializer):
     chart = serializers.PrimaryKeyRelatedField(queryset=ShoppingChart.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='CONFIRMED'))
     course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
-    # confirm_img = Base64ImageField(required=False)
-    confirm_img = serializers.ImageField()
+    confirm_img = Base64ImageField(required=False)
+    # confirm_img = serializers.ImageField()
     switch_img = Base64ImageField(required=False)
 
     class Meta:
