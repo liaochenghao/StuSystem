@@ -419,8 +419,6 @@ class AdminOrderSerializer(OrderSerializer):
             raise exceptions.ValidationError('请传入正确的status参数')
         if instance.status != 'TO_CONFIRM':
             raise exceptions.ValidationError('仅能操作待确认状态下的订单')
-        if instance.status != 'TO_CONFIRM':
-            raise exceptions.ValidationError('仅能操作待确认下的订单')
         instance.status = status
         instance.save()
         if instance.coupon_list:
