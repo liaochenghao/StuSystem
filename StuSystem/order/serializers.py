@@ -283,8 +283,8 @@ class ShoppingChartSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         project = attrs['project']
-        # if project.start_date < datetime.date.today() + datetime.timedelta(7):
-        #     raise serializers.ValidationError('该项目马上就要开课了，请选择其他项目。')
+        if project.start_date < datetime.date.today() + datetime.timedelta(7):
+            raise serializers.ValidationError('该项目马上就要开课了，请选择其他项目。')
         project_course_fee = ProjectCourseFee.objects.filter(project=project, project__is_active=True,
                                                              course_number=attrs['course_num']).first()
         if not project_course_fee:
