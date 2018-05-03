@@ -10,7 +10,8 @@
 {
     "status": "CONFIRMED"   -- 确认订单
     "status": "CONFIRM_FAILED"  -- 支付认证失败
-    ""
+    "remark": "备注"，        -- 备注
+    "pay_fee": 1234，        -- 实际支付金额
 }
 ```
 
