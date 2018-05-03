@@ -1,9 +1,13 @@
 # coding: utf-8
+import json
+
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from admin.functions import order_auto_notice_message, course_auto_notice_message, confirm_auto_notice_message, \
     score_auto_notice_message, switch_auto_notice_message, change_student_status
 from authentication.models import UserInfo, StudentScoreDetail, User
+from coupon.models import UserCoupon
+from operate_history.functions import HistoryFactory
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
 from source.models import Campus, Course, CourseProject
@@ -87,13 +91,17 @@ class UserInfoViewSet(mixins.ListModelMixin,
     @list_route()
     def insert_user_info(self, request):
         from . import tools
+        # tools.get_chose_course_number()
+        # tools.get_confirm_university()
+        # tools.clear_refund_order()
         tools.insert_user_info()
+        # tools.get_order()
         return Response('ok')
 
     @list_route()
     def get_mail(self, request):
         from . import tools
-        tools.get_mail(r'C:\Users\555\Desktop\学生导入信息\20180413_2\汇总.xlsx')
+        # tools.get_mail(r'C:\Users\555\Desktop\学生导入信息\20180413_2\汇总.xlsx')
         return Response('ok')
 
     @list_route()
@@ -161,13 +169,13 @@ class StatisticsViewSet(mixins.ListModelMixin,
             all_payed_number += sum([project.get('payed_number') for project in item['project_set']])
             all_chose_number += sum([project.get('choose_course_number') for project in item['project_set']])
         all_project = {'all_applyed_number': all_applyed_number, 'all_payed_number': all_payed_number,
-                     'all_chose_number': all_chose_number}
+                       'all_chose_number': all_chose_number}
         online_project = {
             'online_applyed_number': sum([project.get('applyed_number') for project in data[-1]['project_set']]),
             'online_payed_number': sum([project.get('payed_number') for project in data[-1]['project_set']]),
             'online_chose_number': sum([project.get('choose_course_number') for project in data[-1]['project_set']])
         }
-        data={'project_list':data}
+        data = {'project_list': data}
         data.update(all_project)
         data.update(online_project)
         return Response(data)
@@ -399,6 +407,23 @@ class AdminOrderViewSet(mixins.ListModelMixin,
         instance = super().update(request, *args, **kwargs)
         order_auto_notice_message(instance.data, instance.data.get('user'))
         return instance
+
+    @list_route()
+    def delete_order(self, request):
+        order = request.query_params.get('order')
+        instance = Order.objects.filter(id=order).first()
+        if not instance:
+            raise exceptions.ValidationError('订单不存在')
+        instance.status = 'CANCELED'
+        instance.save()
+        if instance.coupon_list:
+            # 如果使用了优惠券，更新优惠券的状态
+            coupon_list = json.loads(instance.coupon_list)
+            UserCoupon.objects.filter(user=instance.user, coupon_id__in=coupon_list).update(status='TO_USE')
+        UserCourse.objects.filter(order=instance).delete()
+        HistoryFactory.create_record(operator=request.user, source=instance, key='DELETE',
+                                     remark='管理员删除订单', source_type='ORDER')
+        return Response('订单已删除')
 
 
 class NavigationViewSet(mixins.ListModelMixin,
