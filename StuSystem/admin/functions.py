@@ -78,6 +78,8 @@ def get_chose_number(project):
             # 第一张表
             first_sheet.write(first_row, 0, project.campus.name + '-' + project.name)
             first_sheet.write(first_row, 1, course['course__name'])
+            if user_bool == 1:
+                second_sheet.write(second_row, 2, course_count)
             first_sheet.write(first_row, 3, item.get('user__userinfo__name'))
             first_sheet.write(first_row, 4, item.get('user__userinfo__sales_man'))
             first_sheet.write(first_row, 5, item.get('user__userinfo__email'))
