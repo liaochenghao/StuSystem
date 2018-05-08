@@ -1,6 +1,8 @@
 # coding: utf-8
 import json
 
+from django.http import HttpResponse
+
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from admin.functions import order_auto_notice_message, course_auto_notice_message, confirm_auto_notice_message, \
@@ -102,7 +104,10 @@ class UserInfoViewSet(mixins.ListModelMixin,
     def get_excel(self, request):
         project_id = request.query_params.get('project')
         project = Project.objects.filter(id=project_id).first()
-        response = get_chose_number(project)
+        write_book = get_chose_number(project)
+        response = HttpResponse(content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment;filename="course.xlsx"'
+        write_book.save(response)
         return response
 
     @list_route()

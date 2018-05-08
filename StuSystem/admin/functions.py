@@ -55,19 +55,16 @@ def get_chose_number(project):
     if not course_queryset:
         raise exceptions.NotAuthenticated('项目ID错误 ！')
     write_book = xlwt.Workbook(encoding='utf-8', style_compression=0)
-    first_sheet = write_book.add_sheet('课程选课人数', cell_overwrite_ok=True)
+    first_sheet = write_book.add_sheet('选课数量', cell_overwrite_ok=True)
     second_sheet = write_book.add_sheet('选课人数', cell_overwrite_ok=True)
     col_list = ['校区-项目', '课程', '人数', '姓名', 'CC', '邮箱', '微信']
     for index, col in enumerate(col_list):
         first_sheet.write(0, index, col)
         second_sheet.write(0, index, col)
-    first_row = 1
-    second_row = 1
-    user_list = []
+    first_row, second_row, user_list = 1, 1, []
     for course in course_queryset:
         userinfo_set = UserCourse.objects.filter(project=project, course_id=course['course']).values(
-            'user__userinfo__name', 'user__userinfo__sales_man', 'user__userinfo__email',
-            'user__userinfo__wechat')
+            'user__userinfo__name', 'user__userinfo__sales_man', 'user__userinfo__email', 'user__userinfo__wechat')
         course_count = len(userinfo_set)
         if course_count == 0:
             continue
@@ -79,7 +76,7 @@ def get_chose_number(project):
             first_sheet.write(first_row, 0, project.campus.name + '-' + project.name)
             first_sheet.write(first_row, 1, course['course__name'])
             if user_bool == 1:
-                second_sheet.write(second_row, 2, course_count)
+                first_sheet.write(first_row, 2, course_count)
             first_sheet.write(first_row, 3, item.get('user__userinfo__name'))
             first_sheet.write(first_row, 4, item.get('user__userinfo__sales_man'))
             first_sheet.write(first_row, 5, item.get('user__userinfo__email'))
@@ -98,10 +95,7 @@ def get_chose_number(project):
                 second_row += 1
             first_row += 1
             user_bool = 0
-    response = HttpResponse(content_type='application/octet-stream')
-    response['Content-Disposition'] = 'attachment;filename="course.xlsx"'
-    write_book.save(response)
-    return response
+    return write_book
 
 
 @run_on_executor
