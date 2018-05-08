@@ -4,13 +4,13 @@ import json
 from admin.filters import UserInfoFilterSet, UserCourseFilterSet
 from admin.models import PaymentAccountInfo
 from admin.functions import order_auto_notice_message, course_auto_notice_message, confirm_auto_notice_message, \
-    score_auto_notice_message, switch_auto_notice_message, change_student_status
+    score_auto_notice_message, switch_auto_notice_message, change_student_status, get_chose_number
 from authentication.models import UserInfo, StudentScoreDetail, User
 from coupon.models import UserCoupon
 from operate_history.functions import HistoryFactory
 from permissions.base_permissions import BaseOperatePermission
 from common.models import SalesMan, FirstLevel
-from source.models import Campus, Course, CourseProject
+from source.models import Campus, Course, CourseProject, Project
 from rest_framework import exceptions
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -91,18 +91,19 @@ class UserInfoViewSet(mixins.ListModelMixin,
     @list_route()
     def insert_user_info(self, request):
         from . import tools
-        # tools.get_chose_course_number()
+        tools.get_chose_course_number()
         # tools.get_confirm_university()
         # tools.clear_refund_order()
-        tools.insert_user_info()
+        # tools.insert_user_info()
         # tools.get_order()
         return Response('ok')
 
     @list_route()
-    def get_mail(self, request):
-        from . import tools
-        # tools.get_mail(r'C:\Users\555\Desktop\学生导入信息\20180413_2\汇总.xlsx')
-        return Response('ok')
+    def get_excel(self, request):
+        project_id = request.query_params.get('project')
+        project = Project.objects.filter(id=project_id).first()
+        response = get_chose_number(project)
+        return response
 
     @list_route()
     def clear_user_info(self, request):

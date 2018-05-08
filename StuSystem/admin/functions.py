@@ -3,6 +3,10 @@ import datetime
 import qrcode
 from urllib import parse
 
+import xlwt
+from django.http import HttpResponse
+from rest_framework import exceptions
+
 from StuSystem.settings import DOMAIN, MEDIA_ROOT, MEDIA_URL, WX_SMART_PROGRAM
 from authentication.models import UserInfo
 from market.models import Channel
@@ -44,6 +48,58 @@ def make_qrcode(channel_id):
     qr_code_url = '%s%s%s%s%s' % (DOMAIN, MEDIA_URL, 'common/channel/channel_', channel_id, '.jpg')
     channel_img.save(qr_code_save_path)
     return (qr_code_url, channel_url)
+
+
+def get_chose_number(project):
+    course_queryset = UserCourse.objects.filter(project=project).distinct().values('course__name', 'course')
+    if not course_queryset:
+        raise exceptions.NotAuthenticated('项目ID错误 ！')
+    write_book = xlwt.Workbook(encoding='utf-8', style_compression=0)
+    first_sheet = write_book.add_sheet('课程选课人数', cell_overwrite_ok=True)
+    second_sheet = write_book.add_sheet('选课人数', cell_overwrite_ok=True)
+    col_list = ['校区-项目', '课程', '人数', '姓名', 'CC', '邮箱', '微信']
+    for index, col in enumerate(col_list):
+        first_sheet.write(0, index, col)
+        second_sheet.write(0, index, col)
+    first_row = 1
+    second_row = 1
+    user_list = []
+    for course in course_queryset:
+        userinfo_set = UserCourse.objects.filter(project=project, course_id=course['course']).values(
+            'user__userinfo__name', 'user__userinfo__sales_man', 'user__userinfo__email',
+            'user__userinfo__wechat')
+        course_count = len(userinfo_set)
+        if course_count == 0:
+            continue
+        user_bool = 1
+        for item in userinfo_set:
+            if item.get('user__userinfo__name') == '123':
+                continue
+            # 第一张表
+            first_sheet.write(first_row, 0, project.campus.name + '-' + project.name)
+            first_sheet.write(first_row, 1, course['course__name'])
+            first_sheet.write(first_row, 3, item.get('user__userinfo__name'))
+            first_sheet.write(first_row, 4, item.get('user__userinfo__sales_man'))
+            first_sheet.write(first_row, 5, item.get('user__userinfo__email'))
+            first_sheet.write(first_row, 6, item.get('user__userinfo__wechat'))
+            # 第二张表
+            if not item.get('user__userinfo__wechat') in user_list:
+                user_list.append(item.get('user__userinfo__wechat'))
+                second_sheet.write(second_row, 0, project.campus.name + '-' + project.name)
+                second_sheet.write(second_row, 1, course['course__name'])
+                if user_bool == 1:
+                    second_sheet.write(second_row, 2, course_count)
+                second_sheet.write(second_row, 3, item.get('user__userinfo__name'))
+                second_sheet.write(second_row, 4, item.get('user__userinfo__sales_man'))
+                second_sheet.write(second_row, 5, item.get('user__userinfo__email'))
+                second_sheet.write(second_row, 6, item.get('user__userinfo__wechat'))
+                second_row += 1
+            first_row += 1
+            user_bool = 0
+    response = HttpResponse(content_type='application/octet-stream')
+    response['Content-Disposition'] = 'attachment;filename="course.xlsx"'
+    write_book.save(response)
+    return response
 
 
 @run_on_executor
